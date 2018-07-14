@@ -1,0 +1,12 @@
+.Layout-wrapper {
+  display: flex;
+  background-color: #2A3046;
+  font-family: 'Lato', serif;
+}
+
+.Layout-content-wrapper {
+  padding: 20px 5px;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+}

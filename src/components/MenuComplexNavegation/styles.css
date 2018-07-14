@@ -1,0 +1,100 @@
+.MenuComplexNavegation-wrapper {
+  height:  100vh;
+  display: inline-block;
+  background:  #323951;
+  color: #75829B;
+  font-size: .860rem;
+  position: relative;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 10px 1px, rgba(0, 0, 0, 0.1) 0px -1px 2px 0px;
+}
+
+.MenuComplexNavegation-wrapper > div {
+  padding: 0 10px
+}
+
+.MenuComplexNavegation-header__div {
+  background-color: #373E58;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.MenuComplexNavegation-header__div > img {
+  position: relative;
+  top: 15px;
+}
+
+.MenuComplexNavegation-sections-wrapper__div {
+  width: 180px;
+}
+
+.MenuComplexNavegation-sections-wrapper__div >
+.MenuComplexNavegation-section-wrapper__div {
+  margin-top: 4vh;
+}
+
+.MenuComplexNavegation-sections-wrapper__div >
+.MenuComplexNavegation-section-wrapper__div >
+.MenuComplexNavegation-section-title__div {
+  cursor: pointer;
+  color: #8a96aa;
+}
+
+.MenuComplexNavegation-sections-wrapper__div >
+.MenuComplexNavegation-section-wrapper__div >
+.MenuComplexNavegation-section-title__div:hover {
+  color: #8a96aa;
+}
+
+.MenuComplexNavegation-sections-wrapper__div >
+.MenuComplexNavegation-section-wrapper__div >
+.MenuComplexNavegation-section-title__div > span > a {
+  color: #8a96aa;
+  text-decoration:none;
+}
+
+.MenuComplexNavegation-sections-wrapper__div >
+.MenuComplexNavegation-section-wrapper__div >
+.MenuComplexNavegation-section-title__div > span:nth-child(1) {
+  vertical-align: -3px
+}
+
+.MenuComplexNavegation-sections-wrapper__div >
+.MenuComplexNavegation-section-wrapper__div >
+.MenuComplexNavegation-section-title__div > span:nth-child(2) {
+  margin-left: 10px;
+}
+
+.MenuComplexNavegation-sections-wrapper__div >
+.MenuComplexNavegation-section-wrapper__div >
+.MenuComplexNavegation-section-options__ul {
+  padding-left: 28px;
+  margin: 0;
+}
+
+.MenuComplexNavegation-sections-wrapper__div >
+.MenuComplexNavegation-section-wrapper__div >
+.MenuComplexNavegation-section-options__ul > li:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.MenuComplexNavegation-footer__div {
+  position: absolute;
+  bottom: 0;
+  background-color: #373E58;
+  width: 100%;
+  transition: background-color 1s ease
+}
+
+.MenuComplexNavegation-footer__div:hover {
+  background-color: #3e4663;
+}
+
+.MenuComplexNavegation-footer__div > div {
+  padding: 10px 0 10px 10px;
+  cursor: pointer
+}
+
+.MenuComplexNavegation-footer__div > div > span > i {
+  vertical-align: -3px;
+  margin-right: 5px;
+}
