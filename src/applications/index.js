@@ -5,6 +5,7 @@ import GenerateRoutes from '../components/GenerateRoutes'
 import withLayout from '../hoc/withLayout'
 
 import 'sanitize.css'
+import '../assets/styles/styles.css'
 
 /**
  * Main Component in the React Tree

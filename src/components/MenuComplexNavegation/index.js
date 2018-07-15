@@ -2,121 +2,57 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import './styles.css'
 
+const MOCK_URL_IMAGE = 'http://www.maltratoinfantil.org/wp-content/uploads/2015/12/John-Lennon.jpg'
+
 class MenuComplexNavegation extends Component {
   render() {
     return (
       <nav className="MenuComplexNavegation-wrapper">
         <section className="MenuComplexNavegation-header__div">
-          {/* <img src={logo} alt="Logo"/> */}
+          <img src={MOCK_URL_IMAGE} alt="User profile" />
+          <p>
+            Welcome, <strong>Alex!</strong>
+          </p>
         </section>
         <div>
           <section className="MenuComplexNavegation-sections-wrapper__div">
             <div className="MenuComplexNavegation-section-wrapper__div">
-              <div className="MenuComplexNavegation-section-title__div">
-                {/* <span>
-                  <MaterialIcon icon="security" size={18} />
-                </span> */}
-                <span>
-                  <Link to="/portfolio">
-                    Portfolio
-                  </Link>
-                </span>
-              </div>
               <ul className="MenuComplexNavegation-section-options__ul">
                 <li>
-                  Overview
+                  Main Navegation
                 </li>
                 <li>
-                  Omega Status
+                  Dashboard
                 </li>
                 <li>
-                  Transaction History
+                  Map Data
                 </li>
-                <li className="--disabled">
-                  Perfomance Report
+                <li>
+                  Realtime
                 </li>
-                <li className="--disabled">
-                  Taxes
+                <li>
+                  Alerts
                 </li>
               </ul>
             </div>
             <div className="MenuComplexNavegation-section-wrapper__div">
-              <div className="MenuComplexNavegation-section-title__div">
-                {/* <span>
-                  <MaterialIcon icon="domain" size={18} />
-                </span> */}
-                <span>
-                  <Link to="/markets">
-                    Markets
-                  </Link>
-                </span>
-              </div>
               <ul className="MenuComplexNavegation-section-options__ul">
                 <li>
-                  Overview
-                </li>
-              </ul>
-            </div>
-            <div className="MenuComplexNavegation-section-wrapper__div">
-              <div className="MenuComplexNavegation-section-title__div">
-                {/* <span>
-                  <MaterialIcon icon="comment" size={18} />
-                </span> */}
-                <span>
-                  Forum
-                </span>
-              </div>
-              <ul className="MenuComplexNavegation-section-options__ul">
-                <li>
-                  Bronze Forum
+                  Admin
                 </li>
                 <li>
-                  Silver Forum
+                  Locations
                 </li>
                 <li>
-                  Gold Forum
-                </li>
-              </ul>
-            </div>
-            <div className="MenuComplexNavegation-section-wrapper__div">
-              <div className="MenuComplexNavegation-section-title__div">
-                {/* <span>
-                  <MaterialIcon icon="settings" size={18} />
-                </span> */}
-                <span>
-                  Account
-                </span>
-              </div>
-              <ul className="MenuComplexNavegation-section-options__ul">
-                <li>
-                  Profile
+                  Settings
                 </li>
                 <li>
-                  Security
-                </li>
-                <li>
-                  Payment Details
-                </li>
-                <li>
-                  Verification
-                </li>
-                <li>
-                  UI Preferences
+                  OTA Updates
                 </li>
               </ul>
             </div>
           </section>
         </div>
-        <section className="MenuComplexNavegation-footer__div">
-          <div>
-            {/* <span>
-              <MaterialIcon icon="expand" size={18} />
-            </span> */}
-            <span>
-              Collapse Menu
-            </span>
-          </div>
-        </section>
       </nav>
     )
   }
