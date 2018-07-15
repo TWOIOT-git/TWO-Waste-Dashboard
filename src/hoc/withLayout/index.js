@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import MenuComplexNavegation from '../../components/MenuComplexNavegation'
+import HeaderSearch from '../../components/HeaderSearch'
 import { Hidden, Visible } from 'react-grid-system'
 import './styles.css'
 
@@ -12,9 +13,10 @@ const withLayout = WrappedComponent => {
             <MenuComplexNavegation />
           </Hidden>
           <Visible md sm xs>
-            {/* <FixedNavBar pageWrapId={"Layout-content-wrapper"} /> */}
+            <MenuComplexNavegation />
           </Visible>
-          <div className="Layout-content-wrapper" id="Layout-content-wrapper">
+          <div className="Layout-content-wrapper">
+            <HeaderSearch />
             <WrappedComponent {...this.props} />
           </div>
         </main>

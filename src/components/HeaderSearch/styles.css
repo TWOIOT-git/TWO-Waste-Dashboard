@@ -1,0 +1,15 @@
+.HeaderSearch-wrapper {
+  background-color: var(--header-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+.HeaderSearch-input {
+  background: #4F4949;
+  border: 1px solid #6B6A6A;
+  box-sizing: border-box;
+  padding: 12px 20px;
+  width: 45%;
+}

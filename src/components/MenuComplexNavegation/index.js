@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import './styles.css'
 
 const MOCK_URL_IMAGE = 'http://www.maltratoinfantil.org/wp-content/uploads/2015/12/John-Lennon.jpg'
