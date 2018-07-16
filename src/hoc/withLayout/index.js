@@ -17,7 +17,9 @@ const withLayout = WrappedComponent => {
           </Visible>
           <div className="Layout-content-wrapper">
             <HeaderSearch />
-            <WrappedComponent {...this.props} />
+            <div className="Layout-content-main">
+              <WrappedComponent {...this.props} />
+            </div>
           </div>
         </main>
       )

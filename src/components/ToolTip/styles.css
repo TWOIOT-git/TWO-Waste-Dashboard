@@ -1,0 +1,49 @@
+.Tooltip-wrapper {
+  background-color: #3B425D;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.Tooltip-wrapper.--shadow {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 10px 1px, rgba(0, 0, 0, 0.1) 0px -1px 2px 0px;
+}
+
+.Tooltip-wrapper:after {
+  position:absolute;
+  content:"";
+  width:0px;
+  height:0px;
+  border-top: 15px solid #3B425D;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 15px solid transparent;
+  bottom: -25px;
+  right: 20px;
+}
+
+.Tooltip-wrapper.--top {
+  margin-top: 30px;
+}
+
+.Tooltip-wrapper.--top:after {
+  border-top: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #3B425D;
+  border-left: 15px solid transparent;
+  bottom: unset;
+  top: 0
+}
+
+.Tooltip-wrapper > p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.Tooltip-wrapper > p:nth-child(1) {
+  color: #808495;
+}
+
+.Tooltip-wrapper > p:nth-child(2) {
+  color: #1D9E91;
+  margin-top: 5px;
+}

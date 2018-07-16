@@ -1,0 +1,48 @@
+.GrowthChart-options__div  {
+  margin-bottom: 20px;
+  display:  flex;
+  flex-flow: row-reverse;
+  padding-top: 30px;
+  border-bottom: 2px solid #545F78;
+}
+
+.GrowthChart-ResponsiveContainer {
+  border-left: 1px solid white;
+  border-bottom: 1px solid white;
+}
+
+.GrowthChart-options__div > div {
+  color: #A1A1A1;
+  text-transform: uppercase;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -ms-flex-preferred-size: 4.5%;
+  flex-basis: 4.5%;
+  padding: 0 10px 20px 10px;
+  cursor: pointer;
+  margin-bottom: -2px;
+}
+
+.GrowthChart-options__div > div:not(.--active):hover {
+  color: #cacaca;
+}
+
+
+.GrowthChart-options__div > div.--active {
+  color: #2770B0;
+  border-bottom: 2px solid #2770B0
+}
+
+.GrowthChart-options__div > div.--active:after {
+  /* content: '';
+  height: 2px;
+  width: 50px;
+  background-color: #2770B0;
+  display: block;
+  position: relative;
+  bottom: -12px;
+  right: 6px;
+  box-shadow: 0 0 2px 0px #698caa; */
+}
