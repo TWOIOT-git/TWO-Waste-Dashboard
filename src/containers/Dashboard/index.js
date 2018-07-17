@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Container, Row, Col } from 'react-grid-system'
-import GrowthChart from '../../components/GrowthChart';
+import GrowthChart from '../../components/GrowthChart'
+import TextWithNumberButtom from '../../components/TextWithNumberButtom'
+import FlexColumn from '../../components/FlexColumn'
+import FlexItem from '../../components/FlexItem'
+import ChartScaleDate from '../../components/ChartScaleDate'
 
 export default class Dashboard extends Component {
   state = {
@@ -78,9 +82,20 @@ export default class Dashboard extends Component {
       <React.Fragment>
         <Container fluid>
           <Row>
+            <Col md={12}>
+              <ChartScaleDate />
+            </Col>
+          </Row>
+          <Row>
             <Col md={3}>
-              <h1>Waste Bags</h1>
-              <h2>384</h2>
+              <FlexColumn>
+                <FlexItem>
+                  <TextWithNumberButtom text={'Waste Bags'} number={384} />
+                </FlexItem>
+                <FlexItem>
+                  <TextWithNumberButtom text={'Recycling  Bags'} number={198} dark={true} />
+                </FlexItem>
+              </FlexColumn>
             </Col>
             <Col md={9}>
               <GrowthChart data={this.state.data} />

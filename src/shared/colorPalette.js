@@ -2,8 +2,9 @@ const colors = {
   primary: {
     main: '#E64602'
   },
-  yellow: {
-    main: '#FF6B00'
+  orange: {
+    main: '#FF6B00',
+    dark: '#E64602'
   }
 }
 
