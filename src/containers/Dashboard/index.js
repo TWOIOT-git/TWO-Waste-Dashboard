@@ -82,7 +82,11 @@ export default class Dashboard extends Component {
       <React.Fragment>
         <Container fluid>
           <Row>
-            <Col md={12}>
+            <Col md={8} lg={5} xl={4} offset={{
+              md: 4,
+              lg: 7,
+              xl: 8
+            }}>
               <ChartScaleDate />
             </Col>
           </Row>
