@@ -5,6 +5,7 @@ import TextWithNumberButtom from '../../components/TextWithNumberButtom'
 import FlexColumn from '../../components/FlexColumn'
 import FlexItem from '../../components/FlexItem'
 import ChartScaleDate from '../../components/ChartScaleDate'
+import BoxNumbers from '../../components/BoxNumbers';
 
 export default class Dashboard extends Component {
   state = {
@@ -103,6 +104,26 @@ export default class Dashboard extends Component {
             </Col>
             <Col md={9}>
               <GrowthChart data={this.state.data} />
+            </Col>
+          </Row>
+          <Row style={{ marginTop: '1.5rem' }}>
+            <Col md={6} xs={12}>
+              <BoxNumbers
+                title="Waste Bags"
+                firstNumber={384}
+                firstText="Pickup Reached"
+                secondNumber={145}
+                secondText="Fill Level Reached"
+              />
+            </Col>
+            <Col md={6} xs={12}>
+              <BoxNumbers
+                title="Recycling Bags"
+                firstNumber={223}
+                firstText="Pickup Reached"
+                secondNumber={81}
+                secondText="Fill Level Reached"
+              />
             </Col>
           </Row>
         </Container>
