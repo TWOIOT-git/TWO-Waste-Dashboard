@@ -5,6 +5,9 @@ const colors = {
   orange: {
     main: '#FF6B00',
     dark: '#E64602'
+  },
+  grey: {
+    light: '#686868'
   }
 }
 

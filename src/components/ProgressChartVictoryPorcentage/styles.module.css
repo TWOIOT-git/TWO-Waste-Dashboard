@@ -1,0 +1,15 @@
+.Wrapper {
+  position: relative;
+  text-align: center;
+}
+
+.Paragraph {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+}

@@ -6,6 +6,7 @@ import FlexColumn from '../../components/FlexColumn'
 import FlexItem from '../../components/FlexItem'
 import ChartScaleDate from '../../components/ChartScaleDate'
 import BoxNumbers from '../../components/BoxNumbers';
+import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
 
 export default class Dashboard extends Component {
   state = {
@@ -125,6 +126,13 @@ export default class Dashboard extends Component {
                 secondText="Fill Level Reached"
               />
             </Col>
+          </Row>
+          <Row style={{ marginTop: '1.5rem' }}>
+            {[1, 2, 3, 4].map(i => (
+              <Col md={3} key={i}>
+                <ProgressChartVictoryPorcentage data={i * 10} />
+              </Col>
+            ))}
           </Row>
         </Container>
       </React.Fragment>
