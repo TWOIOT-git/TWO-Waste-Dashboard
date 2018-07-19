@@ -5,7 +5,7 @@ const ChartScaleDate = () => {
   return (
     <div className={styles.ChartScaleDate}>
       <div>Today</div>
-      <div>Week</div>
+      <div className={styles.Active}>Week</div>
       <div>Month</div>
       <div>Year</div>
       <div>All-time</div>

@@ -3,3 +3,19 @@
   justify-content: space-between;
   margin-bottom: 2rem;
 }
+
+.ChartScaleDate > div {
+  cursor: pointer;
+}
+
+.ChartScaleDate > div:hover {
+  color: var(--orange-hover);
+}
+
+.ChartScaleDate > div:active {
+  color: var(--orange-dark);
+}
+
+.Active {
+  color: var(--orange);
+}

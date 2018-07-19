@@ -3,7 +3,7 @@ import Title from '../Title';
 import BoxBackground from '../BoxBackground'
 import styles from './styles.module.css'
 import { Col, Container, Row } from 'react-grid-system';
-
+import AnalizeLink from '../AnalizeLink';
 
 const BoxNumbers = ({
   title,
@@ -15,6 +15,7 @@ const BoxNumbers = ({
   return (
     <BoxBackground>
       <div className={styles.BoxNumbers}>
+        <AnalizeLink />
         <Container>
           <Row>
             <Col>
@@ -24,7 +25,7 @@ const BoxNumbers = ({
         </Container>
         <Container>
           <Row>
-            <Col>
+            <Col className={styles.Col}>
               <p className={[styles.BoxNumbers_Number]}>
                 {firstNumber}
               </p>
@@ -32,7 +33,7 @@ const BoxNumbers = ({
                 {firstText}
               </p>
             </Col>
-            <Col>
+            <Col className={styles.Col}>
               <p className={[styles.BoxNumbers_Number, styles.BoxNumbers_NumberDark].join(' ')}>
                 {secondNumber}
               </p>

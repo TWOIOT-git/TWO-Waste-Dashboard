@@ -1,8 +1,8 @@
 import React from 'react'
-import './styles.css'
+import styles from './styles.module.css'
 
-const SubTitle = ({children}) => {
-  return <h6 className="SubTitle">{children}</h6>
+const SubTitle = ({ children }) => {
+  return <h6 className={styles.Paragraph}>{children}</h6>
 }
- 
+
 export default SubTitle;

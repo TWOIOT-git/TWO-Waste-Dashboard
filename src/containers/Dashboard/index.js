@@ -7,6 +7,7 @@ import FlexItem from '../../components/FlexItem'
 import ChartScaleDate from '../../components/ChartScaleDate'
 import BoxNumbers from '../../components/BoxNumbers';
 import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
+import AverageTime from '../../components/AverageTime';
 
 export default class Dashboard extends Component {
   state = {
@@ -128,11 +129,30 @@ export default class Dashboard extends Component {
             </Col>
           </Row>
           <Row style={{ marginTop: '1.5rem' }}>
-            {[1, 2, 3, 4].map(i => (
-              <Col md={3} key={i}>
-                <ProgressChartVictoryPorcentage data={i * 10} />
-              </Col>
-            ))}
+            <Col md={3}>
+              <ProgressChartVictoryPorcentage
+                data={75}
+                paragraph={'RT Total Weste'}
+              />
+            </Col>
+            <Col md={3}>
+              <ProgressChartVictoryPorcentage
+                data={21}
+                paragraph={'RT Total Recycling'}
+              />
+            </Col>
+            <Col md={3}>
+              <AverageTime
+                data={'11:23'}
+                paragraph={'Average Pickup Time Waste'}
+              />
+            </Col>
+            <Col md={3}>
+              <AverageTime
+                data={'04:17'}
+                paragraph={'Average Pickup Time Recycling'}
+              />
+            </Col>
           </Row>
         </Container>
       </React.Fragment>

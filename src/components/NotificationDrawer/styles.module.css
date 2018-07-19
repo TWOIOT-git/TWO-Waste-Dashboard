@@ -1,0 +1,60 @@
+.Wrapper {
+  position: fixed;
+  width: 344px;
+  max-width: 70%;
+  height: 100%;
+  right: 0;
+  top: 0;
+  z-index: 200;
+  box-sizing: border-box;
+  transition: transform 0.3s ease-out;
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 2rem 1rem;
+}
+
+.Open {
+  transform: translateX(-15px);
+}
+
+.Close {
+  transform: translateX(100%);
+}
+
+.Item {
+  display: flex;
+}
+
+.ItemIconBlock {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ItemIconBlock > svg {
+  font-size: 3rem
+}
+
+.ItemDescriptionBlock {
+  width: 80%;
+}
+
+.ItemDescriptionBlock > p {
+  padding: 0 7%;
+  line-height: 1.4
+}
+
+.ArrowForwardBlock {
+  text-align: right;
+}
+
+.ArrowForwardBlock > svg {
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.Divider {
+  margin-top: 1rem !important;
+  background-color: #4F4949 !important;
+}
+

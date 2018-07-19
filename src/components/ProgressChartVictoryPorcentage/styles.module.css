@@ -13,3 +13,8 @@
   font-size: 2rem;
   font-weight: bold;
 }
+
+.ParagraphBlock {
+  margin: 1rem 0 0 0;
+  text-align: center;
+}
