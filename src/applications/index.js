@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-
 import routes from './routes'
 import GenerateRoutes from '../components/GenerateRoutes'
-import withLayout from '../hoc/withLayout'
 
 import 'sanitize.css'
 import '../assets/styles/styles.css'
@@ -16,4 +14,5 @@ class Applications extends Component {
     return <GenerateRoutes routes={routes} />
   }
 }
-export default withLayout(Applications)
+
+export default Applications

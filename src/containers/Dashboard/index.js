@@ -8,8 +8,9 @@ import ChartScaleDate from '../../components/ChartScaleDate'
 import BoxNumbers from '../../components/BoxNumbers';
 import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
 import AverageTime from '../../components/AverageTime';
+import withLayout from '../../hoc/withLayout';
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
   state = {
     data: [
       {
@@ -159,3 +160,5 @@ export default class Dashboard extends Component {
     )
   }
 }
+
+export default withLayout(Dashboard)
