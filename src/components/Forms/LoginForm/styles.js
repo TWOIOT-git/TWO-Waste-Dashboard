@@ -1,8 +1,20 @@
 import colors from '../../../shared/colorPalette'
+import lightenDarkenColor from '../../../shared/lightenDarkenColor';
 
 const stylesBase = theme => ({
   Card: {
-    backgroundColor: colors.blue.main
+    backgroundColor: colors.blue.main,
+    height: '80vh'
+  },
+  TWOIOT: {
+    margin: '1rem 0 0 0',
+    fontWeight: '100',
+    lineHeight: 0
+  },
+  WASTE: {
+    fontSize: '2.2rem',
+    fontWeight: '600',
+    margin: 0
   },
   boxMarginTop: {
     marginTop: 20
@@ -11,8 +23,8 @@ const stylesBase = theme => ({
     width: '100%',
     marginBottom: 12
   },
-  swithFormButton: {
-    marginTop: 10
+  Description: {
+    fontWeight: '200'
   },
   cardContent: {
     width: '90%',
@@ -21,9 +33,19 @@ const stylesBase = theme => ({
       width: '70%'
     }
   },
-  icon: {
-    verticalAlign: 'middle',
-    fill: '#009688'
+  Button: {
+    fontSize: '1.5rem',
+    fontWeight: '600',
+    border: 'none',
+    padding: 0,
+    color: colors.orange.main,
+    transition: 'color .5s ease',
+    cursor: 'pointer',
+    ['&:disabled']: {
+      cursor: 'none',
+      transition: 'color .5s ease',
+      color: lightenDarkenColor(colors.orange.dark, 90),
+    }
   }
 });
 

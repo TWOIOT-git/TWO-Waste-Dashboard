@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, FormControl, FormHelperText, Input, InputLabel, Card, CardContent, withStyles } from '@material-ui/core'
+import { FormControl, FormHelperText, Input, InputLabel, Card, CardContent, withStyles } from '@material-ui/core'
 import red from '@material-ui/core/colors/red';
 import stylesBase from './styles'
 
@@ -10,12 +10,12 @@ const LoginForm = ({ onSubmit, onChange, controls, classes, clickedSwitchForm, d
       <form action="/" onSubmit={onSubmit} className={classes.form}>
 
         <FormControl>
-          <p>TWOIOT</p>
-          <p>WASTES</p>
+          <p className={classes.TWOIOT}>TWOIOT</p>
+          <p className={classes.WASTE}>WASTE</p>
         </FormControl>
 
         <FormControl>
-          <p>Welcome back!<br />Login to continue your smart waste management.</p>
+          <p className={classes.Description}>Welcome back!<br />Login to continue your smart waste management.</p>
         </FormControl>
 
         <FormControl className={classes.formControl}>
@@ -51,9 +51,14 @@ const LoginForm = ({ onSubmit, onChange, controls, classes, clickedSwitchForm, d
         </FormControl>
 
         <div className={classes.boxMarginTop}>
-          <Button raised color="primary" type="submit" disabled={disabled}>
+          <button
+            color="primary"
+            type="submit"
+            disabled={disabled}
+            className={classes.Button}
+          >
             LOGIN
-          </Button>
+          </button>
         </div>
       </form>
     </CardContent>
