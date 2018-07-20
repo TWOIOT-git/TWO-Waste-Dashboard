@@ -1,1 +1,73 @@
-/* Migrate styles.js */
+.Card {
+  background-color: var(--menu-background-color);
+  height: 80vh;
+  max-width: 400px;
+}
+
+.TWOIOT {
+  margin: 1rem 0 0 0;
+  font-weight: 300;
+  line-height: 0
+}
+
+.WASTE {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin: 0
+}
+
+.BoxMarginTop {
+  margin-top: 20
+}
+
+.FormControl {
+  width: 100%;
+  margin-bottom: 1.2rem !important
+}
+
+.Description {
+  font-weight: 300;
+  font-size: 1.5rem;
+}
+
+.CardContent {
+  width: 100%;
+  height: 100%
+}
+
+.Form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.Button {
+  border: none;
+  padding: 0;
+  color: var(--orange);
+  transition: color .5s ease;
+  font-size: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.Button:disabled {
+  color: var(--orange);
+}
+
+.Button:hover {
+  color: var(--orange-hover);
+}
+
+.Label {
+  color: #686868 !important
+}
+
+.Input {
+  color: white !important;
+}
+
+.Input::before {
+  border-bottom: 1px solid #686868 !important;
+}

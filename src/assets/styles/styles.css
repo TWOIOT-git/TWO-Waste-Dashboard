@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,200,400,500,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700');
 
 * {
   font-family: 'Roboto', sans-serif;
@@ -9,6 +9,7 @@
   --orange: #FF6B00;
   --orange-dark: #E64602;
   --orange-hover: #ff9d00;
+  --orange-disabled: #ffd28a;
   --menu-background-color: #354052;
   --main-background-color: #32373A;
   --header-background-color: #2E2E2E;

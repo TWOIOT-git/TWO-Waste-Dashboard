@@ -4,6 +4,7 @@ import { checkValidity } from '../../shared/checkValidity'
 import { updateObject } from '../../shared/updateObject'
 import { Container, Row, Col } from 'react-grid-system';
 import LoginWrapper from '../../components/LoginWrapper';
+import LoginText from '../../components/LoginText';
 
 class LoginContainer extends React.Component {
   state = {
@@ -76,7 +77,7 @@ class LoginContainer extends React.Component {
       <LoginWrapper>
         <Container fluid>
           <Row>
-            <Col md={4}>
+            <Col md={5}>
               <LoginForm
                 onSubmit={this.processForm}
                 onChange={this.inputChangedHandler}
@@ -91,9 +92,8 @@ class LoginContainer extends React.Component {
                 }
               />
             </Col>
-            <Col md={7}>
-              <h1>"TAC TICS WITHOUT<br />STRATEGY, IS THE<br />NOISE BEFORE DEFEAT</h1>
-              <h2>Sun Tzu,<br />The Art of War</h2>
+            <Col md={6}>
+              <LoginText />
             </Col>
           </Row>
         </Container>
