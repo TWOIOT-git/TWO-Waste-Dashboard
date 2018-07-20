@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import routes from './routes'
 import GenerateRoutes from '../components/GenerateRoutes'
-import { MuiThemeProvider } from '@material-ui/core'
-import theme from './theme'
 
 import 'sanitize.css'
 import '../assets/styles/styles.css'
@@ -15,9 +13,7 @@ import '../assets/styles/styles.css'
 class Applications extends Component {
   render() {
     return (
-      <MuiThemeProvider theme={theme}>
-        <GenerateRoutes routes={routes} />
-      </MuiThemeProvider>
+      <GenerateRoutes routes={routes} />
     )
   }
 }

@@ -1,60 +1,58 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { FormControl, FormHelperText, Input, InputLabel, CardContent } from '@material-ui/core'
-import red from '@material-ui/core/colors/red';
 import styles from './styles.module.css'
 
 const LoginForm = ({ onSubmit, onChange, controls, disabled }) => (
   <div className={styles.Card}>
-    <CardContent className={styles.CardContent}>
+    <div className={styles.CardContent}>
       <form action="/" onSubmit={onSubmit} className={styles.Form}>
 
-        <FormControl>
+        <div>
           <p className={styles.TWOIOT}>TWOIOT</p>
           <p className={styles.WASTE}>WASTE</p>
-        </FormControl>
+        </div>
 
         <div>
 
-          <FormControl>
+          <div>
             <p className={styles.Description}>Welcome back!<br />Login to continue your smart waste management.</p>
-          </FormControl>
+          </div>
 
-          <FormControl className={styles.FormControl}>
-            <InputLabel htmlFor="email-input" className={styles.Label}>Email</InputLabel>
-            <Input
+          <div className={styles.FormControl}>
+            <input
               id="email-input"
               name="email"
               value={controls.email.value}
+              placeholder="Email"
               onChange={(event) => onChange(event, 'email')}
               type="email"
               className={styles.Input}
             />
             {controls.email.errors.message && (
-              <FormHelperText id="email-input-text" style={{ color: red[500] }}>
+              <small id="email-input-text" style={{ color: 'red' }}>
                 {controls.email.errors.message}
-              </FormHelperText>
+              </small>
             )
             }
-          </FormControl>
+          </div>
 
-          <FormControl className={styles.FormControl}>
-            <InputLabel htmlFor="password-input" className={styles.Label}>Password</InputLabel>
-            <Input
+          <div className={styles.FormControl}>
+            <input
               id="password-input"
               name="password"
               value={controls.password.value}
+              placeholder="Password"
               onChange={(event) => onChange(event, 'password')}
               type="password"
               className={styles.Input}
             />
             {controls.password.errors.message && (
-              <FormHelperText id="password-input-text" style={{ color: red[500] }}>
+              <small id="password-input-text" style={{ color: 'red' }}>
                 {controls.password.errors.message}
-              </FormHelperText>
+              </small>
             )
             }
-          </FormControl>
+          </div>
 
         </div>
 
@@ -69,7 +67,7 @@ const LoginForm = ({ onSubmit, onChange, controls, disabled }) => (
           </button>
         </div>
       </form>
-    </CardContent>
+    </div>
   </div>
 )
 

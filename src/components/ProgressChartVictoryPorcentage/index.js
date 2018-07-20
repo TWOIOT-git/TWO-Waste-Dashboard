@@ -22,7 +22,7 @@ const ProgressChartVictoryPorcentage = ({ data, paragraph }) => {
                     </div>
                     <VictoryPie
                         padAngle={0}
-                        labelComponent={<span />}
+                        labels={() => null}
                         innerRadius={70}
                         width={200} height={200}
                         data={[{ 'key': "", 'y': data }, { 'key': "", 'y': (100 - data) }]}

@@ -1,10 +1,6 @@
 import React from 'react'
 import styles from './styles.module.css'
 import SubTitle from '../SubTitle';
-import Warning from '@material-ui/icons/Warning';
-import ErrorOutline from '@material-ui/icons/ErrorOutline';
-import ArrowForward from '@material-ui/icons/ArrowForward';
-import { Divider } from '@material-ui/core';
 
 const NotificationDrawer = ({ show, onClose }) => {
   const arrayClasses = [styles.Wrapper]
@@ -12,13 +8,13 @@ const NotificationDrawer = ({ show, onClose }) => {
   return (
     <div className={arrayClasses.join(' ')}>
       <div className={styles.ArrowForwardBlock}>
-        <ArrowForward onClick={onClose} />
+        {/* <ArrowForward onClick={onClose} /> */}
       </div>
       <SubTitle>Notifications</SubTitle>
-      <Divider className={styles.Divider} />
+      <div className={styles.Divider} />
       <div className={styles.Item}>
         <div className={styles.ItemIconBlock}>
-          <Warning />
+          {/* <Warning /> */}
         </div>
         <div className={styles.ItemDescriptionBlock}>
           <p>
@@ -28,10 +24,10 @@ const NotificationDrawer = ({ show, onClose }) => {
           </p>
         </div>
       </div>
-      <Divider className={styles.Divider} />
+      <div className={styles.Divider} />
       <div className={styles.Item}>
         <div className={styles.ItemIconBlock}>
-          <ErrorOutline />
+          {/* <ErrorOutline /> */}
         </div>
         <div className={styles.ItemDescriptionBlock}>
           <p>
