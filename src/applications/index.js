@@ -12,13 +12,12 @@ import '../assets/styles/styles.css'
  * This Render each route of the containers or / and components like 404
  */
 class Applications extends Component {
-  constructor(props) {
-    super(props);
-
+  componentDidMount = () => {
     setConfiguration({
-      defaultScreenClass: props.defaultScreenClass
+      defaultScreenClass: this.props.defaultScreenClass
     })
   }
+
 
   static propTypes = {
     defaultScreenClass: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
