@@ -1,8 +1,9 @@
-import App from './applications';
-import React from 'react';
-import { StaticRouter } from 'react-router-dom';
-import express from 'express';
-import { renderToString } from 'react-dom/server';
+import App from './applications'
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+import { StaticRouter } from 'react-router-dom'
+import MobileDetect from 'mobile-detect'
+import express from 'express'
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
@@ -11,10 +12,14 @@ server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   .get('/*', (req, res) => {
+    const md = new MobileDetect(req.headers['user-agent']);
+    let defaultScreenClass = 'xl';
+    if (md.phone() !== null) defaultScreenClass = 'xs';
+    if (md.tablet() !== null) defaultScreenClass = 'md';
     const context = {};
     const markup = renderToString(
       <StaticRouter context={context} location={req.url}>
-        <App />
+        <App defaultScreenClass={defaultScreenClass} />
       </StaticRouter>
     );
 

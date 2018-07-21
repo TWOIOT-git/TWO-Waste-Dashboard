@@ -11,10 +11,11 @@
   },
   "dependencies": {
     "express": "^4.16.3",
+    "mobile-detect": "^1.4.2",
     "razzle": "^2.2.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-grid-system": "3.1.2",
+    "react-grid-system": "^4.1.0",
     "react-router-dom": "^4.3.1",
     "recharts": "^1.0.1",
     "sanitize.css": "^5.0.0",
