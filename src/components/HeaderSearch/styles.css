@@ -13,3 +13,10 @@
   padding: 12px 20px;
   width: 45%;
 }
+
+
+@media(max-width: 767px) {
+  .HeaderSearch-input {
+    width: 75%;
+  }
+}

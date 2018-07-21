@@ -9,6 +9,12 @@
   width: 200px
 }
 
+@media(max-width: 921px) {
+  .MenuComplexNavegation-wrapper {
+    display: none;
+  }
+}
+
 .MenuComplexNavegation-header__div {
   padding-top: 20px;
   text-align: center;

@@ -16,6 +16,12 @@
   transform: translateX(-15px);
 }
 
+@media(max-width: 921px) {
+  .Open {
+    transform: translateX(0px);
+  }
+}
+
 .Close {
   transform: translateX(100%);
 }
@@ -31,10 +37,6 @@
   align-items: center;
 }
 
-.ItemIconBlock > svg {
-  font-size: 3rem
-}
-
 .ItemDescriptionBlock {
   width: 80%;
 }
@@ -48,13 +50,7 @@
   text-align: right;
 }
 
-.ArrowForwardBlock > svg {
+.ArrowForwardBlock > img {
   font-size: 3rem;
   cursor: pointer;
 }
-
-.Divider {
-  margin-top: 1rem !important;
-  background-color: #4F4949 !important;
-}
-

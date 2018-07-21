@@ -13,3 +13,10 @@
   padding: 5rem 5rem 0 5rem;
   margin-bottom: 4rem;
 }
+
+@media(max-width: 991px) {
+  .Layout-content-main {
+    padding: 1rem 1rem 0 1rem;
+    margin-bottom: 4rem;
+  } 
+}

@@ -4,3 +4,9 @@
   background-position: center bottom;
   padding: 10vh 10vh;
 }
+
+@media(max-width: 991px) {
+  .Wrapper {
+    height: unset;
+  }
+}

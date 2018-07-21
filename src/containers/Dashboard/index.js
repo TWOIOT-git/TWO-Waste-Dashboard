@@ -110,7 +110,7 @@ class Dashboard extends Component {
             </Col>
           </Row>
           <Row style={{ marginTop: '1.5rem' }}>
-            <Col md={6} xs={12}>
+            <Col sm={12} md={12} lg={6} xl={6}>
               <BoxNumbers
                 title="Waste Bags"
                 firstNumber={384}
@@ -119,7 +119,7 @@ class Dashboard extends Component {
                 secondText="Fill Level Reached"
               />
             </Col>
-            <Col md={6} xs={12}>
+            <Col sm={12} md={12} lg={6} xl={6}>
               <BoxNumbers
                 title="Recycling Bags"
                 firstNumber={223}
@@ -130,25 +130,25 @@ class Dashboard extends Component {
             </Col>
           </Row>
           <Row style={{ marginTop: '1.5rem' }}>
-            <Col md={3}>
+            <Col sm={12} md={6} lg={3} xl={3}>
               <ProgressChartVictoryPorcentage
                 data={75}
                 paragraph={'RT Total Weste'}
               />
             </Col>
-            <Col md={3}>
+            <Col sm={12} md={6} lg={3} xl={3}>
               <ProgressChartVictoryPorcentage
                 data={21}
                 paragraph={'RT Total Recycling'}
               />
             </Col>
-            <Col md={3}>
+            <Col sm={12} md={6} lg={3} xl={3}>
               <AverageTime
                 data={'11:23'}
                 paragraph={'Average Pickup Time Waste'}
               />
             </Col>
-            <Col md={3}>
+            <Col sm={12} md={6} lg={3} xl={3}>
               <AverageTime
                 data={'04:17'}
                 paragraph={'Average Pickup Time Recycling'}

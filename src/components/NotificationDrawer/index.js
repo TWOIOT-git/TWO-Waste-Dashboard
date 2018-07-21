@@ -1,6 +1,10 @@
 import React from 'react'
 import styles from './styles.module.css'
 import SubTitle from '../SubTitle';
+import ArrowForward from '../../assets/images/ArrowForward.svg'
+import Warning from '../../assets/images/Warning.svg'
+import ErrorOutline from '../../assets/images/ErrorOutline.svg'
+import Divider from '../Divider';
 
 const NotificationDrawer = ({ show, onClose }) => {
   const arrayClasses = [styles.Wrapper]
@@ -8,13 +12,13 @@ const NotificationDrawer = ({ show, onClose }) => {
   return (
     <div className={arrayClasses.join(' ')}>
       <div className={styles.ArrowForwardBlock}>
-        {/* <ArrowForward onClick={onClose} /> */}
+        <img src={ArrowForward} alt="arrow forward icon" onClick={onClose} />
       </div>
       <SubTitle>Notifications</SubTitle>
-      <div className={styles.Divider} />
+      <Divider />
       <div className={styles.Item}>
         <div className={styles.ItemIconBlock}>
-          {/* <Warning /> */}
+          <img src={Warning} alt="warning icon" />
         </div>
         <div className={styles.ItemDescriptionBlock}>
           <p>
@@ -24,10 +28,10 @@ const NotificationDrawer = ({ show, onClose }) => {
           </p>
         </div>
       </div>
-      <div className={styles.Divider} />
+      <Divider />
       <div className={styles.Item}>
         <div className={styles.ItemIconBlock}>
-          {/* <ErrorOutline /> */}
+          <img src={ErrorOutline} alt="error outline icon" />
         </div>
         <div className={styles.ItemDescriptionBlock}>
           <p>
