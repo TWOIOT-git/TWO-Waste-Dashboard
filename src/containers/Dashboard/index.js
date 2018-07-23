@@ -9,6 +9,7 @@ import BoxNumbers from '../../components/BoxNumbers';
 import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
 import AverageTime from '../../components/AverageTime';
 import withLayout from '../../hoc/withLayout';
+import MarginTop from '../../components/MarginTop';
 
 class Dashboard extends Component {
   state = {
@@ -120,13 +121,15 @@ class Dashboard extends Component {
               />
             </Col>
             <Col sm={12} md={12} lg={6} xl={6}>
-              <BoxNumbers
-                title="Recycling Bags"
-                firstNumber={223}
-                firstText="Pickup Reached"
-                secondNumber={81}
-                secondText="Fill Level Reached"
-              />
+              <MarginTop>
+                <BoxNumbers
+                  title="Recycling Bags"
+                  firstNumber={223}
+                  firstText="Pickup Reached"
+                  secondNumber={81}
+                  secondText="Fill Level Reached"
+                />
+              </MarginTop>
             </Col>
           </Row>
           <Row style={{ marginTop: '1.5rem' }}>
@@ -137,22 +140,29 @@ class Dashboard extends Component {
               />
             </Col>
             <Col sm={12} md={6} lg={3} xl={3}>
-              <ProgressChartVictoryPorcentage
-                data={21}
-                paragraph={'RT Total Recycling'}
-              />
+              <MarginTop>
+                <ProgressChartVictoryPorcentage
+                  data={21}
+                  paragraph={'RT Total Recycling'}
+                />
+              </MarginTop>
             </Col>
             <Col sm={12} md={6} lg={3} xl={3}>
-              <AverageTime
-                data={'11:23'}
-                paragraph={'Average Pickup Time Waste'}
-              />
+              <MarginTop>
+                <AverageTime
+                  data={'11:23'}
+                  paragraph={'Average Pickup Time Waste'}
+                />
+              </MarginTop>
             </Col>
+
             <Col sm={12} md={6} lg={3} xl={3}>
-              <AverageTime
-                data={'04:17'}
-                paragraph={'Average Pickup Time Recycling'}
-              />
+              <MarginTop>
+                <AverageTime
+                  data={'04:17'}
+                  paragraph={'Average Pickup Time Recycling'}
+                />
+              </MarginTop>
             </Col>
           </Row>
         </Container>

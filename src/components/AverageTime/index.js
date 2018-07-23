@@ -4,9 +4,9 @@ import styles from './styles.module.css'
 import SubTitle from '../SubTitle';
 import AnalizeLink from '../AnalizeLink';
 
-const AverageTime = ({ data, paragraph }) => {
+const AverageTime = ({ data, paragraph, style }) => {
     return (
-        <BoxBackground wrapperProps={{ style: { height: '100%' } }}>
+        <BoxBackground wrapperProps={{ style: { height: '100%', ...(style ? style : null) } }}>
             <AnalizeLink />
             <div>
                 <div className={styles.Wrapper}>

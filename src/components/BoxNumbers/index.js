@@ -10,10 +10,11 @@ const BoxNumbers = ({
   firstNumber,
   firstText,
   secondNumber,
-  secondText
+  secondText,
+  style
 }) => {
   return (
-    <BoxBackground>
+    <BoxBackground wrapperProps={{ style: { ...(style ? style : null) } }}>
       <div className={styles.BoxNumbers}>
         <AnalizeLink />
         <Container>
