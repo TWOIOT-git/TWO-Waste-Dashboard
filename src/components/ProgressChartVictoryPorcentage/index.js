@@ -6,9 +6,9 @@ import colors from '../../shared/colorPalette'
 import SubTitle from '../SubTitle';
 import AnalizeLink from '../AnalizeLink';
 
-const ProgressChartVictoryPorcentage = ({ data, paragraph }) => {
+const ProgressChartVictoryPorcentage = ({ data, paragraph, style }) => {
     return (
-        <BoxBackground wrapperProps={{ style: { height: '100%' } }}>
+        <BoxBackground wrapperProps={{ style: { height: '100%', ...(style ? style : null) } }}>
             <div>
                 <AnalizeLink />
                 <div className={styles.ParagraphBlock}>

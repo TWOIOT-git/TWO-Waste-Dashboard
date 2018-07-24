@@ -134,10 +134,12 @@ class Dashboard extends Component {
           </Row>
           <Row style={{ marginTop: '1.5rem' }}>
             <Col sm={12} md={6} lg={3} xl={3}>
-              <ProgressChartVictoryPorcentage
-                data={75}
-                paragraph={'RT Total Weste'}
-              />
+              <MarginTop>
+                <ProgressChartVictoryPorcentage
+                  data={75}
+                  paragraph={'RT Total Waste'}
+                />
+              </MarginTop>
             </Col>
             <Col sm={12} md={6} lg={3} xl={3}>
               <MarginTop>
