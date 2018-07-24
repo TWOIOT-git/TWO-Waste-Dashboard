@@ -17,4 +17,20 @@
 
 .Wrapper {
   width: 375px;
+  float: right;
+}
+
+@media(max-width: 991px) {
+  .Wrapper {
+    width: 100%;
+    float: unset;
+  }
+
+  .Paragraph {
+    font-size: 1.5rem;
+  }
+
+  .ParagraphSmall {
+    font-size: 1rem;
+  }
 }

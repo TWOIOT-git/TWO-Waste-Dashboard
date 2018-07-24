@@ -8,5 +8,7 @@
 @media(max-width: 991px) {
   .Wrapper {
     height: unset;
+    padding-left: 15px;
+    padding-right: 15px
   }
 }

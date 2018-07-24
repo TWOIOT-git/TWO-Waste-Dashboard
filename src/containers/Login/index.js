@@ -2,12 +2,16 @@ import React from 'react'
 import LoginForm from '../../components/Forms/LoginForm'
 import { checkValidity } from '../../shared/checkValidity'
 import { updateObject } from '../../shared/updateObject'
-import { Container, Row, Col } from 'react-grid-system';
+import { Container, Row, Col, Hidden } from 'react-grid-system';
 import LoginWrapper from '../../components/LoginWrapper';
 import LoginText from '../../components/LoginText';
 
 class LoginContainer extends React.Component {
   state = {
+    quote: null,
+    author: null,
+    loadingQuote: true,
+    errorQuote: false,
     controls: {
       email: {
         value: '',
@@ -69,6 +73,26 @@ class LoginContainer extends React.Component {
     event.preventDefault()
   }
 
+  componentDidMount = () => {
+    fetch('https://andruxnet-random-famous-quotes.p.mashape.com/?cat=famous&count=1', {
+      headers: {
+        'X-Mashape-Key': 'yvOwNAb6Bnmsh6AcPnjVYFaSCoIAp18qEyRjsnKcGcVYjww6UO',
+        'Accept': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(res => this.setState({
+        loadingQuote: false,
+        author: res[0].author,
+        quote: res[0].quote
+      }))
+      .catch(err => this.setState({
+        errorQuote: true,
+        loadingQuote: false,
+      }))
+  }
+
+
   /**
    * Render the component.
    */
@@ -77,7 +101,7 @@ class LoginContainer extends React.Component {
       <LoginWrapper>
         <Container fluid>
           <Row>
-            <Col md={5}>
+            <Col md={5} sm={8}>
               <LoginForm
                 onSubmit={this.processForm}
                 onChange={this.inputChangedHandler}
@@ -92,8 +116,14 @@ class LoginContainer extends React.Component {
                 }
               />
             </Col>
-            <Col md={6}>
-              <LoginText />
+            <Col md={6} sm={4}>
+              <Hidden xs={true}>
+                <LoginText
+                  loading={this.state.loadingQuote || this.state.errorQuote}
+                  quote={this.state.errorQuote || this.state.quote}
+                  author={this.state.errorQuote || this.state.author}
+                />
+              </Hidden>
             </Col>
           </Row>
         </Container>
