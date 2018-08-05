@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import NavLinkCustom from '../NavLinkCustom';
 import './styles.css'
 
 const MOCK_URL_IMAGE = 'http://www.maltratoinfantil.org/wp-content/uploads/2015/12/John-Lennon.jpg'
@@ -21,16 +22,24 @@ class MenuComplexNavegation extends Component {
                   Main Navegation
                 </li>
                 <li>
-                  Dashboard
+                  <NavLinkCustom to='/' exact>
+                    Dashboard
+                  </NavLinkCustom>
                 </li>
                 <li>
-                  Map Data
+                  <NavLinkCustom to='/map-data'>
+                    Map Data
+                  </NavLinkCustom>
                 </li>
                 <li>
-                  Realtime
+                  <NavLinkCustom to='/realtime'>
+                    Realtime
+                </NavLinkCustom>
                 </li>
                 <li>
-                  Alerts
+                  <NavLinkCustom to='/alerts'>
+                    Alerts
+                  </NavLinkCustom>
                 </li>
               </ul>
             </div>
@@ -40,13 +49,19 @@ class MenuComplexNavegation extends Component {
                   Admin
                 </li>
                 <li>
-                  Locations
+                  <NavLinkCustom to='/locations'>
+                    Locations
+                  </NavLinkCustom>
                 </li>
                 <li>
-                  Settings
+                  <NavLinkCustom to='/settings'>
+                    Settings
+                  </NavLinkCustom>
                 </li>
                 <li>
-                  OTA Updates
+                  <NavLinkCustom to='/ota'>
+                    OTA Updates
+                  </NavLinkCustom>
                 </li>
               </ul>
             </div>

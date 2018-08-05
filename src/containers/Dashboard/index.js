@@ -9,7 +9,7 @@ import BoxNumbers from '../../components/BoxNumbers';
 import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
 import AverageTime from '../../components/AverageTime';
 import withLayout from '../../hoc/withLayout';
-import MarginTop from '../../components/MarginTop';
+import Margin from '../../components/Margin';
 
 class Dashboard extends Component {
   state = {
@@ -121,7 +121,7 @@ class Dashboard extends Component {
               />
             </Col>
             <Col sm={12} md={12} lg={6} xl={6}>
-              <MarginTop>
+              <Margin orientation='top' breakpoints={['xs', 'sm', 'md']}>
                 <BoxNumbers
                   title="Recycling Bags"
                   firstNumber={223}
@@ -129,42 +129,42 @@ class Dashboard extends Component {
                   secondNumber={81}
                   secondText="Fill Level Reached"
                 />
-              </MarginTop>
+              </Margin>
             </Col>
           </Row>
           <Row style={{ marginTop: '1.5rem' }}>
             <Col sm={12} md={6} lg={3} xl={3}>
-              <MarginTop>
+              <Margin orientation='top' breakpoints={['xs', 'sm', 'md']}>
                 <ProgressChartVictoryPorcentage
                   data={75}
                   paragraph={'RT Total Waste'}
                 />
-              </MarginTop>
+              </Margin>
             </Col>
             <Col sm={12} md={6} lg={3} xl={3}>
-              <MarginTop>
+              <Margin orientation='top' breakpoints={['xs', 'sm', 'md']}>
                 <ProgressChartVictoryPorcentage
                   data={21}
                   paragraph={'RT Total Recycling'}
                 />
-              </MarginTop>
+              </Margin>
             </Col>
             <Col sm={12} md={6} lg={3} xl={3}>
-              <MarginTop>
+              <Margin orientation='top' breakpoints={['xs', 'sm', 'md']}>
                 <AverageTime
                   data={'11:23'}
                   paragraph={'Average Pickup Time Waste'}
                 />
-              </MarginTop>
+              </Margin>
             </Col>
 
             <Col sm={12} md={6} lg={3} xl={3}>
-              <MarginTop>
+              <Margin orientation='top' breakpoints={['xs', 'sm', 'md']}>
                 <AverageTime
                   data={'04:17'}
                   paragraph={'Average Pickup Time Recycling'}
                 />
-              </MarginTop>
+              </Margin>
             </Col>
           </Row>
         </Container>

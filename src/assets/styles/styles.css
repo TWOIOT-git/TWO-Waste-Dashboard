@@ -15,3 +15,8 @@
   --header-background-color: #2E2E2E;
   --border-color: #2B3544;
 }
+
+.activeNavLink {
+  color: var(--orange)
+}
+
