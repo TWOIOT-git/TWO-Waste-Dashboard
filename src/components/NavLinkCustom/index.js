@@ -7,6 +7,9 @@ const NavLinkCustom = ({ children, to, exact }) => {
     <NavLink
       to={to}
       exact={exact}
+      style={{
+        textDecoration: 'none'
+      }}
       activeStyle={{
         color: '#FF6B00'
       }}
