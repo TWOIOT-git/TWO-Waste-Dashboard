@@ -4,13 +4,11 @@ import { VictoryPie } from 'victory'
 import styles from './styles.module.css'
 import colors from '../../shared/colorPalette'
 import SubTitle from '../SubTitle';
-import AnalizeLink from '../AnalizeLink';
 
 const ProgressChartVictoryPorcentage = ({ data, paragraph, style }) => {
     return (
         <BoxBackground wrapperProps={{ style: { height: '100%', ...(style ? style : null) } }}>
             <div>
-                <AnalizeLink />
                 <div className={styles.ParagraphBlock}>
                     <SubTitle>{paragraph}</SubTitle>
                 </div>

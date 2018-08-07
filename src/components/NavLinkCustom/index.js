@@ -20,7 +20,7 @@ const NavLinkCustom = ({ children, to, exact }) => {
 }
 
 NavLinkCustom.propTypes = {
-  children: PropTypes.number.isRequired
+  children: PropTypes.node.isRequired
 }
 
 export default NavLinkCustom
