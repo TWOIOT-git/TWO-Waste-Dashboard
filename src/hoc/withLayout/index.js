@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import MenuComplexNavegation from '../../components/MenuComplexNavegation'
 import HeaderSearch from '../../components/HeaderSearch'
 import { Hidden, Visible } from 'react-grid-system'
-import NotificationDrawer from '../../components/NotificationDrawer';
+// import NotificationDrawer from '../../components/NotificationDrawer';
 import './styles.css'
 
 const withLayout = WrappedComponent => {
@@ -18,10 +18,12 @@ const withLayout = WrappedComponent => {
     render() {
       return (
         <main className="Layout-wrapper">
-          <NotificationDrawer
+          {/*
+            <NotificationDrawer
             show={this.state.showNotificationDrawer}
             onClose={this.handleToggleDrawerNotification}
-          />
+            />
+          */}
           <Hidden md sm xs>
             <MenuComplexNavegation />
           </Hidden>
