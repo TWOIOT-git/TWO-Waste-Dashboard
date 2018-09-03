@@ -41,6 +41,11 @@ class MenuComplexNavegation extends Component {
                     Alerts
                   </NavLinkCustom>
                 </li>
+                <li>
+                  <NavLinkCustom to='/tech'>
+                    TechCruch 2019
+                  </NavLinkCustom>
+                </li>
               </ul>
             </div>
             <div className="MenuComplexNavegation-section-wrapper__div">
