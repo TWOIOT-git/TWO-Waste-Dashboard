@@ -43,7 +43,7 @@ class MenuComplexNavegation extends Component {
                 </li>
                 <li>
                   <NavLinkCustom to='/tech'>
-                    TechCruch 2019
+                    TechCruch 2018
                   </NavLinkCustom>
                 </li>
               </ul>

@@ -1,7 +1,7 @@
 import Dashboard from '../containers/Dashboard'
 import RealTime from '../containers/RealTime'
 import Login from '../containers/Login'
-import TechCrunch2019 from '../containers/TechCrunch2019';
+import TechCrunch2018 from '../containers/TechCrunch2018';
 
 const routes = [
     {
@@ -21,7 +21,7 @@ const routes = [
     },
     {
         path: '/tech',
-        component: TechCrunch2019,
+        component: TechCrunch2018,
         exact: false
     }
 ]

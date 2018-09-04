@@ -6,7 +6,7 @@ import Margin from '../../components/Margin';
 import Loader from '../../components/Loader';
 import FadeIn from '../../components/FadeIn';
 
-class TechCrunch2019 extends Component {
+class TechCrunch2018 extends Component {
   state = {
     data: null
   }
@@ -68,4 +68,4 @@ class TechCrunch2019 extends Component {
   }
 }
 
-export default withLayout(TechCrunch2019)
+export default withLayout(TechCrunch2018)
