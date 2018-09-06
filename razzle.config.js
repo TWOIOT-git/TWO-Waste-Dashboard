@@ -1,5 +1,4 @@
 const isHeroku = require("is-heroku")
-const entries = require("object.entries")
 
 module.exports = {
   modify: (config, { target, dev }, webpack) => {

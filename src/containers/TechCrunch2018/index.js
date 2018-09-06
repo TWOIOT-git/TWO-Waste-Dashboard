@@ -21,14 +21,17 @@ class TechCrunch2018 extends Component {
             'x-api-key': 'rVRWFFuhqpatYCy0fe57N60ZbIX2r96Z8QUUyAdx'
           }
         }).then(res => res.json())
-          .then(res => console.log(res))
+          .then(res => {
+            console.log(res)
+            console.log((res.Items[0].bin_level / res.Items[0].max_distance) * 100)
+            this.setState({
+              data: {
+                value: (res.Items[0].bin_level / res.Items[0].max_distance) * 100,
+                text: 'Sensor ID01'
+              }
+            })
+          })
           .catch(err => console.log(err))
-        this.setState({
-          data: {
-            value: Math.floor(Math.random() * 101),
-            text: 'Sensor ID01'
-          }
-        })
       },
       2000
     );
