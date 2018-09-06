@@ -15,7 +15,7 @@ const ProgressChartVictoryPorcentage = ({ data, paragraph, style }) => {
                 <div className={styles.Wrapper}>
                     <div className={styles.Paragraph}>
                         <span>
-                            {data}%
+                            {Math.round(data)}%
                         </span>
                     </div>
                     <VictoryPie
