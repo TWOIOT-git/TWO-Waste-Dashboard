@@ -10,6 +10,7 @@ import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictor
 import AverageTime from '../../components/AverageTime';
 import withLayout from '../../hoc/withLayout';
 import Margin from '../../components/Margin';
+import onlyAuthenticated from '../../hoc/onlyAuthenticated';
 
 class Dashboard extends Component {
   state = {
@@ -173,4 +174,4 @@ class Dashboard extends Component {
   }
 }
 
-export default withLayout(Dashboard)
+export default onlyAuthenticated(withLayout(Dashboard))

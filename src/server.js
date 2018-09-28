@@ -1,5 +1,6 @@
 import App from './applications'
 import React from 'react'
+import { UserProvider } from './providers/UserProvider';
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 import MobileDetect from 'mobile-detect'
@@ -19,7 +20,9 @@ server
     const context = {};
     const markup = renderToString(
       <StaticRouter context={context} location={req.url}>
-        <App defaultScreenClass={defaultScreenClass} />
+        <UserProvider>
+          <App defaultScreenClass={defaultScreenClass} />
+        </UserProvider>
       </StaticRouter>
     );
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Container, Row, Col } from 'react-grid-system'
 import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
 import withLayout from '../../hoc/withLayout';
+import onlyAuthenticated from '../../hoc/onlyAuthenticated';
 import Margin from '../../components/Margin';
 import Loader from '../../components/Loader';
 import FadeIn from '../../components/FadeIn';
@@ -71,4 +72,4 @@ class TechCrunch2018 extends Component {
   }
 }
 
-export default withLayout(TechCrunch2018)
+export default onlyAuthenticated(withLayout(TechCrunch2018))

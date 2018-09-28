@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styles from './styles.module.css'
+import { ClipLoader } from 'react-spinners';
 
-const LoginForm = ({ onSubmit, onChange, controls, disabled }) => (
+const LoginForm = ({ onSubmit, onChange, controls, disabled, loading }) => (
   <div className={styles.Card}>
     <div className={styles.CardContent}>
-      <form action="/" onSubmit={onSubmit} className={styles.Form}>
+      <form onSubmit={onSubmit} className={styles.Form}>
 
         <div>
           <p className={styles.TWOIOT}>TWOIOT</p>
@@ -29,7 +30,7 @@ const LoginForm = ({ onSubmit, onChange, controls, disabled }) => (
               className={styles.Input}
             />
             {controls.email.errors.message && (
-              <small id="email-input-text" style={{ color: 'red' }}>
+              <small id="email-input-text" className={styles.TextHelper}>
                 {controls.email.errors.message}
               </small>
             )
@@ -47,7 +48,7 @@ const LoginForm = ({ onSubmit, onChange, controls, disabled }) => (
               className={styles.Input}
             />
             {controls.password.errors.message && (
-              <small id="password-input-text" style={{ color: 'red' }}>
+              <small id="password-input-text" className={styles.TextHelper}>
                 {controls.password.errors.message}
               </small>
             )
@@ -57,14 +58,26 @@ const LoginForm = ({ onSubmit, onChange, controls, disabled }) => (
         </div>
 
         <div className={styles.BoxMarginTop}>
-          <button
-            color="primary"
-            type="submit"
-            disabled={disabled}
-            className={styles.Button}
-          >
-            LOGIN
-          </button>
+          {
+            loading ? (
+              <div className={styles.ClipLoaderCenter}>
+                <ClipLoader
+                  color={'#FF6B00'}
+                  loading={true}
+                  size={75}
+                />
+              </div>
+            ) : (
+                <button
+                  color="primary"
+                  type="submit"
+                  disabled={disabled}
+                  className={styles.Button}
+                >
+                  LOGIN
+              </button>
+              )
+          }
         </div>
       </form>
     </div>
@@ -75,7 +88,8 @@ LoginForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   controls: PropTypes.object.isRequired,
-  disabled: PropTypes.bool.isRequired
+  disabled: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired
 }
 
 export default LoginForm

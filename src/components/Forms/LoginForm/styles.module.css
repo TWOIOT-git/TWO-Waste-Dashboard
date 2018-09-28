@@ -6,6 +6,21 @@
   padding: 0 2rem
 }
 
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.ClipLoaderCenter {
+  animation: fadein .2s forwards;
+  text-align: center;
+}
+
+.TextHelper {
+  animation: fadein .2s forwards;
+  color: var(--orange);
+}
+
 @media(max-width: 575px) {
   .Card {
     max-width: 100%;

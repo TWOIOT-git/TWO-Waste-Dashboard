@@ -3,9 +3,12 @@ import routes from './routes'
 import GenerateRoutes from '../components/GenerateRoutes'
 import PropTypes from 'prop-types'
 import { setConfiguration } from 'react-grid-system'
+import { withRouter } from 'react-router-dom';
+import withUserInformation from '../hoc/withUserInformation';
 
 import 'sanitize.css'
 import '../assets/styles/styles.css'
+
 
 /**
  * Main Component in the React Tree
@@ -16,11 +19,21 @@ class Applications extends Component {
     setConfiguration({
       defaultScreenClass: this.props.defaultScreenClass
     })
+
+    this.props.user.getUserInformation(
+      () => {
+        this.props.history.push('/realtime')
+      },
+      () => {
+        this.props.history.push('/auth')
+      }
+    )
   }
 
 
   static propTypes = {
     defaultScreenClass: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
+    user: PropTypes.object
   }
 
   static defaultProps = {
@@ -29,9 +42,11 @@ class Applications extends Component {
 
   render() {
     return (
-      <GenerateRoutes routes={routes} />
+      <React.Fragment>
+        <GenerateRoutes routes={routes} />
+      </React.Fragment>
     )
   }
 }
 
-export default Applications
+export default withUserInformation(withRouter(Applications))

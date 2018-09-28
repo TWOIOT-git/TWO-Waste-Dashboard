@@ -5,6 +5,7 @@ import { updateObject } from '../../shared/updateObject'
 import { Container, Row, Col, Hidden } from 'react-grid-system';
 import LoginWrapper from '../../components/LoginWrapper';
 import LoginText from '../../components/LoginText';
+import withUserInformation from '../../hoc/withUserInformation';
 
 class LoginContainer extends React.Component {
   state = {
@@ -12,6 +13,7 @@ class LoginContainer extends React.Component {
     author: null,
     loadingQuote: true,
     errorQuote: false,
+    loadingAuth: false,
     controls: {
       email: {
         value: '',
@@ -71,6 +73,17 @@ class LoginContainer extends React.Component {
    */
   processForm = async (event) => {
     event.preventDefault()
+
+    this.setState({ loadingAuth: true })
+
+    const tryAuth = await this.props.user.authentication({
+      email: this.state.controls.email.value,
+      password: this.state.controls.password.value
+    })
+
+    this.setState({ loadingAuth: false })
+
+    console.log(tryAuth)
   }
 
   componentDidMount = () => {
@@ -103,10 +116,10 @@ class LoginContainer extends React.Component {
           <Row>
             <Col md={5} sm={8}>
               <LoginForm
+                loading={this.state.loadingAuth}
                 onSubmit={this.processForm}
                 onChange={this.inputChangedHandler}
                 controls={this.state.controls}
-                clickedSwitchForm={this.props.clickedSwitchForm}
                 disabled={
                   (this.state.controls.password.errors.message || this.state.controls.email.errors.message)
                     ? true
@@ -132,4 +145,4 @@ class LoginContainer extends React.Component {
   }
 }
 
-export default LoginContainer
+export default withUserInformation(LoginContainer)

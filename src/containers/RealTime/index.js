@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Container, Row, Col } from 'react-grid-system'
 import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
 import withLayout from '../../hoc/withLayout';
+import onlyAuthenticated from '../../hoc/onlyAuthenticated';
 import Margin from '../../components/Margin';
 import Loader from '../../components/Loader';
 import FadeIn from '../../components/FadeIn';
@@ -88,4 +89,4 @@ class Realtime extends Component {
   }
 }
 
-export default withLayout(Realtime)
+export default onlyAuthenticated(withLayout(Realtime))
