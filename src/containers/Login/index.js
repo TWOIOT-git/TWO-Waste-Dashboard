@@ -6,6 +6,7 @@ import { Container, Row, Col, Hidden } from 'react-grid-system';
 import LoginWrapper from '../../components/LoginWrapper';
 import LoginText from '../../components/LoginText';
 import withUserInformation from '../../hoc/withUserInformation';
+import { withRouter } from 'react-router-dom';
 
 class LoginContainer extends React.Component {
   state = {
@@ -83,7 +84,11 @@ class LoginContainer extends React.Component {
 
     this.setState({ loadingAuth: false })
 
-    console.log(tryAuth)
+    if (tryAuth) {
+      this.props.history.push('/realtime')
+    } else {
+
+    }
   }
 
   componentDidMount = () => {
@@ -145,4 +150,4 @@ class LoginContainer extends React.Component {
   }
 }
 
-export default withUserInformation(LoginContainer)
+export default withUserInformation(withRouter(LoginContainer))

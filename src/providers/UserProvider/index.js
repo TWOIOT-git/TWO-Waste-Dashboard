@@ -23,7 +23,6 @@ class UserProvider extends React.Component {
       }).then(res => {
         return res.json()
       }).then(res => {
-        console.log(res)
         if ('error' in res) {
           return false
         } else {
@@ -46,7 +45,6 @@ class UserProvider extends React.Component {
           return true
         }
       }).catch(err => {
-        console.log(err)
         return false
       })
     },
@@ -64,8 +62,6 @@ class UserProvider extends React.Component {
       const email = localStorage.getItem("email")
 
       let expirationDate = localStorage.getItem("expirationDate")
-
-      console.log(token, expirationDate, userId, email)
 
       if (token && expirationDate && userId && email) {
         expirationDate = new Date(expirationDate)
