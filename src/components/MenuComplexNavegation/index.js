@@ -27,46 +27,9 @@ class MenuComplexNavegation extends Component {
                   </NavLinkCustom>
                 </li>
                 <li>
-                  <NavLinkCustom to='/map-data'>
-                    Map Data
-                  </NavLinkCustom>
-                </li>
-                <li>
                   <NavLinkCustom to='/realtime'>
                     Realtime
                 </NavLinkCustom>
-                </li>
-                <li>
-                  <NavLinkCustom to='/alerts'>
-                    Alerts
-                  </NavLinkCustom>
-                </li>
-                <li>
-                  <NavLinkCustom to='/tech'>
-                    TechCruch 2018
-                  </NavLinkCustom>
-                </li>
-              </ul>
-            </div>
-            <div className="MenuComplexNavegation-section-wrapper__div">
-              <ul className="MenuComplexNavegation-section-options__ul">
-                <li>
-                  Admin
-                </li>
-                <li>
-                  <NavLinkCustom to='/locations'>
-                    Locations
-                  </NavLinkCustom>
-                </li>
-                <li>
-                  <NavLinkCustom to='/settings'>
-                    Settings
-                  </NavLinkCustom>
-                </li>
-                <li>
-                  <NavLinkCustom to='/ota'>
-                    OTA Updates
-                  </NavLinkCustom>
                 </li>
               </ul>
             </div>
