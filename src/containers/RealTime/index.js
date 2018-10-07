@@ -7,51 +7,108 @@ import Margin from '../../components/Margin';
 import Loader from '../../components/Loader';
 import FadeIn from '../../components/FadeIn';
 
+const axios = require('axios');
+
+
 class Realtime extends Component {
   state = {
     data: null,
-    chartsNames: [
-      '1st Floor - Mens Waste',
-      '1st Floor - Mens Recycling',
-      '1st Floor - Mens Other',
-      '1st Floor - Womens Waste',
-      '1st Floor - Womens Recycling',
-      '1st Floor - Womens Other',
-      '2nd Floor - Mens Waste',
-      '2nd Floor - Mens Recycling',
-      '2nd Floor - Mens Other',
-      '2nd Floor - Womens Waste',
-      '2nd Floor - Womens Recycling',
-      '2nd Floor - Womens Other',
-      '3rd Floor - Mens Waste',
-      '3rd Floor - Mens Recycling',
-      '3rd Floor - Mens Other',
-      '3rd Floor - Womens Waste',
-      '3rd Floor - Womens Recycling',
-      '3rd Floor - Womens Other',
-      'B Floor - Mens Waste',
-      'B Floor - Mens Recycling',
-      'B Floor - Mens Other',
-      'B Floor - Womens Waste',
-      'B Floor - Womens Recycling',
-      'B Floor - Womens Other'
+    sensors_ids: [
+      'ID01',
+      'ID02',
+      'ID03',
+      'ID04',
+      'ID05',
+      'ID06',
+      'ID07',
+      'ID08',
+      'ID09',
+      'ID010',
+      'ID011',
+      'ID012',
+      'ID013',
+      'ID014',
+      'ID015',
+      'ID016',
+      'ID017',
+      'ID018',
+      'ID019',
+      'ID020',
+      'ID021',
+      'ID022',
+      'ID023',
+      'ID024'
     ]
   }
 
+
+  fetch_data = function() {
+    let sensor_data = []
+    this.setState({
+      data: []
+    })
+    let self = this;
+    this.state.sensors_ids.forEach(function (id, index) {
+
+      axios.get('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api', {
+          params: {
+            sensor_id: id
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': 'rVRWFFuhqpatYCy0fe57N60ZbIX2r96Z8QUUyAdx'
+          }
+        })
+        .then(function (response) {
+          if(response.data.Items[0]) {
+            sensor_data.push(response.data.Items[0])
+            self.setState({
+              data: sensor_data
+            })
+          }
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
+
+    });
+  }
+
+
   componentDidMount() {
-    this.fetchPoolData = setInterval(
-      () => this.setState({
-        data: new Array(24).fill(undefined).map((_, i) => ({
-          value: Math.floor(Math.random() * 101),
-          text: this.state.chartsNames[i]
-        }))
-      }),
-      2000
-    );
+
+    this.fetch_data(this);
+
+    this.interval = setInterval(() => this.fetch_data(this) , 10000);
+
   }
 
   componentWillUnmount() {
-    clearInterval(this.fetchPoolData);
+    clearInterval(this.interval)
+  }
+
+  calc_fill_percentate(bin_level) {
+
+    // max bin_level = 7500
+    // if bin_level == 7500 => Trash can is empty
+    // if bin_level == 0 => Trash can is full empty
+    let percentage = 0;
+
+    const MAX_BIN_LEVEL = 7500;
+
+    if(bin_level >= MAX_BIN_LEVEL) {
+      percentage = 0;
+    } else if(bin_level <= 0) {
+      percentage = 100
+    } else {
+      percentage = bin_level / MAX_BIN_LEVEL * 100
+    }
+
+    return percentage
   }
 
   render() {
@@ -61,7 +118,7 @@ class Realtime extends Component {
         <Container fluid>
           {data ?
             <Row>
-              {data.map((n, i) => (
+              {data.map((sensor, i) => (
                 <Margin
                   orientation='bottom'
                   breakpoints={['xs', 'sm', 'md', 'lg', 'xl']}
@@ -70,8 +127,8 @@ class Realtime extends Component {
                   <Col sm={12} md={6} lg={4} xl={4}>
                     <FadeIn>
                       <ProgressChartVictoryPorcentage
-                        data={n.value}
-                        paragraph={n.text}
+                        data={this.calc_fill_percentate(sensor.bin_level)}
+                        paragraph={sensor.bin_location + " ID: " + sensor.sensor_id}
                       />
                     </FadeIn>
                   </Col>
