@@ -71,12 +71,12 @@ class Realtime extends Component {
 
     this.fetch_data(this);
 
-    this.interval = setInterval(() => this.fetch_data(this) , 10000);
+    this.fetchDataInterval = setInterval(() => this.fetch_data(this) , 10000);
 
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval)
+    clearInterval(this.fetchDataInterval)
   }
 
   calc_percentage(bin_level) {
