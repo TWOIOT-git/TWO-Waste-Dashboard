@@ -67,7 +67,7 @@ class UserProvider extends React.Component {
         expirationDate = new Date(expirationDate)
 
         if (expirationDate <= new Date()) {
-          this.logout()
+          this.state.logout()
           callbackFail()
         } else {
           this.checkAuthTimeout = setTimeout(() => {
