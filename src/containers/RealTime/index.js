@@ -13,7 +13,7 @@ const axios = require('axios');
 class Realtime extends Component {
   state = {
     data: null,
-    sensors_ids: [
+    installed_sensor_ids: [
       'ID01',
       'ID02',
       'ID03',
@@ -48,7 +48,7 @@ class Realtime extends Component {
       data: []
     })
     let self = this;
-    this.state.sensors_ids.forEach(function (id, index) {
+    this.state.installed_sensor_ids.forEach(function (id, index) {
 
       axios.get('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api', {
           params: {
@@ -91,11 +91,14 @@ class Realtime extends Component {
     clearInterval(this.interval)
   }
 
-  calc_fill_percentate(bin_level) {
+  calc_percentage(bin_level) {
 
+
+    // bin_level = distance to the garbage in millimeters (mm)
     // max bin_level = 7500
     // if bin_level == 7500 => Trash can is empty
-    // if bin_level == 0 => Trash can is full empty
+    // if bin_level == 0 => Trash can is full
+    
     let percentage = 0;
 
     const MAX_BIN_LEVEL = 7500;
@@ -127,7 +130,7 @@ class Realtime extends Component {
                   <Col sm={12} md={6} lg={4} xl={4}>
                     <FadeIn>
                       <ProgressChartVictoryPorcentage
-                        data={this.calc_fill_percentate(sensor.bin_level)}
+                        data={this.calc_percentage(sensor.bin_level)}
                         paragraph={sensor.bin_location + " ID: " + sensor.sensor_id}
                       />
                     </FadeIn>
