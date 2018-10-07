@@ -7,8 +7,6 @@ import Margin from '../../components/Margin';
 import Loader from '../../components/Loader';
 import FadeIn from '../../components/FadeIn';
 
-const axios = require('axios');
-
 
 class Realtime extends Component {
   state = {
@@ -43,38 +41,28 @@ class Realtime extends Component {
 
 
   fetch_data = function() {
-    let sensor_data = []
-    this.setState({
-      data: []
-    })
+    let sensor_array = []
     let self = this;
-    this.state.installed_sensor_ids.forEach(function (id, index) {
 
-      axios.get('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api', {
-          params: {
-            sensor_id: id
-          },
+    this.state.installed_sensor_ids.forEach(function (sensor_id, index) {
+
+      fetch('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api?sensor_id=' + sensor_id, {
           headers: {
             'Content-Type': 'application/json',
             'x-api-key': 'rVRWFFuhqpatYCy0fe57N60ZbIX2r96Z8QUUyAdx'
           }
         })
-        .then(function (response) {
-          if(response.data.Items[0]) {
-            sensor_data.push(response.data.Items[0])
-            self.setState({
-              data: sensor_data
-            })
-          }
-
+        .then(res => res.json())
+        .then(res => {
+            let sensor_data = res.Items[0];
+            if(sensor_data) {
+              sensor_array.push(sensor_data)
+              self.setState({
+                data: sensor_array
+              })
+            }
         })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .then(function () {
-          // always executed
-        });
-
+        .catch(err => console.log("err", err))
     });
   }
 
@@ -83,12 +71,12 @@ class Realtime extends Component {
 
     this.fetch_data(this);
 
-    this.interval = setInterval(() => this.fetch_data(this) , 10000);
+    this.fetchDataInterval = setInterval(() => this.fetch_data(this) , 10000);
 
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval)
+    clearInterval(this.fetchDataInterval)
   }
 
   calc_percentage(bin_level) {
@@ -98,7 +86,7 @@ class Realtime extends Component {
     // max bin_level = 7500
     // if bin_level == 7500 => Trash can is empty
     // if bin_level == 0 => Trash can is full
-    
+
     let percentage = 0;
 
     const MAX_BIN_LEVEL = 7500;
