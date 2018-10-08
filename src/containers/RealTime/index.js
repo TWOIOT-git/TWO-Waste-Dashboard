@@ -21,21 +21,21 @@ class Realtime extends Component {
       'ID07',
       'ID08',
       'ID09',
-      'ID010',
-      'ID011',
-      'ID012',
-      'ID013',
-      'ID014',
-      'ID015',
-      'ID016',
-      'ID017',
-      'ID018',
-      'ID019',
-      'ID020',
-      'ID021',
-      'ID022',
-      'ID023',
-      'ID024'
+      'ID10',
+      'ID11',
+      'ID12',
+      'ID13',
+      'ID14',
+      'ID15',
+      'ID16',
+      'ID17',
+      'ID18',
+      'ID19',
+      'ID20',
+      'ID21',
+      'ID22',
+      'ID23',
+      'ID24'
     ]
   }
 
@@ -57,6 +57,9 @@ class Realtime extends Component {
             let sensor_data = res.Items[0];
             if(sensor_data) {
               sensor_array.push(sensor_data)
+              sensor_array = sensor_array.sort(function (a, b) {
+                  return ('' + a.sensor_id).localeCompare(b.sensor_id);
+              })
               self.setState({
                 data: sensor_array
               })
@@ -71,7 +74,7 @@ class Realtime extends Component {
 
     this.fetch_data(this);
 
-    this.fetchDataInterval = setInterval(() => this.fetch_data(this) , 10000);
+    this.fetchDataInterval = setInterval(() => this.fetch_data(this) , 600000);
 
   }
 
