@@ -1,7 +1,7 @@
 import Dashboard from '../containers/Dashboard'
 import RealTime from '../containers/RealTime'
 import Login from '../containers/Login'
-import TechCrunch2018 from '../containers/TechCrunch2018';
+import Demo from '../containers/Demo';
 
 const routes = [
     {
@@ -20,8 +20,8 @@ const routes = [
         exact: false
     },
     {
-        path: '/tech',
-        component: TechCrunch2018,
+        path: '/demo',
+        component: Demo,
         exact: false
     }
 ]

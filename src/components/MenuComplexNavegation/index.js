@@ -29,7 +29,12 @@ class MenuComplexNavegation extends Component {
                 <li>
                   <NavLinkCustom to='/realtime'>
                     Realtime
-                </NavLinkCustom>
+                  </NavLinkCustom>
+                </li>
+                <li>
+                  <NavLinkCustom to='/demo'>
+                    Asia World Expo 2018
+                  </NavLinkCustom>
                 </li>
               </ul>
             </div>

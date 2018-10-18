@@ -6,6 +6,7 @@ import onlyAuthenticated from '../../hoc/onlyAuthenticated';
 import Margin from '../../components/Margin';
 import Loader from '../../components/Loader';
 import FadeIn from '../../components/FadeIn';
+import Title from '../../components/Title';
 
 class TechCrunch2018 extends Component {
   state = {
@@ -15,7 +16,7 @@ class TechCrunch2018 extends Component {
   componentDidMount() {
     this.fetchPoolData = setInterval(
       () => {
-        fetch('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api?sensor_id=ID01', {
+        fetch('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api?sensor_id=IDHK', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -23,12 +24,10 @@ class TechCrunch2018 extends Component {
           }
         }).then(res => res.json())
           .then(res => {
-            console.log(res)
-            console.log((res.Items[0].bin_level / res.Items[0].max_distance) * 100)
             this.setState({
               data: {
-                value: (res.Items[0].bin_level / res.Items[0].max_distance) * 100,
-                text: 'Sensor ID01'
+                value: -1 * (((res.Items[0].bin_level / 850) * 100) - 100),
+                text: 'Sensor IDHK'
               }
             })
           })
@@ -47,6 +46,11 @@ class TechCrunch2018 extends Component {
     return (
       <React.Fragment>
         <Container fluid>
+          <Row>
+            <Col align='center'>
+              <Title> Asia World Expo 2018 </Title>
+            </Col>
+          </Row>
           {data ? (
             <Row>
               <Margin

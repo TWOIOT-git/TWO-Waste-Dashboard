@@ -68,7 +68,8 @@
 
 .Button {
   border: none;
-  padding: 0;
+  padding: 10px;
+  border-radius: 2px;
   color: var(--orange);
   transition: color .5s ease;
   font-size: 1.5rem;
@@ -89,11 +90,12 @@
 }
 
 .Input {
-  color: white !important;
+  color: #686868 !important;
   border: 0;
-  border-bottom: 1px solid #686868;
   width: 100%;
-  padding-bottom: 5px
+  padding: 0 10px;
+  height: 40px;
+  border-radius: 4px;
 }
 
 .Input::before {
