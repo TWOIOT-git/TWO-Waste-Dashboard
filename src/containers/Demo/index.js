@@ -26,7 +26,7 @@ class TechCrunch2018 extends Component {
           .then(res => {
             this.setState({
               data: {
-                value: -1 * (((res.Items[0].bin_level / 850) * 100) - 100),
+                value: -1 * (((res.Items[0].bin_level / 350) * 100) - 100),
                 text: 'Sensor IDHK'
               }
             })
