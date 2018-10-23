@@ -18,11 +18,11 @@ class MenuComplexNavegation extends Component {
                 <li>
                   Main Navegation
                 </li>
-                <li>
+                {/* <li>
                   <NavLinkCustom to='/' exact>
                     Dashboard
                   </NavLinkCustom>
-                </li>
+                </li> */}
                 <li>
                   <NavLinkCustom to='/realtime'>
                     Realtime
