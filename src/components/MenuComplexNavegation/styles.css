@@ -67,3 +67,7 @@
   padding-top: 1.7rem;
   border-top: 2px solid var(--border-color)
 }
+
+.logo-typo {
+  font-family: 'Share Tech Mono', monospace;
+}
