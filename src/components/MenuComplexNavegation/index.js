@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
 import NavLinkCustom from '../NavLinkCustom';
 import './styles.css'
-
-const MOCK_URL_IMAGE = 'http://www.maltratoinfantil.org/wp-content/uploads/2015/12/John-Lennon.jpg'
+import twoiot_logo from '../../assets/images/twoiot_logo.jpg'
 
 class MenuComplexNavegation extends Component {
   render() {
     return (
       <nav className="MenuComplexNavegation-wrapper">
         <section className="MenuComplexNavegation-header__div">
-          <img src={MOCK_URL_IMAGE} alt="User profile" />
-          <p>
-            Welcome, <strong>Alex!</strong>
-          </p>
+          <img src={twoiot_logo} alt="twoiot logo" />
+          <p>IOT Waste Management </p>
         </section>
         <div>
           <section className="MenuComplexNavegation-sections-wrapper__div">
