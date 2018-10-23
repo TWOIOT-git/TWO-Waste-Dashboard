@@ -2,13 +2,14 @@ import React from 'react'
 import styles from './styles.module.css'
 import { ClipLoader } from 'react-spinners';
 import FadeIn from '../FadeIn';
+import colors from '../../shared/colorPalette'
 
 export default () => {
   return (
     <div className={styles.Loader}>
       <FadeIn>
         <ClipLoader
-          color={'#FF6B00'}
+          color={colors.orange.main}
           loading={true}
           size={100}
         />

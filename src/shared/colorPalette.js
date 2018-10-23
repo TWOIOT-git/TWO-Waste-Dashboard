@@ -3,7 +3,7 @@ const colors = {
         main: '#E64602'
     },
     orange: {
-        main: '#FF6B00',
+        main: '#FF9900',
         dark: '#E64602'
     },
     grey: {
