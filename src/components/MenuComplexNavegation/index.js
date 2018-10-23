@@ -9,7 +9,7 @@ class MenuComplexNavegation extends Component {
       <nav className="MenuComplexNavegation-wrapper">
         <section className="MenuComplexNavegation-header__div">
           <img src={twoiot_logo} alt="twoiot logo" />
-          <p class="logo-typo">IOT Waste Management</p>
+          <p className="logo-typo">IOT Waste Management</p>
         </section>
         <div>
           <section className="MenuComplexNavegation-sections-wrapper__div">

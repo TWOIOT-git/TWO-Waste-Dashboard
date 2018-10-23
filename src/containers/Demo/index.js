@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Row, Col } from 'react-grid-system'
-import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
+import ProgressChartTrashCan from '../../components/ProgressChartTrashCan';
 import withLayout from '../../hoc/withLayout';
 import onlyAuthenticated from '../../hoc/onlyAuthenticated';
 import Margin from '../../components/Margin';
@@ -59,9 +59,9 @@ class TechCrunch2018 extends Component {
               >
                 <Col sm={12} md={6} lg={4} xl={4}>
                   <FadeIn>
-                    <ProgressChartVictoryPorcentage
+                    <ProgressChartTrashCan
                       data={data.value}
-                      paragraph={data.text}
+                      id={data.text}
                     />
                   </FadeIn>
                 </Col>

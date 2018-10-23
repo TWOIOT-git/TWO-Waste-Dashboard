@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Row, Col } from 'react-grid-system'
-import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
+import ProgressChartTrashCan from '../../components/ProgressChartTrashCan';
 import withLayout from '../../hoc/withLayout';
 import onlyAuthenticated from '../../hoc/onlyAuthenticated';
 import Margin from '../../components/Margin';
@@ -120,9 +120,10 @@ class Realtime extends Component {
                 >
                   <Col sm={12} md={6} lg={4} xl={4}>
                     <FadeIn>
-                      <ProgressChartVictoryPorcentage
+                      <ProgressChartTrashCan
                         data={this.calc_percentage(sensor.bin_level)}
-                        paragraph={sensor.bin_location + " ID: " + sensor.sensor_id}
+                        location={sensor.bin_location}
+                        id={sensor.sensor_id}
                       />
                     </FadeIn>
                   </Col>
