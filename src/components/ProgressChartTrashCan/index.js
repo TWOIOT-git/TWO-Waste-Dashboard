@@ -8,7 +8,19 @@ import SubTitle from '../SubTitle';
 import trash_can_img from '../../assets/images/trash_can.svg'
 
 
+
 const ProgressChartTrashCan = ({ data, location, id, style }) => {
+
+    var status_color = (data) => {
+      if (data <= 49) {
+        return colors.green.main
+      }  else if (data <= 79) {
+        return colors.orange.main
+      } else {
+        return colors.red.main
+      }
+    }
+
     return (
         <BoxBackground wrapperProps={{ style: { height: '100%', ...(style ? style : null) } }}>
             <div className={styles.BoxWrapper}>
@@ -27,7 +39,7 @@ const ProgressChartTrashCan = ({ data, location, id, style }) => {
                         innerRadius={70}
                         width={200} height={200}
                         data={[{ 'key': "", 'y': data }, { 'key': "", 'y': (100 - data) }]}
-                        colorScale={[colors.orange.main, colors.grey.light]}
+                        colorScale={[status_color(data), colors.grey.light]}
                     />
                 </div>
               </div>
