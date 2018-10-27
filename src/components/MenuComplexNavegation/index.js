@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import NavLinkCustom from '../NavLinkCustom';
 import './styles.css'
 import twoiot_logo from '../../assets/images/twoiot_logo.jpg'
+import icon_dashboard from '../../assets/images/icon-dashboard.svg'
+import icon_bin from '../../assets/images/icon-bin.svg'
 
 class MenuComplexNavegation extends Component {
   render() {
@@ -17,11 +19,13 @@ class MenuComplexNavegation extends Component {
               <ul className="MenuComplexNavegation-section-options__ul">
                 <li>
                   <NavLinkCustom to='/' exact>
+                    <img className="nav-img" src={icon_dashboard} alt="dashboard icon" />
                     Dashboard
                   </NavLinkCustom>
                 </li>
                 <li>
                   <NavLinkCustom to='/realtime'>
+                    <img className="nav-img" src={icon_bin} alt="realtime icon" />
                     Realtime
                   </NavLinkCustom>
                 </li>

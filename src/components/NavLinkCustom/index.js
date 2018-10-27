@@ -9,7 +9,10 @@ const NavLinkCustom = ({ children, to, exact }) => {
       to={to}
       exact={exact}
       style={{
-        textDecoration: 'none'
+        textDecoration: 'none',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
       }}
       activeStyle={{
         color: colors.orange.main
