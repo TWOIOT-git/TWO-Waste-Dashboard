@@ -18,7 +18,6 @@
 .MenuComplexNavegation-header__div {
   padding-top: 20px;
   text-align: center;
-  border-bottom: 2px solid var(--border-color)
 }
 
 .MenuComplexNavegation-header__div > img {
@@ -39,7 +38,6 @@
 
 .MenuComplexNavegation-sections-wrapper__div >
 .MenuComplexNavegation-section-wrapper__div {
-  margin-top: 4vh;
   font-weight: bold;
 }
 

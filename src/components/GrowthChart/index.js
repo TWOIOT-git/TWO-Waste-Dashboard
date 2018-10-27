@@ -3,7 +3,9 @@ import {
   AreaChart,
   Area,
   ResponsiveContainer,
-  CartesianGrid
+  CartesianGrid,
+  XAxis,
+  YAxis
 } from 'recharts';
 import CustomTooltip from '../ToolTip'
 import colors from '../../shared/colorPalette'
@@ -16,21 +18,22 @@ class GrowthChart extends Component {
     const dataFromLabel = { ...this.props.data[label] }
     return (
       <CustomTooltip
-        currency={`$ ${dataFromLabel['currency']}`}
-        porcentage={dataFromLabel['porcentage']}
+        bin_level={dataFromLabel['bin_level']}
       />
     )
   }
+
 
   render() {
     return (
       <React.Fragment>
         <ResponsiveContainer
           width='100%'
-          height={350}
+          height={150}
           className="GrowthChart-ResponsiveContainer"
         >
-          <AreaChart data={this.props.data}>
+          <AreaChart
+          data={this.props.data}>
             <defs>
               <linearGradient id="colorCurreny" x1="0" y1="0" x2="0" y2="2">
                 <stop offset="1%" stopColor={lightenDarkenColor(colors.primary.main, 40)} stopOpacity={1} />
@@ -41,9 +44,10 @@ class GrowthChart extends Component {
                 <stop offset="99%" stopColor={lightenDarkenColor(colors.orange.main, 60)} stopOpacity={0.3} />
               </linearGradient>
             </defs>
+            <XAxis dataKey="time" />
+            <YAxis domain={[0, 100]} dataKey="percentage" />
             <CartesianGrid vertical={false} />
-            <Area type='monotone' dataKey='currency' stroke={colors.primary.main} strokeWidth="2" fill='url(#colorCurreny)' />
-            <Area type='monotone' dataKey='otherValue' stroke={colors.primary.main} strokeWidth="2" fill='url(#colorotherValue)' />
+            <Area type='monotone' dataKey='percentage' stroke={colors.orange.main} strokeWidth="2" fill='url(#colorCurreny)' />
           </AreaChart>
         </ResponsiveContainer>
       </React.Fragment>

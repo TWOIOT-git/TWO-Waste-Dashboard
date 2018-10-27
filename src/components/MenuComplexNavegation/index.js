@@ -16,23 +16,22 @@ class MenuComplexNavegation extends Component {
             <div className="MenuComplexNavegation-section-wrapper__div">
               <ul className="MenuComplexNavegation-section-options__ul">
                 <li>
-                  Main Navegation
-                </li>
-                {/* <li>
                   <NavLinkCustom to='/' exact>
                     Dashboard
                   </NavLinkCustom>
-                </li> */}
+                </li>
                 <li>
                   <NavLinkCustom to='/realtime'>
                     Realtime
                   </NavLinkCustom>
                 </li>
+                {/*
                 <li>
                   <NavLinkCustom to='/demo'>
                     Asia World Expo 2018
                   </NavLinkCustom>
                 </li>
+                */}
               </ul>
             </div>
           </section>
