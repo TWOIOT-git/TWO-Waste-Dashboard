@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types'
+import colors from '../../shared/colorPalette'
 
 const NavLinkCustom = ({ children, to, exact }) => {
   return (
@@ -8,10 +9,13 @@ const NavLinkCustom = ({ children, to, exact }) => {
       to={to}
       exact={exact}
       style={{
-        textDecoration: 'none'
+        textDecoration: 'none',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
       }}
       activeStyle={{
-        color: '#FF6B00'
+        color: colors.orange.main
       }}
     >
       {children}

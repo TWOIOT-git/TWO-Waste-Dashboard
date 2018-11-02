@@ -2,8 +2,7 @@ import React from 'react'
 import './styles.css'
 
 const Tooltip = ({
-  currency,
-  porcentage,
+  bin_level,
   className
 }) => {
   const classes = ["Tooltip-wrapper"]
@@ -12,10 +11,9 @@ const Tooltip = ({
 
   return (
     <div className={classes.join(" ")}>
-        <p> { currency } </p>
-        <p> { porcentage } </p>
+        <p> { bin_level } </p>
     </div>
   )
 }
- 
+
 export default Tooltip

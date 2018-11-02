@@ -18,7 +18,6 @@
 .MenuComplexNavegation-header__div {
   padding-top: 20px;
   text-align: center;
-  border-bottom: 2px solid var(--border-color)
 }
 
 .MenuComplexNavegation-header__div > img {
@@ -27,7 +26,6 @@
   background: white;
   text-align: center;
   width: 84px;
-  border: 1px solid var(--orange);
 }
 
 .MenuComplexNavegation-header__div > p {
@@ -40,7 +38,6 @@
 
 .MenuComplexNavegation-sections-wrapper__div >
 .MenuComplexNavegation-section-wrapper__div {
-  margin-top: 4vh;
   font-weight: bold;
 }
 
@@ -67,4 +64,13 @@
 .MenuComplexNavegation-section-wrapper__div:last-child {
   padding-top: 1.7rem;
   border-top: 2px solid var(--border-color)
+}
+
+.logo-typo {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.nav-img {
+  width: 15px;
+  margin-right: 10px;
 }

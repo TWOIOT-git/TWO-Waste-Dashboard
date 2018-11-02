@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Row, Col } from 'react-grid-system'
-import ProgressChartVictoryPorcentage from '../../components/ProgressChartVictoryPorcentage';
+import ProgressChartTrashCan from '../../components/ProgressChartTrashCan';
 import withLayout from '../../hoc/withLayout';
 import onlyAuthenticated from '../../hoc/onlyAuthenticated';
 import Margin from '../../components/Margin';
@@ -82,28 +82,6 @@ class Realtime extends Component {
     clearInterval(this.fetchDataInterval)
   }
 
-  calc_percentage(bin_level) {
-
-
-    // bin_level = distance to the garbage in millimeters (mm)
-    // max bin_level = 7500
-    // if bin_level == 7500 => Trash can is empty
-    // if bin_level == 0 => Trash can is full
-
-    let percentage = 0;
-
-    const MAX_BIN_LEVEL = 7500;
-
-    if(bin_level >= MAX_BIN_LEVEL) {
-      percentage = 0;
-    } else if(bin_level <= 0) {
-      percentage = 100
-    } else {
-      percentage = bin_level / MAX_BIN_LEVEL * 100
-    }
-
-    return percentage
-  }
 
   render() {
     const { data } = this.state
@@ -120,9 +98,10 @@ class Realtime extends Component {
                 >
                   <Col sm={12} md={6} lg={4} xl={4}>
                     <FadeIn>
-                      <ProgressChartVictoryPorcentage
-                        data={this.calc_percentage(sensor.bin_level)}
-                        paragraph={sensor.bin_location + " ID: " + sensor.sensor_id}
+                      <ProgressChartTrashCan
+                        data={-1 * (((sensor.bin_level / 850) * 100) - 100)}
+                        location={sensor.bin_location}
+                        id={sensor.sensor_id}
                       />
                     </FadeIn>
                   </Col>
