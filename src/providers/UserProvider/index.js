@@ -10,7 +10,7 @@ class UserProvider extends React.Component {
     currentUser: null,
     isAuthenticated: () => this.state.currentUser !== null,
     authentication: ({ email, password }) => {
-      return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyAWAEvqeUBKzcWYAGs-KlAz0VE3tNJU6h4', {
+      return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDDgqcJCuCAsiLdH5eWOHKzLCf2uHdS3GE', {
         method: 'POST',
         body: JSON.stringify({
           email: email,
