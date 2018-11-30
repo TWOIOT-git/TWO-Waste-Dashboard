@@ -3,9 +3,8 @@ import styles from './style.module.css'
 import Title from '../Title';
 import colors from '../../shared/colorPalette'
 
-export default ({ text, number, dark, containerStyle }) => {
+export default ({ text, name, number, dark, containerStyle }) => {
   const classesNumber = [styles.Number]
-
   dark && classesNumber.push(styles.NumberDark)
 
   var status_color = (data) => {
@@ -21,6 +20,7 @@ export default ({ text, number, dark, containerStyle }) => {
   return (
     <div style={{ ...containerStyle }}>
       <Title>{text}</Title>
+      <p>{name}</p>
       <h2 style={{color: status_color(number)}} className={classesNumber.join(' ')}  >{number}%</h2>
     </div >
   )

@@ -16,31 +16,31 @@ import Loader from '../../components/Loader';
 class Dashboard extends Component {
   state = {
     data: null,
-    installed_sensor_ids: [
-      'ID01',
-      'ID02',
-      'ID03',
-      'ID04',
-      'ID05',
-      'ID06',
-      'ID07',
-      'ID08',
-      'ID09',
-      'ID10',
-      'ID11',
-      'ID12',
-      'ID13',
-      'ID14',
-      'ID15',
-      'ID16',
-      'ID17',
-      'ID18',
-      'ID19',
-      'ID20',
-      'ID21',
-      'ID22',
-      'ID23',
-      'ID24'
+    installed_sensors: [
+      {id: 'ID01', name: '1st North Waste'},
+      {id: 'ID02', name: ''},
+      {id: 'ID03', name: '1st North Paper'},
+      {id: 'ID04', name: '1st North Plastic'},
+      {id: 'ID05', name: '1st South Waste'},
+      {id: 'ID06', name: '1st South Plastic'},
+      {id: 'ID07', name: '1st South Paper'},
+      {id: 'ID08', name: '2nd North Waste'},
+      {id: 'ID09', name: ''},
+      {id: 'ID10', name: ''},
+      {id: 'ID11', name: ''},
+      {id: 'ID12', name: ''},
+      {id: 'ID13', name: ''},
+      {id: 'ID14', name: ''},
+      {id: 'ID15', name: '2nd North Plastic'},
+      {id: 'ID16', name: '2nd North Paper'},
+      {id: 'ID17', name: ''},
+      {id: 'ID18', name: '2nd South Plastic'},
+      {id: 'ID19', name: ''},
+      {id: 'ID20', name: ''},
+      {id: 'ID21', name: ''},
+      {id: 'ID22', name: ''},
+      {id: 'ID23', name: ''},
+      {id: 'ID24', name: '2nd South Waste'}
     ]
   }
 
@@ -48,8 +48,8 @@ class Dashboard extends Component {
     let sensor_array = []
 
     let self = this;
-    this.state.installed_sensor_ids.forEach(function (sensor_id, index) {
-      fetch('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api?sensor_id=' + sensor_id + '&limit=10', {
+    this.state.installed_sensors.forEach(function (sensor, index) {
+      fetch('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api?sensor_id=' + sensor.id + '&limit=50', {
           headers: {
             'Content-Type': 'application/json',
             'x-api-key': 'rVRWFFuhqpatYCy0fe57N60ZbIX2r96Z8QUUyAdx'
@@ -59,6 +59,18 @@ class Dashboard extends Component {
         .then(res => {
           let sensor_data = res.Items;
           if (sensor_data.length > 0) {
+            var period = new Date();
+            period.setDate(period.getDate() - 3);
+            var last_sensor_date = new Date(sensor_data[0].fill_date);
+            // return if last_sensor_date is older than 3 days
+            if ( last_sensor_date <= period) {
+              return
+            }
+            if(sensor.name) {
+              sensor_data.name = sensor.name;
+            } else {
+              sensor_data.name = "Unknown";
+            }
             sensor_data = sensor_data.sort(function (a, b) {
                 return new Date(a.fill_date) - new Date(b.fill_date);
             })
@@ -101,10 +113,10 @@ class Dashboard extends Component {
           {data.map((sensor, i) => (
             <Col
               md={12} style={colStyle}>
-              <TextWithNumberButtom text={sensor[0].sensor_id} number={Math.round(-1 * (((sensor[sensor.length - 1].bin_level / 850) * 100) - 100))} />
+              <TextWithNumberButtom text={sensor.name} name={sensor[0].sensor_id} number={Math.round(-1 * (((sensor[sensor.length - 1].bin_level / 850) * 100) - 100))} />
               <GrowthChart data={sensor.map(a => {
                 var date = new Date(a.fill_date)
-                a.time = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                a.time = date.toLocaleTimeString(["en-US"], { weekday: "short", month: "short", day: "numeric", hour: '2-digit' });
                 a.percentage = Math.round(-1 * (((a.bin_level / 850) * 100) - 100))
                 return a
               })} />

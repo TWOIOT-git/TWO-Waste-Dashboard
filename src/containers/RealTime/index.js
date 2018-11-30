@@ -11,31 +11,31 @@ import FadeIn from '../../components/FadeIn';
 class Realtime extends Component {
   state = {
     data: null,
-    installed_sensor_ids: [
-      'ID01',
-      'ID02',
-      'ID03',
-      'ID04',
-      'ID05',
-      'ID06',
-      'ID07',
-      'ID08',
-      'ID09',
-      'ID10',
-      'ID11',
-      'ID12',
-      'ID13',
-      'ID14',
-      'ID15',
-      'ID16',
-      'ID17',
-      'ID18',
-      'ID19',
-      'ID20',
-      'ID21',
-      'ID22',
-      'ID23',
-      'ID24'
+    installed_sensors: [
+      {id: 'ID01', name: '1st North Waste'},
+      {id: 'ID02', name: ''},
+      {id: 'ID03', name: '1st North Paper'},
+      {id: 'ID04', name: '1st North Plastic'},
+      {id: 'ID05', name: '1st South Waste'},
+      {id: 'ID06', name: '1st South Plastic'},
+      {id: 'ID07', name: '1st South Paper'},
+      {id: 'ID08', name: '2nd North Waste'},
+      {id: 'ID09', name: ''},
+      {id: 'ID10', name: ''},
+      {id: 'ID11', name: ''},
+      {id: 'ID12', name: ''},
+      {id: 'ID13', name: ''},
+      {id: 'ID14', name: ''},
+      {id: 'ID15', name: '2nd North Plastic'},
+      {id: 'ID16', name: '2nd North Paper'},
+      {id: 'ID17', name: ''},
+      {id: 'ID18', name: '2nd South Plastic'},
+      {id: 'ID19', name: ''},
+      {id: 'ID20', name: ''},
+      {id: 'ID21', name: ''},
+      {id: 'ID22', name: ''},
+      {id: 'ID23', name: ''},
+      {id: 'ID24', name: '2nd South Waste'}
     ]
   }
 
@@ -44,9 +44,9 @@ class Realtime extends Component {
     let sensor_array = []
     let self = this;
 
-    this.state.installed_sensor_ids.forEach(function (sensor_id, index) {
+    this.state.installed_sensors.forEach(function (sensor, index) {
 
-      fetch('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api?sensor_id=' + sensor_id, {
+      fetch('https://qpwqj1knvh.execute-api.ap-northeast-1.amazonaws.com/staging/db-api?sensor_id=' + sensor.id, {
           headers: {
             'Content-Type': 'application/json',
             'x-api-key': 'rVRWFFuhqpatYCy0fe57N60ZbIX2r96Z8QUUyAdx'
@@ -56,6 +56,18 @@ class Realtime extends Component {
         .then(res => {
             let sensor_data = res.Items[0];
             if(sensor_data) {
+              var period = new Date();
+              period.setDate(period.getDate() - 3);
+              var last_sensor_date = new Date(sensor_data.fill_date);
+              // return if last_sensor_date is older than 3 days
+              if ( last_sensor_date <= period) {
+                return
+              }
+              if(sensor.name) {
+                sensor_data.name = sensor.name;
+              } else {
+                sensor_data.name = "Unknown";
+              }
               sensor_array.push(sensor_data)
               sensor_array = sensor_array.sort(function (a, b) {
                   return ('' + a.sensor_id).localeCompare(b.sensor_id);
@@ -100,7 +112,7 @@ class Realtime extends Component {
                     <FadeIn>
                       <ProgressChartTrashCan
                         data={-1 * (((sensor.bin_level / 850) * 100) - 100)}
-                        location={sensor.bin_location}
+                        location={sensor.name}
                         id={sensor.sensor_id}
                       />
                     </FadeIn>
