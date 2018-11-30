@@ -57,9 +57,9 @@ class Realtime extends Component {
             let sensor_data = res.Items[0];
             if(sensor_data) {
               var period = new Date();
-              period.setDate(period.getDate() - 7);
+              period.setDate(period.getDate() - 3);
               var last_sensor_date = new Date(sensor_data.fill_date);
-              // return if last_sensor_date is older than 7 days
+              // return if last_sensor_date is older than 3 days
               if ( last_sensor_date <= period) {
                 return
               }
