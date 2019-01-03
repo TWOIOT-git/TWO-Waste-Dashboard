@@ -12,7 +12,7 @@ const defaultOGImage = '/assets/favicons/android-icon-192x192.png'
 const openGraphImageWidth = 192
 const openGraphImageHeight = 192
 const defaultDescription = description
-const defaultOGURL = 'https://razzle-client.herokuapp.com/auth'
+const defaultOGURL = 'https://analytics.twoiot.com'
 const title = 'Lidbot'
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
