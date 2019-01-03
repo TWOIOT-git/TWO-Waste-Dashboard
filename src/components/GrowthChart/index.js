@@ -23,7 +23,6 @@ class GrowthChart extends Component {
     )
   }
 
-
   render() {
     return (
       <React.Fragment>
@@ -33,7 +32,7 @@ class GrowthChart extends Component {
           className="GrowthChart-ResponsiveContainer"
         >
           <AreaChart
-          data={this.props.data}>
+            data={this.props.data}>
             <defs>
               <linearGradient id="colorCurreny" x1="0" y1="0" x2="0" y2="2">
                 <stop offset="1%" stopColor={lightenDarkenColor(colors.primary.main, 40)} stopOpacity={1} />

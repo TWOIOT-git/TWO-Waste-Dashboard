@@ -7,6 +7,7 @@ import Margin from '../../components/Margin';
 import Loader from '../../components/Loader';
 import FadeIn from '../../components/FadeIn';
 import Title from '../../components/Title';
+import FlexCenter from '../../components/FlexCenter';
 
 class TechCrunch2018 extends Component {
   state = {
@@ -68,7 +69,11 @@ class TechCrunch2018 extends Component {
               </Margin>
             </Row>
           )
-            : <Loader />
+            : (
+              <FlexCenter>
+                <Loader />
+              </FlexCenter>
+            )
           }
         </Container>
       </React.Fragment>
