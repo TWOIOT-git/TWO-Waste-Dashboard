@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import NavLinkCustom from '../NavLinkCustom';
-import './styles.css'
-import twoiot_logo from '../../assets/images/twoiot_logo.jpg'
+import logo from '../../assets/images/logo.png'
 import icon_dashboard from '../../assets/images/icon-dashboard.svg'
 import icon_bin from '../../assets/images/icon-bin.svg'
+import './styles.css'
 
 class MenuComplexNavegation extends Component {
   render() {
     return (
       <nav className="MenuComplexNavegation-wrapper">
         <section className="MenuComplexNavegation-header__div">
-          <img src={twoiot_logo} alt="twoiot logo" />
+          <img src={logo} alt="Lidbot logo" />
           <p className="logo-typo">IOT Waste Management</p>
         </section>
         <div>

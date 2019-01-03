@@ -1,15 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700');
 @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+
 * {
   font-family: 'Roboto', sans-serif;
   color: rgb(255, 255, 255);
 }
 
 :root {
-  --orange: #FF6B00;
-  --orange-dark: #E64602;
-  --orange-hover: #ff9d00;
-  --orange-disabled: #ffd28a;
+  --orange: #00CD98;
+  --orange-dark: rgb(0, 150, 110);
+  --orange-hover: rgb(0, 224, 165);
+  --orange-disabled: rgba(124, 255, 220, 0.877);
   --menu-background-color: #354052;
   --main-background-color: #32373A;
   --header-background-color: #2E2E2E;

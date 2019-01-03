@@ -62,7 +62,7 @@ const LoginForm = ({ onSubmit, onChange, controls, disabled, loading }) => (
             loading ? (
               <div className={styles.ClipLoaderCenter}>
                 <ClipLoader
-                  color={'#FF6B00'}
+                  color={'var(--orange)'}
                   loading={true}
                   size={75}
                 />

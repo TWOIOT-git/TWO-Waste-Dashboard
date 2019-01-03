@@ -3,8 +3,8 @@ const colors = {
         main: '#E64602'
     },
     orange: {
-        main: '#FF9900',
-        dark: '#E64602'
+        main: '#00CD98',
+        dark: 'rgb(0, 150, 110)'
     },
     grey: {
         light: '#686868'
@@ -13,10 +13,10 @@ const colors = {
         main: '#354052'
     },
     green: {
-      main: '#37a037'
+        main: '#37a037'
     },
     red: {
-      main: '#ff3737'
+        main: '#ff3737'
     }
 }
 
