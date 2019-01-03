@@ -9,6 +9,11 @@
     "start": "NODE_ENV=production node build/server.js",
     "heroku-postbuild": "yarn run build"
   },
+  "engines": {
+    "node": "8.11.3",
+    "npm": "5.6.0",
+    "yarn": "1.7.0"
+  },
   "dependencies": {
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
