@@ -11,30 +11,13 @@ class Dashboard extends Component {
   state = {
     data: null,
     installed_sensors: [
-      { id: 'ID01', name: '1st North Waste' },
-      { id: 'ID02', name: '' },
-      { id: 'ID03', name: '1st North Paper' },
-      { id: 'ID04', name: '1st North Plastic' },
-      { id: 'ID05', name: '1st South Waste' },
-      { id: 'ID06', name: '1st South Plastic' },
-      { id: 'ID07', name: '1st South Paper' },
-      { id: 'ID08', name: '2nd North Waste' },
-      { id: 'ID09', name: '' },
-      { id: 'ID10', name: '' },
-      { id: 'ID11', name: '' },
-      { id: 'ID12', name: '' },
-      { id: 'ID13', name: '' },
-      { id: 'ID14', name: '' },
-      { id: 'ID15', name: '2nd North Plastic' },
-      { id: 'ID16', name: '2nd North Paper' },
-      { id: 'ID17', name: '' },
-      { id: 'ID18', name: '2nd South Plastic' },
-      { id: 'ID19', name: '' },
-      { id: 'ID20', name: '' },
-      { id: 'ID21', name: '' },
-      { id: 'ID22', name: '' },
-      { id: 'ID23', name: '' },
-      { id: 'ID24', name: '2nd South Waste' }
+      { id: 'ID31', name: 'ID31' },
+      { id: 'ID32', name: 'ID32' },
+      { id: 'ID33', name: 'ID33' },
+      { id: 'ID34', name: 'ID34' },
+      { id: 'ID35', name: 'ID35' },
+      { id: 'ID36', name: 'ID36' },
+      { id: 'ID37', name: 'ID37' }
     ]
   }
 
