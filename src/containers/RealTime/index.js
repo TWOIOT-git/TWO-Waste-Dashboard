@@ -94,7 +94,7 @@ class Realtime extends Component {
                   <Col sm={12} md={6} lg={4} xl={4}>
                     <FadeIn>
                       <ProgressChartTrashCan
-                        data={-1 * (((sensor.bin_level / 850) * 100) - 100)}
+                        data={-1 * (((sensor.bin_level / 900) * 100) - 100)}
                         location={sensor.name}
                         id={sensor.sensor_id}
                       />

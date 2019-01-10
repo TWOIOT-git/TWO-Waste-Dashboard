@@ -94,7 +94,7 @@ class Dashboard extends Component {
                   <GrowthChart data={sensor.map(a => {
                     var date = new Date(a.fill_date)
                     a.time = date.toLocaleTimeString(["en-US"], { weekday: "short", month: "short", day: "numeric", hour: '2-digit' });
-                    a.percentage = Math.round(-1 * (((a.bin_level / 850) * 100) - 100))
+                    a.percentage = Math.round(-1 * (((a.bin_level / 900) * 100) - 100))
                     return a
                   })} />
                 </Col>
