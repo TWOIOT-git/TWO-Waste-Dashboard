@@ -12,13 +12,13 @@ class Realtime extends Component {
   state = {
     data: null,
     installed_sensors: [
-      { id: 'ID31', name: 'ID31' },
-      { id: 'ID32', name: 'ID32' },
-      { id: 'ID33', name: 'ID33' },
-      { id: 'ID34', name: 'ID34' },
-      { id: 'ID35', name: 'ID35' },
-      { id: 'ID36', name: 'ID36' },
-      { id: 'ID37', name: 'ID37' },
+      { id: 'ID31', name: 'TTA Waste 3rd Floor'},
+      { id: 'ID32', name: 'TTA Recycling 3rd Floor #1 '},
+      { id: 'ID33', name: 'TTA Recycling 3rd Floor #2'},
+      { id: 'ID34', name: 'TTA Waste 4th Floor' },
+      { id: 'ID35', name: 'TTA Recycling 4th Floor' },
+      { id: 'ID36', name: 'Futureward Central Recycling' },
+      { id: 'ID37', name: 'Futureward Central Waste' }
     ]
   }
 
