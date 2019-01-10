@@ -13,11 +13,11 @@ const ProgressChartTrashCan = ({ data, location, id, style }) => {
 
     var status_color = (data) => {
       if (data <= 49) {
-        return colors.green.main
+        return "#00CD98"
       }  else if (data <= 79) {
-        return colors.orange.main
+        return "#FF6B00"
       } else {
-        return colors.red.main
+        return "#FF3737"
       }
     }
 
