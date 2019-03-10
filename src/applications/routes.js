@@ -2,6 +2,7 @@ import Dashboard from '../containers/Dashboard'
 import RealTime from '../containers/RealTime'
 import Login from '../containers/Login'
 import Demo from '../containers/Demo';
+import Map from '../containers/Map';
 
 const routes = [
     {
@@ -22,6 +23,11 @@ const routes = [
     {
         path: '/demo',
         component: Demo,
+        exact: false
+    },
+    {
+        path: '/map',
+        component: Map,
         exact: false
     }
 ]

@@ -23,5 +23,8 @@ module.exports = {
     config.plugins[indexDefinePlugin] = new webpack.DefinePlugin(newDefs)
 
     return config
-  }
+  },
+  plugins: [
+    'runtimeenv'
+  ]
 }

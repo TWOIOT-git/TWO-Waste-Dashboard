@@ -1,7 +1,6 @@
 import React from 'react'
 import styles from './style.module.css'
 import Title from '../Title';
-import colors from '../../shared/colorPalette'
 
 export default ({ text, name, number, dark, containerStyle }) => {
   const classesNumber = [styles.Number]

@@ -29,6 +29,12 @@ class MenuComplexNavegation extends Component {
                     Realtime
                   </NavLinkCustom>
                 </li>
+                <li>
+                  <NavLinkCustom to='/map'>
+                    <img className="nav-img" src={icon_bin} alt="realtime icon" />
+                    Map
+                  </NavLinkCustom>
+                </li>
                 {/*
                 <li>
                   <NavLinkCustom to='/demo'>
