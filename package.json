@@ -22,7 +22,6 @@
     "is-heroku": "^2.0.0",
     "mobile-detect": "^1.4.3",
     "razzle": "^2.4.0",
-    "razzle-plugin-runtimeenv": "^1.0.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-grid-system": "^4.3.1",
