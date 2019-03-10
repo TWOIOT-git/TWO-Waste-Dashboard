@@ -10,7 +10,6 @@ import WasteBinInfo from '../../components/WasteBinInfo';
 
 import bin_data from '../../bin_data.json';
 
-console.log("env var:", process.env.REACT_APP_MAPBOX_ACCESS_TOKEN);
 
 class Realtime extends Component {
 
@@ -73,7 +72,8 @@ class Realtime extends Component {
             <ReactMapGL
               {...this.state.viewport}
               mapStyle='mapbox://styles/mapbox/dark-v9'
-              onViewportChange={(viewport) => this.setState({ viewport })} >
+              onViewportChange={(viewport) => this.setState({ viewport })} 
+              mapboxApiAccessToken={process.env.RAZZLE_REACT_APP_MAPBOX_ACCESS_TOKEN}>
               {this.state.bin_data.map(this._renderWasteBinMarker)}
               {this._renderPopup()}
             </ReactMapGL>
