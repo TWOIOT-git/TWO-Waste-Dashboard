@@ -30,7 +30,7 @@ class Demo extends Component {
         .then(res => {
           this.setState({
             data: {
-              value: -1 * ((res.Items[0].bin_level / 350) * 100 - 100),
+              value: -1 * ((res.Items[0].bin_level / 200) * 100 - 100),
               text: "Sensor ID40"
             }
           });
