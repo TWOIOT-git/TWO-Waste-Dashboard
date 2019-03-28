@@ -30,7 +30,7 @@ class Demo extends Component {
         .then(res => {
           this.setState({
             data: {
-              value: -1 * (((860 - res.Items[0].bin_level ) * 100) / 860 - 200 )  - 100,
+              value: ((res.Items[0].bin_level - 200) / 690) * 100,
               text: "Sensor ID40"
             }
           });
@@ -58,7 +58,6 @@ class Demo extends Component {
               <Margin
                 orientation="top"
                 breakpoints={["xs", "sm", "md", "lg", "xl"]}
-
               >
                 <Col sm={12} md={12} lg={12} xl={12}>
                   <FadeIn>
