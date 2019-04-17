@@ -1,0 +1,10 @@
+src/
+static/
+__tests__/
+node_modules/
+
+.storybook
+.sass-cache
+.tmp
+
+*.test

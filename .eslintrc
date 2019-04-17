@@ -1,0 +1,26 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/react"
+  ],
+  "globals": {
+    "document": true,
+    "window": true,
+    "process": true,
+    "fetch": true
+  },
+  "rules": {
+    "import/extensions": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-unresolved": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "react/jsx-filename-extension": 0,
+    "linebreak-style": 0
+  },
+  "plugins": [
+    "jsx-a11y",
+    "react"
+  ]
+}

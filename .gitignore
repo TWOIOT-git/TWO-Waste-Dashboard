@@ -1,14 +1,8 @@
-logs
-*.log
-npm-debug.log*
+*.map
 .DS_Store
+node_modules/
+debug.log
+.tmp
+dist
+.next
 
-coverage
-node_modules
-build
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-__old__
-yarn.lock
