@@ -1,4 +1,5 @@
 import React from "react";
+import Router from 'next/router'
 import Head from "../components/Head";
 
 export default class Authentication extends React.Component {
@@ -17,12 +18,18 @@ export default class Authentication extends React.Component {
     });
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+
+    Router.push('/analytics')
+  };
+
   render() {
     const { email, password } = this.state;
     const { onChange } = this;
     return (
       <section>
-        <Head title='lidbot - Login'/>
+        <Head title="lidbot - Login" />
         <div>
           <div>
             <div>
@@ -43,7 +50,7 @@ export default class Authentication extends React.Component {
           <div>
             <h1>WASTE ANALYTICS PLATFORM</h1>
             <p>Welcome back! Login to continue your smart waste management.</p>
-            <form>
+            <form onSubmit={e => this.onSubmit(e)}>
               <label htmlFor="email">
                 Email
                 <input
@@ -104,7 +111,7 @@ export default class Authentication extends React.Component {
                 @media (max-width: 876px) {
                   flex-direction: column;
                   width: 100%;
-                  padding: 2.5%;
+                  padding: 5%;
                   height: unset;
                   box-shadow: none;
                   animation: none;
@@ -224,10 +231,12 @@ export default class Authentication extends React.Component {
                         margin-top: 30px;
                         margin-bottom: 60px;
                         cursor: pointer;
-                        transition: .2s all ease;
+                        transition: 0.2s all ease;
                         outline: none;
 
-                        &:active, &:hover, &:focus {
+                        &:active,
+                        &:hover,
+                        &:focus {
                           background-color: #0af1b5;
                         }
 
