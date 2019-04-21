@@ -5,12 +5,11 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
-  Legend,
   ResponsiveContainer
 } from "recharts";
 import Head from "../components/Head";
 import MenuNavegation from "../components/MenuNavegation";
+
 const data = [
   {
     name: new Date().toLocaleDateString(),
@@ -68,8 +67,8 @@ const Analytics = () => (
         <div className="SimpleLineChartContainer">
           <ResponsiveContainer>
             <LineChart
-              width={'100%'}
-              height={'100%'}
+              width="100%"
+              height="100%"
               data={data}
               margin={{
                 top: 100 / 2,
@@ -79,12 +78,12 @@ const Analytics = () => (
               }}
             >
               <CartesianGrid
-                stroke={"rgba(255, 255, 255, 0.1)"}
+                stroke="rgba(255, 255, 255, 0.1)"
                 vertical={false}
               />
               <XAxis
                 axisLine={false}
-                stroke={"transparent"}
+                stroke="transparent"
                 tick={{ fill: "white" }}
                 tickSize={10}
                 dataKey="name"
@@ -92,7 +91,7 @@ const Analytics = () => (
               />
               <YAxis
                 axisLine={false}
-                stroke={"transparent"}
+                stroke="transparent"
                 tick={{ fill: "white" }}
                 tickSize={10}
               />
@@ -103,7 +102,13 @@ const Analytics = () => (
                 strokeWidth={5}
                 dot={false}
               />
-              <Line type="monotone" dataKey="uv" stroke="#003B2C" strokeWidth={5} dot={false}/>
+              <Line
+                type="monotone"
+                dataKey="uv"
+                stroke="#003B2C"
+                strokeWidth={5}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
