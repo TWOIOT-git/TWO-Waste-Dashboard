@@ -93,6 +93,7 @@ export default class Authentication extends React.Component {
               align-items: center;
               justify-content: center;
               height: 100vh;
+              background-color: white;
 
               @media (max-width: 876px) {
                 display: block;

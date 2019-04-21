@@ -94,12 +94,6 @@ class LidbotDocument extends Document {
           <link href="/static/css/sanitize.css" rel="stylesheet" />
         </Head>
         <body>
-          <style jsx global>{`
-            body {
-              margin: 0;
-              padding: 0;
-            }
-          `}</style>
           <Main />
           <NextScript />
         </body>
