@@ -111,6 +111,7 @@ class Analytics extends React.Component {
   }
 
   render() {
+    const { Dot1CX, Dot2CX, Pie1CX, Pie2CX } = this.state;
     return (
       <>
         <Head title="lidbot - Analytics" />
@@ -184,7 +185,7 @@ class Analytics extends React.Component {
                     <PieChart>
                       <g>
                         <text
-                          x={"50%"}
+                          x="50%"
                           y={100}
                           dy={8}
                           textAnchor="middle"
@@ -193,23 +194,18 @@ class Analytics extends React.Component {
                           550
                         </text>
                       </g>
-                      {this.state.Pie1CX ? (
+                      {Pie1CX ? (
                         <g>
                           <Sector
                             fill="#00BF8E"
-                            cx={this.state.Pie1CX}
+                            cx={Pie1CX}
                             cy={105}
                             innerRadius={53}
                             outerRadius={55}
                             startAngle={270}
                             endAngle={0}
                           />
-                          <Dot
-                            r={3}
-                            cx={this.state.Dot1CX}
-                            cy={105}
-                            fill="#00BF8E"
-                          />
+                          <Dot r={3} cx={Dot1CX} cy={105} fill="#00BF8E" />
                         </g>
                       ) : null}
                       <Pie
@@ -223,8 +219,8 @@ class Analytics extends React.Component {
                         endAngle={0}
                         dataKey="value"
                       >
-                        {dataPieChartWithPaddingAngle.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                        {dataPieChartWithPaddingAngle.map(({ name }, index) => (
+                          <Cell key={`cell-${name}`} fill={COLORS[index]} />
                         ))}
                       </Pie>
                     </PieChart>
@@ -238,7 +234,7 @@ class Analytics extends React.Component {
                     <PieChart>
                       <g>
                         <text
-                          x={"50%"}
+                          x="50%"
                           y={100}
                           dy={8}
                           textAnchor="middle"
@@ -247,23 +243,18 @@ class Analytics extends React.Component {
                           550
                         </text>
                       </g>
-                      {this.state.Pie2CX ? (
+                      {Pie2CX ? (
                         <g>
                           <Sector
                             fill="#00BF8E"
-                            cx={this.state.Pie2CX}
+                            cx={Pie2CX}
                             cy={105}
                             innerRadius={53}
                             outerRadius={55}
                             startAngle={270}
                             endAngle={0}
                           />
-                          <Dot
-                            r={3}
-                            cx={this.state.Dot2CX}
-                            cy={105}
-                            fill="#00BF8E"
-                          />
+                          <Dot r={3} cx={Dot2CX} cy={105} fill="#00BF8E" />
                         </g>
                       ) : null}
                       <Pie
@@ -277,8 +268,8 @@ class Analytics extends React.Component {
                         endAngle={0}
                         dataKey="value"
                       >
-                        {dataPieChartWithPaddingAngle.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                        {dataPieChartWithPaddingAngle.map(({ name }, index) => (
+                          <Cell key={`cell-${name}`} fill={COLORS[index]} />
                         ))}
                       </Pie>
                     </PieChart>
