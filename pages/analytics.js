@@ -10,7 +10,11 @@ import {
   PieChart,
   Cell,
   Sector,
-  Dot
+  Dot,
+  BarChart,
+  Bar,
+  Tooltip,
+  Legend
 } from "recharts";
 import Head from "../components/Head";
 import MenuNavegation from "../components/MenuNavegation";
@@ -265,7 +269,10 @@ class Analytics extends React.Component {
                           <svg height="16" width="16">
                             <circle cx="8" cy="8" r="8" fill={COLORS[index]} />
                           </svg>
-                          <span> {'>'} {value}</span>
+                          <span>
+                            {" "}
+                            {">"} {value}
+                          </span>
                         </div>
                       );
                     }
@@ -334,18 +341,19 @@ class Analytics extends React.Component {
                   </ResponsiveContainer>
                 </div>
                 <div className="Dots-Numbers">
-                  {data.map(
-                    ({ pv }, index) => {
-                      return (
-                        <div key={pv}>
-                          <svg height="16" width="16">
-                            <circle cx="8" cy="8" r="8" fill={COLORS[index]} />
-                          </svg>
-                          <span> {'>'} {pv}</span>
-                        </div>
-                      );
-                    }
-                  )}
+                  {data.map(({ pv }, index) => {
+                    return (
+                      <div key={pv}>
+                        <svg height="16" width="16">
+                          <circle cx="8" cy="8" r="8" fill={COLORS[index]} />
+                        </svg>
+                        <span>
+                          {" "}
+                          {">"} {pv}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="TinyLineChart">
                   <ResponsiveContainer>
@@ -358,6 +366,110 @@ class Analytics extends React.Component {
                         dot={false}
                       />
                     </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>{" "}
+              <div className="CardPie">
+                <h2>Fill Level Reached Waste</h2>
+                <h3>76</h3>
+                <div className="BarChart">
+                  <ResponsiveContainer>
+                    <BarChart
+                      data={data}
+                      margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                    >
+                      <defs>
+                        <linearGradient
+                          id="linearGradientBarChart"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="2"
+                        >
+                          <stop offset="6%" stopColor="#C2F7E8" />
+                          <stop offset="34%" stopColor="#00CD95" />
+                          <stop offset="54%" stopColor="#007A5B" />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid stroke="#eaeaea" vertical={false} />
+                      <XAxis
+                        dataKey="pv"
+                        tick={{
+                          fill: "rgba(51, 51, 51, 0.2)",
+                          fontSize: 12
+                        }}
+                        tickSize={10}
+                        axisLine={false}
+                        stroke="transparent"
+                      />
+                      <YAxis
+                        tick={{
+                          fill: "rgba(51, 51, 51, 0.2)",
+                          fontSize: 12
+                        }}
+                        tickSize={10}
+                        axisLine={false}
+                        stroke="transparent"
+                      />
+                      <Tooltip />
+                      <Bar
+                        dataKey="uv"
+                        fill="url(#linearGradientBarChart)"
+                        barSize={3}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div className="CardPie">
+                <h2>Fill Level Reached Recycling</h2>
+                <h3>352</h3>
+                <div className="BarChart">
+                  <ResponsiveContainer>
+                    <BarChart
+                      data={data}
+                      margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                    >
+                      <defs>
+                        <linearGradient
+                          id="linearGradientBarChart"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="2"
+                        >
+                          <stop offset="6%" stopColor="#C2F7E8" />
+                          <stop offset="34%" stopColor="#00CD95" />
+                          <stop offset="54%" stopColor="#007A5B" />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid stroke="#eaeaea" vertical={false} />
+                      <XAxis
+                        dataKey="pv"
+                        tick={{
+                          fill: "rgba(51, 51, 51, 0.2)",
+                          fontSize: 12
+                        }}
+                        tickSize={10}
+                        axisLine={false}
+                        stroke="transparent"
+                      />
+                      <YAxis
+                        tick={{
+                          fill: "rgba(51, 51, 51, 0.2)",
+                          fontSize: 12
+                        }}
+                        tickSize={10}
+                        axisLine={false}
+                        stroke="transparent"
+                      />
+                      <Tooltip />
+                      <Bar
+                        dataKey="uv"
+                        fill="url(#linearGradientBarChart)"
+                        barSize={3}
+                      />
+                    </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
@@ -424,6 +536,24 @@ class Analytics extends React.Component {
                       animation: Enter 0.5s forwards;
                       color: #333333;
                     }
+
+                    h3 {
+                      font-family: Roboto;
+                      font-style: normal;
+                      font-weight: bold;
+                      font-size: 64px;
+                      line-height: normal;
+                      margin: 50px 0;
+
+                      color: #333333;
+                    }
+                  }
+
+                  .BarChart {
+                    width: 100%;
+                    height: 50%;
+                    margin: auto;
+                    display: block;
                   }
 
                   .ChartContainer {
