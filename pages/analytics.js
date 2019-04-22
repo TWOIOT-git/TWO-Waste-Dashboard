@@ -32,20 +32,26 @@ const COLORS = calculateColorPerModel(
 const data = [
   {
     name: new Date().toLocaleDateString(),
-    uv: 4000,
+    uv: 88000,
+    pv: 400,
+    amt: 2400
+  },
+  {
+    name: new Date().toLocaleDateString(),
+    uv: 7000,
     pv: 2400,
     amt: 2400
   },
   {
     name: new Date().toLocaleDateString(),
-    uv: 3000,
+    uv: 33000,
     pv: 1398,
     amt: 2210
   },
   {
     name: new Date().toLocaleDateString(),
     uv: 2000,
-    pv: 9800,
+    pv: 93800,
     amt: 2290
   },
   {
@@ -56,20 +62,41 @@ const data = [
   },
   {
     name: new Date().toLocaleDateString(),
-    uv: 1890,
+    uv: 12890,
     pv: 4800,
     amt: 2181
   },
   {
     name: new Date().toLocaleDateString(),
     uv: 2390,
-    pv: 3800,
+    pv: 32800,
     amt: 2500
   },
   {
     name: new Date().toLocaleDateString(),
     uv: 3490,
     pv: 4300,
+    amt: 2100
+  }
+];
+
+const data2 = [
+  {
+    name: new Date().toLocaleDateString(),
+    uv: 1231,
+    pv: 24040,
+    amt: 2400
+  },
+  {
+    name: new Date().toLocaleDateString(),
+    uv: 680,
+    pv: 3908,
+    amt: 12400
+  },
+  {
+    name: new Date().toLocaleDateString(),
+    uv: 1445,
+    pv: 34300,
     amt: 2100
   }
 ];
@@ -90,7 +117,7 @@ class Analytics extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.setState({
         Pie1CX: this.Pie1Ref.current.clientWidth / 2,
         Dot1CX:
@@ -108,6 +135,10 @@ class Analytics extends React.Component {
             3
       });
     }, 2000);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
   }
 
   render() {
@@ -195,7 +226,7 @@ class Analytics extends React.Component {
                         </text>
                       </g>
                       {Pie1CX ? (
-                        <g>
+                        <g className="LineWithDot">
                           <Sector
                             fill="#00BF8E"
                             cx={Pie1CX}
@@ -226,6 +257,33 @@ class Analytics extends React.Component {
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
+                <div className="Dots-Numbers">
+                  {dataPieChartWithPaddingAngle.map(
+                    ({ value, name }, index) => {
+                      return (
+                        <div key={name}>
+                          <svg height="16" width="16">
+                            <circle cx="8" cy="8" r="8" fill={COLORS[index]} />
+                          </svg>
+                          <span> > {value}</span>
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+                <div className="TinyLineChart">
+                  <ResponsiveContainer>
+                    <LineChart data={data2}>
+                      <Line
+                        type="monotone"
+                        dataKey="pv"
+                        stroke="#2F5C31"
+                        strokeWidth={1.5}
+                        dot={false}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
               <div className="CardPie">
                 <h2>Average Fill Level</h2>
@@ -240,11 +298,11 @@ class Analytics extends React.Component {
                           textAnchor="middle"
                           className="CenterText"
                         >
-                          550
+                          223420
                         </text>
                       </g>
-                      {Pie2CX ? (
-                        <g>
+                      {Pie1CX ? (
+                        <g className="LineWithDot">
                           <Sector
                             fill="#00BF8E"
                             cx={Pie2CX}
@@ -258,7 +316,7 @@ class Analytics extends React.Component {
                         </g>
                       ) : null}
                       <Pie
-                        data={dataPieChartWithPaddingAngle}
+                        data={data}
                         cy={100}
                         innerRadius={65}
                         outerRadius={80}
@@ -266,13 +324,40 @@ class Analytics extends React.Component {
                         paddingAngle={5}
                         startAngle={270}
                         endAngle={0}
-                        dataKey="value"
+                        dataKey="uv"
                       >
-                        {dataPieChartWithPaddingAngle.map(({ name }, index) => (
+                        {data.map(({ name }, index) => (
                           <Cell key={`cell-${name}`} fill={COLORS[index]} />
                         ))}
                       </Pie>
                     </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="Dots-Numbers">
+                  {data.map(
+                    ({ pv }, index) => {
+                      return (
+                        <div key={pv}>
+                          <svg height="16" width="16">
+                            <circle cx="8" cy="8" r="8" fill={COLORS[index]} />
+                          </svg>
+                          <span> > {pv}</span>
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+                <div className="TinyLineChart">
+                  <ResponsiveContainer>
+                    <LineChart data={data}>
+                      <Line
+                        type="monotone"
+                        dataKey="pv"
+                        stroke="#2F5C31"
+                        strokeWidth={1.5}
+                        dot={false}
+                      />
+                    </LineChart>
                   </ResponsiveContainer>
                 </div>
               </div>
@@ -280,6 +365,26 @@ class Analytics extends React.Component {
           </div>
           <style jsx>
             {`
+              @keyframes Enter {
+                from {
+                  -webkit-transform: translateX(-28px);
+                  opacity: 0;
+                }
+                to {
+                  -webkit-transform: none;
+                  opacity: 1;
+                }
+              }
+
+              @keyframes EnterSpan {
+                from {
+                  opacity: 0;
+                }
+                to {
+                  opacity: 1;
+                }
+              }
+
               .LayoutFlex {
                 display: flex;
               }
@@ -302,10 +407,10 @@ class Analytics extends React.Component {
                 grid-gap: 24px;
 
                 > div {
-                  height: 400px;
+                  height: 450px;
                   background: #ffffff;
                   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-                  padding: 40px;
+                  padding: 20px;
 
                   &.CardPie {
                     text-align: center;
@@ -316,14 +421,18 @@ class Analytics extends React.Component {
                       font-weight: bold;
                       font-size: 18px;
                       line-height: normal;
-
+                      animation: Enter 0.5s forwards;
                       color: #333333;
                     }
                   }
 
                   .ChartContainer {
                     width: 100%;
-                    height: 100%;
+                    height: 200px;
+
+                    .LineWithDot {
+                      animation: EnterSpan 1s forwards ease-in-out;
+                    }
                   }
 
                   .CenterText {
@@ -333,6 +442,36 @@ class Analytics extends React.Component {
                     font-size: 27.9px;
                     line-height: normal;
                     fill: #333333;
+                  }
+
+                  .Dots-Numbers {
+                    margin-top: 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    > div {
+                      span {
+                        font-family: Roboto;
+                        font-style: normal;
+                        font-weight: normal;
+                        font-size: 12px;
+                        line-height: normal;
+
+                        color: #333333;
+
+                        animation: EnterSpan 1s forwards ease-in-out;
+                      }
+                      svg {
+                        animation: Enter 0.5s forwards;
+                      }
+                    }
+                  }
+
+                  .TinyLineChart {
+                    margin-top: 20px;
+                    height: 100px;
+                    width: 100%;
                   }
                 }
               }
