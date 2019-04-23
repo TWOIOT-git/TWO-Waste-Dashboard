@@ -13,8 +13,7 @@ import {
   Dot,
   BarChart,
   Bar,
-  Tooltip,
-  Legend
+  Tooltip
 } from "recharts";
 import Head from "../components/Head";
 import MenuNavegation from "../components/MenuNavegation";
