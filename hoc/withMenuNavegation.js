@@ -18,6 +18,7 @@ export default WrappedComponent => {
 
         .LayoutFlex > .Content {
           flex: 1;
+          padding-left: 200px
         }
       `}</style>
     </div>

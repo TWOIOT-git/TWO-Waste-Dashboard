@@ -3,7 +3,8 @@
   "extends": [
     "airbnb",
     "prettier",
-    "prettier/react"
+    "prettier/react",
+    "plugin:jsx-control-statements/recommended"
   ],
   "globals": {
     "document": true,
@@ -17,10 +18,12 @@
     "import/no-unresolved": 0,
     "jsx-a11y/anchor-is-valid": 0,
     "react/jsx-filename-extension": 0,
-    "linebreak-style": 0
+    "linebreak-style": 0,
+    "react/jsx-no-undef": [2, { "allowGlobals": true }]
   },
   "plugins": [
     "jsx-a11y",
-    "react"
+    "react",
+    "jsx-control-statements"
   ]
 }

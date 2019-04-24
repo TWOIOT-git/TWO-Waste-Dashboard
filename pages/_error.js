@@ -4,7 +4,10 @@ import withMenuNavegation from "../hoc/withMenuNavegation";
 const ErrorPage = () => {
   return (
     <div>
-      <h1>Wow...just back <span>.</span></h1>
+      <h1>
+        <span style={{ color: "#da6464" }}>Error</span>
+        <span>.</span>
+      </h1>
       <style jsx>{`
         @keyframes Enter {
           from {
@@ -21,8 +24,7 @@ const ErrorPage = () => {
           display: flex;
           justify-content: center;
           align-items: center;
-          height: 100%;
-          background: linear-gradient(#efefef 20%,#008c67a8, #00cd98)
+          height: 100vh;
         }
 
         h1 {
@@ -31,7 +33,7 @@ const ErrorPage = () => {
           animation: Enter 0.5s forwards;
 
           span {
-            color: #00cd98
+            color: #00cd98;
           }
         }
       `}</style>

@@ -10,7 +10,9 @@ const Item = ({ children, text, link, numberNews, pathname }) => {
       <a>
         {children}
         <span className="text">{text}</span>
-        {numberNews ? <span className="news">{numberNews}</span> : null}
+        <If condition={numberNews}>
+          <span className="news">{numberNews}</span>
+        </If>
         <style jsx>
           {`
             a {
@@ -263,6 +265,7 @@ const MenuNavegation = ({ userImage, userName, router: { pathname } }) => (
           width: 200px;
           background: #ffffff;
           box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+          position: fixed;
 
           > div {
             padding-top: 34px;
@@ -319,7 +322,7 @@ MenuNavegation.propTypes = {
   userImage: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
   router: PropTypes.shape({
-    pathname: PropTypes.object.isRequired
+    pathname: PropTypes.string.isRequired
   }).isRequired
 };
 

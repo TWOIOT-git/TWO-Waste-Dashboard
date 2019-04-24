@@ -3,23 +3,25 @@ import withMenuNavegation from "../hoc/withMenuNavegation";
 import Head from "../components/Head";
 import TopTools from "../components/TopTools";
 import SensorItemCard from "../components/SensorItemCard";
+import SensorTable from "../components/SensorTable";
 
 class Sensors extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      layoutMode: "cards",
       data: [
         {
           id: 1,
           name: "MAINSTREET_33/023",
-          robin_size: "ROBIN XL",
+          robinSize: "ROBIN XL",
           status: "full",
-          porcentage: "95%",
+          porcentage: "95",
           location: {
             city: "Berlin",
             street: "Martinusstr.7, 66802",
-            out_in: "indoor"
+            outIn: "indoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -28,13 +30,13 @@ class Sensors extends React.Component {
         {
           id: 2,
           name: "FEHRBELLINER STREET 47",
-          robin_size: "ROBIN SENSOR X",
+          robinSize: "ROBIN SENSOR X",
           status: "no-full",
-          porcentage: "15%",
+          porcentage: "15",
           location: {
             city: "Berlin",
             street: "Fehrbelliner Str. 47, 10119",
-            out_in: "outdoor"
+            outIn: "outdoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -43,13 +45,13 @@ class Sensors extends React.Component {
         {
           id: 3,
           name: "MAINSTREET_33/023",
-          robin_size: "ROBIN XL",
+          robinSize: "ROBIN XL",
           status: "full",
-          porcentage: "95%",
+          porcentage: "95",
           location: {
             city: "Berlin",
             street: "Martinusstr.7, 66802",
-            out_in: "indoor"
+            outIn: "indoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -58,13 +60,13 @@ class Sensors extends React.Component {
         {
           id: 4,
           name: "FEHRBELLINER STREET 47",
-          robin_size: "ROBIN SENSOR X",
+          robinSize: "ROBIN SENSOR X",
           status: "no-full",
-          porcentage: "15%",
+          porcentage: "15",
           location: {
             city: "Berlin",
             street: "Fehrbelliner Str. 47, 10119",
-            out_in: "outdoor"
+            outIn: "outdoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -73,13 +75,13 @@ class Sensors extends React.Component {
         {
           id: 5,
           name: "MAINSTREET_33/023",
-          robin_size: "ROBIN XL",
+          robinSize: "ROBIN XL",
           status: "full",
-          porcentage: "95%",
+          porcentage: "95",
           location: {
             city: "Berlin",
             street: "Martinusstr.7, 66802",
-            out_in: "indoor"
+            outIn: "indoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -88,13 +90,13 @@ class Sensors extends React.Component {
         {
           id: 6,
           name: "FEHRBELLINER STREET 47",
-          robin_size: "ROBIN SENSOR X",
+          robinSize: "ROBIN SENSOR X",
           status: "no-full",
-          porcentage: "15%",
+          porcentage: "15",
           location: {
             city: "Berlin",
             street: "Fehrbelliner Str. 47, 10119",
-            out_in: "outdoor"
+            outIn: "outdoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -103,13 +105,13 @@ class Sensors extends React.Component {
         {
           id: 7,
           name: "MAINSTREET_33/023",
-          robin_size: "ROBIN XL",
+          robinSize: "ROBIN XL",
           status: "full",
-          porcentage: "95%",
+          porcentage: "95",
           location: {
             city: "Berlin",
             street: "Martinusstr.7, 66802",
-            out_in: "indoor"
+            outIn: "indoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -118,13 +120,13 @@ class Sensors extends React.Component {
         {
           id: 8,
           name: "FEHRBELLINER STREET 47",
-          robin_size: "ROBIN SENSOR X",
+          robinSize: "ROBIN SENSOR X",
           status: "no-full",
-          porcentage: "15%",
+          porcentage: "15",
           location: {
             city: "Berlin",
             street: "Fehrbelliner Str. 47, 10119",
-            out_in: "outdoor"
+            outIn: "outdoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -133,13 +135,13 @@ class Sensors extends React.Component {
         {
           id: 9,
           name: "MAINSTREET_33/023",
-          robin_size: "ROBIN XL",
+          robinSize: "ROBIN XL",
           status: "full",
-          porcentage: "95%",
+          porcentage: "95",
           location: {
             city: "Berlin",
             street: "Martinusstr.7, 66802",
-            out_in: "indoor"
+            outIn: "indoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -148,13 +150,13 @@ class Sensors extends React.Component {
         {
           id: 10,
           name: "FEHRBELLINER STREET 47",
-          robin_size: "ROBIN SENSOR X",
+          robinSize: "ROBIN SENSOR X",
           status: "no-full",
-          porcentage: "15%",
+          porcentage: "15",
           location: {
             city: "Berlin",
             street: "Fehrbelliner Str. 47, 10119",
-            out_in: "outdoor"
+            outIn: "outdoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -163,13 +165,13 @@ class Sensors extends React.Component {
         {
           id: 11,
           name: "MAINSTREET_33/023",
-          robin_size: "ROBIN XL",
+          robinSize: "ROBIN XL",
           status: "full",
-          porcentage: "95%",
+          porcentage: "95",
           location: {
             city: "Berlin",
             street: "Martinusstr.7, 66802",
-            out_in: "indoor"
+            outIn: "indoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -178,13 +180,13 @@ class Sensors extends React.Component {
         {
           id: 12,
           name: "FEHRBELLINER STREET 47",
-          robin_size: "ROBIN SENSOR X",
+          robinSize: "ROBIN SENSOR X",
           status: "no-full",
-          porcentage: "15%",
+          porcentage: "15",
           location: {
             city: "Berlin",
             street: "Fehrbelliner Str. 47, 10119",
-            out_in: "outdoor"
+            outIn: "outdoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -193,13 +195,13 @@ class Sensors extends React.Component {
         {
           id: 13,
           name: "MAINSTREET_33/023",
-          robin_size: "ROBIN XL",
+          robinSize: "ROBIN XL",
           status: "full",
-          porcentage: "95%",
+          porcentage: "95",
           location: {
             city: "Berlin",
             street: "Martinusstr.7, 66802",
-            out_in: "indoor"
+            outIn: "indoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -208,13 +210,13 @@ class Sensors extends React.Component {
         {
           id: 14,
           name: "FEHRBELLINER STREET 47",
-          robin_size: "ROBIN SENSOR X",
+          robinSize: "ROBIN SENSOR X",
           status: "no-full",
-          porcentage: "15%",
+          porcentage: "15",
           location: {
             city: "Berlin",
             street: "Fehrbelliner Str. 47, 10119",
-            out_in: "outdoor"
+            outIn: "outdoor"
           },
           owner: {
             name: "LIDBOT POC"
@@ -225,17 +227,25 @@ class Sensors extends React.Component {
   }
 
   render() {
-    const { data } = this.state;
+    const { data, layoutMode } = this.state;
     return (
       <>
         <Head title="lidbot - Sensors" />
-        <TopTools />
+        <TopTools
+          layoutMode={layoutMode}
+          onChangeLayout={value => this.setState({ layoutMode: value })}
+        />
         <div className="SensorsContainer">
-          {data.map(item => (
-            <div key={item.id} className='ItemCol'>
-              <SensorItemCard {...item} />
-            </div>
-          ))}
+          <If condition={layoutMode === "cards"}>
+            {data.map(item => (
+              <div key={item.id} className="ItemCol">
+                <SensorItemCard {...item} />
+              </div>
+            ))}
+          </If>
+          <If condition={layoutMode === 'table'}>
+              <SensorTable items={data}/>
+          </If>
         </div>
         <style jsx>{`
           .SensorsContainer {
@@ -246,12 +256,12 @@ class Sensors extends React.Component {
             .ItemCol {
               width: 33.3333%;
 
-              &:nth-child(3n+2) {
-                padding-right: 33px
+              &:nth-child(3n + 2) {
+                padding-right: 33px;
               }
 
-              &:nth-child(3n+1) {
-                padding-right: 33px
+              &:nth-child(3n + 1) {
+                padding-right: 33px;
               }
             }
           }

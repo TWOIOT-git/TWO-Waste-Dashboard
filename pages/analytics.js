@@ -220,7 +220,7 @@ class Analytics extends React.Component {
                       550
                     </text>
                   </g>
-                  {Pie1CX ? (
+                  <If condition={Pie1CX}>
                     <g className="LineWithDot">
                       <Sector
                         fill="#00BF8E"
@@ -233,7 +233,7 @@ class Analytics extends React.Component {
                       />
                       <Dot r={3} cx={Dot1CX} cy={105} fill="#00BF8E" />
                     </g>
-                  ) : null}
+                  </If>
                   <Pie
                     data={dataPieChartWithPaddingAngle}
                     cy={100}
@@ -297,7 +297,7 @@ class Analytics extends React.Component {
                       223420
                     </text>
                   </g>
-                  {Pie1CX ? (
+                  <If condition={Pie2CX}>
                     <g className="LineWithDot">
                       <Sector
                         fill="#00BF8E"
@@ -310,7 +310,7 @@ class Analytics extends React.Component {
                       />
                       <Dot r={3} cx={Dot2CX} cy={105} fill="#00BF8E" />
                     </g>
-                  ) : null}
+                  </If>
                   <Pie
                     data={data}
                     cy={100}

@@ -1,6 +1,12 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-export default function TopTools() {
+function TopTools({ layoutMode, onChangeLayout }) {
+  const onClickButtonLayout = () => {
+    const newValue = layoutMode === "cards" ? "table" : "cards";
+    onChangeLayout(newValue);
+  };
+
   return (
     <div className="TopTools">
       <div>
@@ -8,10 +14,24 @@ export default function TopTools() {
           <img src="/static/icons/search.png" alt="search in lidbot" />
           <input placeholder="Search for..." id="search" name="search" />
         </label>
-        <button type='button'>
+        <button type="button">
           <img src="/static/icons/filter.png" alt="search in lidbot" />
         </button>
       </div>
+      <If condition={layoutMode}>
+        <button
+          className="layoutButton"
+          type="button"
+          onClick={onClickButtonLayout}
+        >
+          <img
+            src={`/static/icons/${
+              layoutMode === "cards" ? "cardMode" : "tableMode"
+            }.png`}
+            alt="layout in lidbot"
+          />
+        </button>
+      </If>
       <style jsx>{`
         .TopTools {
           width: 100%;
@@ -19,6 +39,15 @@ export default function TopTools() {
           display: flex;
           justify-content: center;
           align-items: center;
+
+          .layoutButton {
+            border: none;
+            background: none;
+            padding: 0;
+            position: absolute;
+            right: 30px;
+            cursor: pointer;
+          }
 
           > div {
             button {
@@ -58,3 +87,15 @@ export default function TopTools() {
     </div>
   );
 }
+
+TopTools.defaultProps = {
+  layoutMode: "",
+  onChangeLayout: () => null
+};
+
+TopTools.propTypes = {
+  layoutMode: PropTypes.string,
+  onChangeLayout: PropTypes.func
+};
+
+export default TopTools;

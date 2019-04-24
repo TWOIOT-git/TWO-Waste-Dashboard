@@ -10,5 +10,8 @@
         }
       }
     ]
+  ],
+  "plugins": [
+    "jsx-control-statements"
   ]
 }
