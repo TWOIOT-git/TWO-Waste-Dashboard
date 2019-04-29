@@ -1,5 +1,5 @@
 import React from "react";
-import withMenuNavegation from "../hoc/withMenuNavegation";
+import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import TopTools from "../components/TopTools";
 import SensorItemCard from "../components/SensorItemCard";
@@ -229,7 +229,7 @@ class Sensors extends React.Component {
   render() {
     const { data, layoutMode } = this.state;
     return (
-      <>
+      <LayoutMenuNavegation>
         <Head title="lidbot - Sensors" />
         <TopTools
           layoutMode={layoutMode}
@@ -243,8 +243,8 @@ class Sensors extends React.Component {
               </div>
             ))}
           </If>
-          <If condition={layoutMode === 'table'}>
-              <SensorTable items={data}/>
+          <If condition={layoutMode === "table"}>
+            <SensorTable items={data} />
           </If>
         </div>
         <style jsx>{`
@@ -266,9 +266,9 @@ class Sensors extends React.Component {
             }
           }
         `}</style>
-      </>
+      </LayoutMenuNavegation>
     );
   }
 }
 
-export default withMenuNavegation(Sensors);
+export default Sensors

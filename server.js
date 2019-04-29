@@ -14,10 +14,9 @@ app.prepare().then(() => {
   server.disable("x-powered-by");
   server.use(compression());
   server.get(/(.+)\/$/, (req, res) =>
-    res.redirect(301, req.url.replace(/\/$/, ""))
+  res.redirect(301, req.url.replace(/\/$/, ""))
   );
   server.get("*", handle);
-
   const httpServer = http.createServer(server);
   httpServer.listen(port, err => {
     if (err) throw err;

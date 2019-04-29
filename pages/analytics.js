@@ -17,7 +17,7 @@ import {
 } from "recharts";
 import Head from "../components/Head";
 import calculateColorPerModel from "../utils/calculateColorPerModel";
-import withMenuNavegation from "../hoc/withMenuNavegation";
+import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 
 const dataPieChartWithPaddingAngle = [
   { name: "Group A", value: 400 },
@@ -147,7 +147,7 @@ class Analytics extends React.Component {
   render() {
     const { Dot1CX, Dot2CX, Pie1CX, Pie2CX } = this.state;
     return (
-      <>
+      <LayoutMenuNavegation>
         <Head title="lidbot - Analytics" />
         <div className="SimpleLineChartContainer">
           <ResponsiveContainer>
@@ -595,9 +595,9 @@ class Analytics extends React.Component {
             }
           `}
         </style>
-      </>
+      </LayoutMenuNavegation>
     );
   }
 }
 
-export default withMenuNavegation(Analytics);
+export default Analytics;

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import React from "react";
-import Document, { Head, Main, NextScript } from "next/document";
+import Document, { Html, Head, Main, NextScript } from "next/document";
 import FONTS from "../utils/loadFonts";
 
 class LidbotDocument extends Document {
@@ -11,7 +11,7 @@ class LidbotDocument extends Document {
 
   render() {
     return (
-      <html lang="en">
+      <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
           <link rel="shortcut icon" href="/static/favicons/favicon.ico" />
@@ -97,7 +97,7 @@ class LidbotDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }

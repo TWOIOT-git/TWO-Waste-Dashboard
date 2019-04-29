@@ -41,8 +41,6 @@ const Tag = ({ name }) => {
             height: 100%;
             width: 31px;
             display: inline;
-            justify-content: center;
-            align-items: center;
             background: #00bf8d;
             cursor: pointer;
           }
