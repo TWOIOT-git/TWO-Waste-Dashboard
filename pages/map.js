@@ -4,6 +4,7 @@ import fetch from "isomorphic-unfetch";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import FlagMarker from "../components/FlagMarker";
+import TopTools from "../components/TopTools";
 
 class Map extends React.Component {
   constructor(props) {
@@ -68,6 +69,9 @@ class Map extends React.Component {
     } = this;
     return (
       <LayoutMenuNavegation>
+        <div className="TopToolsAbsolute">
+          <TopTools />
+        </div>
         <ReactMapGL
           {...viewport}
           mapStyle="mapbox://styles/mapbox/dark-v9"
@@ -79,6 +83,18 @@ class Map extends React.Component {
           {data.map(this.renderWasteBinMarker)}
           {this.renderPopup()}
         </ReactMapGL>
+        <style jsx>{`
+          .TopToolsAbsolute {
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            top: 22px;
+            background: white;
+            width: 800px;
+            right: calc(50% - 400px);
+            z-index: 1;
+            padding-bottom: 22px
+          }
+        `}</style>
       </LayoutMenuNavegation>
     );
   }

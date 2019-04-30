@@ -252,6 +252,7 @@ class Sensors extends React.Component {
             display: flex;
             flex-wrap: wrap;
             padding: 0 30px 30px 30px;
+            margin-top: 22px;
 
             .ItemCol {
               width: 33.3333%;

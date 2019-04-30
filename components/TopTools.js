@@ -81,7 +81,6 @@ class TopTools extends React.Component {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 22px;
 
             > div {
               &:not(:last-child) {
