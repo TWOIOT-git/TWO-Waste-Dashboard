@@ -18,6 +18,7 @@ import {
 import Head from "../components/Head";
 import calculateColorPerModel from "../utils/calculateColorPerModel";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
+import breakpoints from "../utils/breakpoints";
 
 const dataPieChartWithPaddingAngle = [
   { name: "Group A", value: 400 },
@@ -38,30 +39,6 @@ const data = [
     uv: 88000,
     pv: 400,
     amt: 2400
-  },
-  {
-    name: new Date().toLocaleDateString(),
-    uv: 7000,
-    pv: 2400,
-    amt: 2400
-  },
-  {
-    name: new Date().toLocaleDateString(),
-    uv: 33000,
-    pv: 1398,
-    amt: 2210
-  },
-  {
-    name: new Date().toLocaleDateString(),
-    uv: 2000,
-    pv: 93800,
-    amt: 2290
-  },
-  {
-    name: new Date().toLocaleDateString(),
-    uv: 2780,
-    pv: 3908,
-    amt: 2000
   },
   {
     name: new Date().toLocaleDateString(),
@@ -506,11 +483,30 @@ class Analytics extends React.Component {
               grid-template-rows: 1fr;
               grid-gap: 24px;
 
+              @media (max-width: ${breakpoints.tablet}) {
+                grid-template-columns: 1fr 1fr;
+                padding: 0;
+                grid-gap: 0;
+              }
+
+              @media (max-width: ${breakpoints.phone}) {
+                grid-template-columns: 1fr;
+              }
+
               > div {
                 height: 450px;
                 background: #ffffff;
                 box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
                 padding: 20px;
+
+                @media (max-width: ${breakpoints.tablet}) {
+                  box-shadow: none;
+
+                  &:nth-child(1),
+                  &:nth-child(2) {
+                    height: 300px;
+                  }
+                }
 
                 &.CardPie {
                   text-align: center;
@@ -523,6 +519,10 @@ class Analytics extends React.Component {
                     line-height: normal;
                     animation: Enter 0.5s forwards;
                     color: #333333;
+
+                    @media (max-width: ${breakpoints.tablet}) {
+                      font-size: 12px;
+                    }
                   }
 
                   h3 {
@@ -534,6 +534,10 @@ class Analytics extends React.Component {
                     margin: 50px 0;
 
                     color: #333333;
+
+                    @media (max-width: ${breakpoints.tablet}) {
+                      font-size: 27px;
+                    }
                   }
                 }
 
@@ -568,6 +572,10 @@ class Analytics extends React.Component {
                   justify-content: space-between;
                   align-items: center;
 
+                  @media (max-width: ${breakpoints.tablet}) {
+                    display: none;
+                  }
+
                   > div {
                     span {
                       font-family: Roboto;
@@ -590,6 +598,10 @@ class Analytics extends React.Component {
                   margin-top: 20px;
                   height: 100px;
                   width: 100%;
+
+                  @media (max-width: ${breakpoints.tablet}) {
+                    display: none;
+                  }
                 }
               }
             }

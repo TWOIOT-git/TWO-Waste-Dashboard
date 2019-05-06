@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { withRouter } from "next/router";
+import breakpoints from "../utils/breakpoints";
 
 const Item = ({ children, text, link, numberNews, pathname }) => {
   const active = pathname === link;
@@ -82,8 +83,13 @@ const tryAddActiveColor = (pathname, href) =>
   pathname === href ? "#00B284" : "#333333";
 
 // TODO: Add tryAddActiveColor in all fills of icons
-const MenuNavegation = ({ userImage, userName, router: { pathname } }) => (
-  <div className="MenuNavegation">
+const MenuNavegation = ({
+  show,
+  userImage,
+  userName,
+  router: { pathname }
+}) => (
+  <div className={`MenuNavegation ${show ? "--show" : ""}`}>
     <div>
       <img src={userImage} alt="lidbot user" />
       <h1>
@@ -267,6 +273,21 @@ const MenuNavegation = ({ userImage, userName, router: { pathname } }) => (
           box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
           position: fixed;
 
+          @media (max-width: ${breakpoints.tablet}) {
+            z-index: 12;
+            left: 0;
+            transition: 0.6s all ease;
+            transform: translateX(-100vw);
+            opacity: 0;
+
+            &.--show {
+              transform: translateX(0);
+              opacity: 1;
+              height: 100%;
+              overflow-y: scroll
+            }
+          }
+
           > div {
             padding-top: 34px;
             padding-bottom: 34px;
@@ -323,7 +344,8 @@ MenuNavegation.propTypes = {
   userName: PropTypes.string.isRequired,
   router: PropTypes.shape({
     pathname: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  show: PropTypes.bool.isRequired
 };
 
 export default withRouter(MenuNavegation);
