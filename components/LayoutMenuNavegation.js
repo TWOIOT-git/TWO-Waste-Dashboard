@@ -19,7 +19,11 @@ class LayoutMenuNavegation extends React.Component {
   };
 
   render() {
-    const { show } = this.state;
+    const {
+      state: { show },
+      props: { children },
+      toggleShow
+    } = this;
     return (
       <div className="LayoutFlex">
         <MenuNavegation
@@ -27,7 +31,7 @@ class LayoutMenuNavegation extends React.Component {
           userName="Carl"
           show={show}
         />
-        <button className="burger" type="button" onClick={this.toggleShow}>
+        <button className="burger" type="button" onClick={toggleShow}>
           <svg
             width="12"
             height="10"
@@ -40,8 +44,16 @@ class LayoutMenuNavegation extends React.Component {
             <path d="M0 9H12" stroke="white" />
           </svg>
         </button>
-        {show ? <div className="Overlay" onClick={this.toggleShow} /> : null}
-        <div className="Content">{this.props.children}</div>
+        <If condition={show}>
+          <div
+            className="Overlay"
+            onClick={toggleShow}
+            role="button"
+            tabIndex="0"
+            onKeyPress={toggleShow}
+          />
+        </If>
+        <div className="Content">{children}</div>
         <style jsx>{`
           .LayoutFlex {
             display: flex;
@@ -55,7 +67,7 @@ class LayoutMenuNavegation extends React.Component {
             left: 0;
             top: 0;
             background-color: rgba(0, 0, 0, 0.5);
-            z-index: 11
+            z-index: 11;
           }
 
           .LayoutFlex > .Content {
@@ -83,7 +95,6 @@ class LayoutMenuNavegation extends React.Component {
               border: none;
               padding: 0;
               transform: scale(2, 2);
-              outline: none;
             }
           }
         `}</style>
