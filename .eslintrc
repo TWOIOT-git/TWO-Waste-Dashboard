@@ -19,7 +19,16 @@
     "jsx-a11y/anchor-is-valid": 0,
     "react/jsx-filename-extension": 0,
     "linebreak-style": 0,
-    "react/jsx-no-undef": [2, { "allowGlobals": true }]
+    "react/jsx-no-undef": [2, { "allowGlobals": true }],
+    "jsx-a11y/label-has-associated-control": [ 2, {
+      "assert": "htmlFor"
+    }],
+    "jsx-a11y/label-has-for": [ 2, {
+      "required": {
+          "every": [ "id" ]
+      },
+      "allowChildren": false
+    }]
   },
   "plugins": [
     "jsx-a11y",

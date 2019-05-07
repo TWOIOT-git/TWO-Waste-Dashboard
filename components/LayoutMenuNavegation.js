@@ -83,6 +83,7 @@ class LayoutMenuNavegation extends React.Component {
             .LayoutFlex > .Content {
               flex: 1;
               padding-left: 0;
+              width: 100%;
             }
 
             .LayoutFlex .burger {
