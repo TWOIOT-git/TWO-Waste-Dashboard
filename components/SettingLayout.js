@@ -34,10 +34,10 @@ const SettingLayout = ({ children, router: { pathname } }) => {
           </Link>
         </div>
         <div>
-          <Link href="settings_general">
+          <Link href="settings_generals">
             <a
               className={`${
-                pathname === "/settings_general" ? "--active" : ""
+                pathname === "/settings_generals" ? "--active" : ""
               }`}
             >
               General
