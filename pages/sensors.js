@@ -16,7 +16,6 @@ class Sensors extends React.Component {
           id: 1,
           name: "MAINSTREET_33/023",
           robinSize: "ROBIN XL",
-          status: "full",
           porcentage: "95",
           location: {
             city: "Berlin",
@@ -31,7 +30,6 @@ class Sensors extends React.Component {
           id: 2,
           name: "FEHRBELLINER STREET 47",
           robinSize: "ROBIN SENSOR X",
-          status: "no-full",
           porcentage: "15",
           location: {
             city: "Berlin",
@@ -46,7 +44,6 @@ class Sensors extends React.Component {
           id: 3,
           name: "MAINSTREET_33/023",
           robinSize: "ROBIN XL",
-          status: "full",
           porcentage: "95",
           location: {
             city: "Berlin",
@@ -61,7 +58,6 @@ class Sensors extends React.Component {
           id: 4,
           name: "FEHRBELLINER STREET 47",
           robinSize: "ROBIN SENSOR X",
-          status: "no-full",
           porcentage: "15",
           location: {
             city: "Berlin",
@@ -76,7 +72,6 @@ class Sensors extends React.Component {
           id: 5,
           name: "MAINSTREET_33/023",
           robinSize: "ROBIN XL",
-          status: "full",
           porcentage: "95",
           location: {
             city: "Berlin",
@@ -91,7 +86,6 @@ class Sensors extends React.Component {
           id: 6,
           name: "FEHRBELLINER STREET 47",
           robinSize: "ROBIN SENSOR X",
-          status: "no-full",
           porcentage: "15",
           location: {
             city: "Berlin",
@@ -106,7 +100,6 @@ class Sensors extends React.Component {
           id: 7,
           name: "MAINSTREET_33/023",
           robinSize: "ROBIN XL",
-          status: "full",
           porcentage: "95",
           location: {
             city: "Berlin",
@@ -121,7 +114,6 @@ class Sensors extends React.Component {
           id: 8,
           name: "FEHRBELLINER STREET 47",
           robinSize: "ROBIN SENSOR X",
-          status: "no-full",
           porcentage: "15",
           location: {
             city: "Berlin",
@@ -136,7 +128,6 @@ class Sensors extends React.Component {
           id: 9,
           name: "MAINSTREET_33/023",
           robinSize: "ROBIN XL",
-          status: "full",
           porcentage: "95",
           location: {
             city: "Berlin",
@@ -151,7 +142,6 @@ class Sensors extends React.Component {
           id: 10,
           name: "FEHRBELLINER STREET 47",
           robinSize: "ROBIN SENSOR X",
-          status: "no-full",
           porcentage: "15",
           location: {
             city: "Berlin",
@@ -166,7 +156,7 @@ class Sensors extends React.Component {
           id: 11,
           name: "MAINSTREET_33/023",
           robinSize: "ROBIN XL",
-          status: "full",
+
           porcentage: "95",
           location: {
             city: "Berlin",
@@ -181,7 +171,6 @@ class Sensors extends React.Component {
           id: 12,
           name: "FEHRBELLINER STREET 47",
           robinSize: "ROBIN SENSOR X",
-          status: "no-full",
           porcentage: "15",
           location: {
             city: "Berlin",
@@ -196,7 +185,7 @@ class Sensors extends React.Component {
           id: 13,
           name: "MAINSTREET_33/023",
           robinSize: "ROBIN XL",
-          status: "full",
+
           porcentage: "95",
           location: {
             city: "Berlin",
@@ -211,7 +200,6 @@ class Sensors extends React.Component {
           id: 14,
           name: "FEHRBELLINER STREET 47",
           robinSize: "ROBIN SENSOR X",
-          status: "no-full",
           porcentage: "15",
           location: {
             city: "Berlin",
@@ -272,4 +260,4 @@ class Sensors extends React.Component {
   }
 }
 
-export default Sensors
+export default Sensors;

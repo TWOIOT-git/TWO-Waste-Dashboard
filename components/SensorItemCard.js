@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Link from "next/link";
 
 const SensorItemCard = ({
   name,
   robinSize,
-  status,
   porcentage,
   location: { city, street, outIn },
   owner
@@ -13,10 +13,12 @@ const SensorItemCard = ({
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span
-            className={`status ${status === "no-full" ? "green" : "red"}`}
-          />
-          <h2>{name} </h2>
+          <span className={`status ${porcentage < 50 ? "green" : "red"}`} />
+          <h2>
+            <Link href="sensor">
+              <a>{name}</a>
+            </Link>
+          </h2>
           <p>{robinSize}</p>
         </div>
       </div>
@@ -194,13 +196,21 @@ const SensorItemCard = ({
                 padding: 20px 30px;
 
                 h2 {
-                  font-family: Roboto;
-                  font-style: normal;
-                  font-weight: bold;
-                  font-size: 20px;
-                  line-height: normal;
                   margin: 0;
-                  color: #333333;
+
+                  a {
+                    color: #333333;
+                    font-family: Roboto;
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 20px;
+                    line-height: normal;
+                    text-decoration: none;
+
+                    &:hover {
+                      color: #00bf8d;
+                    }
+                  }
                 }
 
                 p {
@@ -242,7 +252,6 @@ const SensorItemCard = ({
 SensorItemCard.propTypes = {
   name: PropTypes.string.isRequired,
   robinSize: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired,
   porcentage: PropTypes.string.isRequired,
   location: PropTypes.shape({
     city: PropTypes.string.isRequired,
