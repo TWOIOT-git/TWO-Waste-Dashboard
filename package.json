@@ -9,7 +9,8 @@
     "build": "next build",
     "lint": "npm run lint:eslint",
     "lint:fix": "eslint --fix --ignore-path .eslintignore .",
-    "lint:eslint": "eslint --ignore-path .eslintignore ."
+    "lint:eslint": "eslint --ignore-path .eslintignore .",
+    "heroku-postbuild": "npm run build"
   },
   "repository": {
     "type": "git",
