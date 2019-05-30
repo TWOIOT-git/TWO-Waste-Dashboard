@@ -39,7 +39,7 @@ export default class Sensor extends Component {
         .then(res => res.json())
         .then(res => {
           const binLevel = res.Items[0].bin_level;
-          const porcentage = -1 * ((binLevel / 240) * 100 - 100); // <---- MATH CODE
+          const porcentage = -1 * ((binLevel / 640) * 100 - 100); // <---- MATH CODE
 
           if (porcentage <= 5) {
             this.setState({ porcentage: "0" });
