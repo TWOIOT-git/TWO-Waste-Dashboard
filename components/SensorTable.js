@@ -88,11 +88,11 @@ const SensorTable = ({ items }) => {
             }
 
             > div:last-child {
-              flex: 0.4;
+              flex: 0.75
             }
 
             > div:first-child {
-              flex: 0.3;
+              flex: 0.75;
             }
           }
 
@@ -109,11 +109,11 @@ const SensorTable = ({ items }) => {
             }
 
             > div:last-child {
-              flex: 0.4;
+              flex: 0.75
             }
 
             > div:first-child {
-              flex: 0.3;
+              flex: 0.75;
             }
 
             .status {

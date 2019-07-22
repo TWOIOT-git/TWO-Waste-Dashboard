@@ -6,3 +6,5 @@ debug.log
 dist
 .next
 
+build
+.idea

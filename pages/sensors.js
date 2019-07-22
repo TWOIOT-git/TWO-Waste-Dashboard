@@ -1,9 +1,11 @@
 import React from "react";
+import moment from "moment";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import TopTools from "../components/TopTools";
 import SensorItemCard from "../components/SensorItemCard";
 import SensorTable from "../components/SensorTable";
+import axios from "axios";
 
 class Sensors extends React.Component {
   constructor(props) {
@@ -12,207 +14,53 @@ class Sensors extends React.Component {
     this.state = {
       layoutMode: "cards",
       data: [
-        {
-          id: 1,
-          name: "MAINSTREET_33/023",
-          robinSize: "ROBIN XL",
-          porcentage: "95",
-          location: {
-            city: "Berlin",
-            street: "Martinusstr.7, 66802",
-            outIn: "indoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 2,
-          name: "FEHRBELLINER STREET 47",
-          robinSize: "ROBIN SENSOR X",
-          porcentage: "15",
-          location: {
-            city: "Berlin",
-            street: "Fehrbelliner Str. 47, 10119",
-            outIn: "outdoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 3,
-          name: "MAINSTREET_33/023",
-          robinSize: "ROBIN XL",
-          porcentage: "95",
-          location: {
-            city: "Berlin",
-            street: "Martinusstr.7, 66802",
-            outIn: "indoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 4,
-          name: "FEHRBELLINER STREET 47",
-          robinSize: "ROBIN SENSOR X",
-          porcentage: "15",
-          location: {
-            city: "Berlin",
-            street: "Fehrbelliner Str. 47, 10119",
-            outIn: "outdoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 5,
-          name: "MAINSTREET_33/023",
-          robinSize: "ROBIN XL",
-          porcentage: "95",
-          location: {
-            city: "Berlin",
-            street: "Martinusstr.7, 66802",
-            outIn: "indoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 6,
-          name: "FEHRBELLINER STREET 47",
-          robinSize: "ROBIN SENSOR X",
-          porcentage: "15",
-          location: {
-            city: "Berlin",
-            street: "Fehrbelliner Str. 47, 10119",
-            outIn: "outdoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 7,
-          name: "MAINSTREET_33/023",
-          robinSize: "ROBIN XL",
-          porcentage: "95",
-          location: {
-            city: "Berlin",
-            street: "Martinusstr.7, 66802",
-            outIn: "indoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 8,
-          name: "FEHRBELLINER STREET 47",
-          robinSize: "ROBIN SENSOR X",
-          porcentage: "15",
-          location: {
-            city: "Berlin",
-            street: "Fehrbelliner Str. 47, 10119",
-            outIn: "outdoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 9,
-          name: "MAINSTREET_33/023",
-          robinSize: "ROBIN XL",
-          porcentage: "95",
-          location: {
-            city: "Berlin",
-            street: "Martinusstr.7, 66802",
-            outIn: "indoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 10,
-          name: "FEHRBELLINER STREET 47",
-          robinSize: "ROBIN SENSOR X",
-          porcentage: "15",
-          location: {
-            city: "Berlin",
-            street: "Fehrbelliner Str. 47, 10119",
-            outIn: "outdoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 11,
-          name: "MAINSTREET_33/023",
-          robinSize: "ROBIN XL",
-
-          porcentage: "95",
-          location: {
-            city: "Berlin",
-            street: "Martinusstr.7, 66802",
-            outIn: "indoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 12,
-          name: "FEHRBELLINER STREET 47",
-          robinSize: "ROBIN SENSOR X",
-          porcentage: "15",
-          location: {
-            city: "Berlin",
-            street: "Fehrbelliner Str. 47, 10119",
-            outIn: "outdoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 13,
-          name: "MAINSTREET_33/023",
-          robinSize: "ROBIN XL",
-
-          porcentage: "95",
-          location: {
-            city: "Berlin",
-            street: "Martinusstr.7, 66802",
-            outIn: "indoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        },
-        {
-          id: 14,
-          name: "FEHRBELLINER STREET 47",
-          robinSize: "ROBIN SENSOR X",
-          porcentage: "15",
-          location: {
-            city: "Berlin",
-            street: "Fehrbelliner Str. 47, 10119",
-            outIn: "outdoor"
-          },
-          owner: {
-            name: "LIDBOT POC"
-          }
-        }
       ]
     };
   }
+
+  componentDidMount() {
+      this.refresh();
+      this.timerID = setInterval(
+          () => this.refresh(),
+          30000
+      );
+  }
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+
+
+    refresh() {
+      console.log('refreshing sensors');
+
+        axios.get('https://api.lidbot.com/device/customers/taipei-city/sensors')
+            .then(response => {
+                const sensors = response.data.results;
+
+                let data = [];
+                for (let sensor of sensors) {
+                    data.push({
+                        id: sensor.sensor_id,
+                        name: sensor.sensor_id,
+                        robinSize: "Robin XL",
+                        porcentage: sensor.fill_percentage,
+                        location: {
+                            city: "Taipei",
+                            street: "XinYi Rd.",
+                            outIn: "indoor"
+                        },
+                        owner: {
+                            name: sensor.customer_id
+                        },
+                        time: moment.unix(sensor.updated_on).fromNow()
+                    })
+                }
+                this.setState({ data });
+            })
+            .catch(error => console.log(error))
+            .finally(function () {
+            });
+    }
 
   render() {
     const { data, layoutMode } = this.state;

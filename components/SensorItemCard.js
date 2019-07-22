@@ -7,7 +7,8 @@ const SensorItemCard = ({
   robinSize,
   porcentage,
   location: { city, street, outIn },
-  owner
+  owner,
+    time
 }) => {
   return (
     <article>
@@ -26,7 +27,8 @@ const SensorItemCard = ({
         <div>
           <div>
             <p>STATUS:</p>
-            <h3>{porcentage}%</h3>
+            <h3>{Math.round(porcentage)}%</h3>
+            <h5>{time}</h5>
           </div>
           <div>
             <p>LOCATION:</p>
@@ -142,7 +144,7 @@ const SensorItemCard = ({
                     font-family: Roboto;
                     font-style: normal;
                     font-weight: bold;
-                    font-size: 72px;
+                    font-size: 52px;
                     line-height: normal;
 
                     color: ${porcentage > 50 ? "#da6464" : "#00bf8d"};
@@ -252,7 +254,7 @@ const SensorItemCard = ({
 SensorItemCard.propTypes = {
   name: PropTypes.string.isRequired,
   robinSize: PropTypes.string.isRequired,
-  porcentage: PropTypes.string.isRequired,
+  porcentage: PropTypes.number.isRequired,
   location: PropTypes.shape({
     city: PropTypes.string.isRequired,
     street: PropTypes.string.isRequired,

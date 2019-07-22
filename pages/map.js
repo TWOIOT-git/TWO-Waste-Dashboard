@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import PropTypes from "prop-types";
 import fetch from "isomorphic-unfetch";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
@@ -11,9 +12,9 @@ class Map extends React.Component {
     super(props);
     this.state = {
       viewport: {
-        latitude: 25.079964,
-        longitude: 121.546367,
-        zoom: 16,
+        latitude: 25.033209,
+        longitude: 121.552708,
+        zoom: 14,
         width: "100%",
         height: "100vh"
       },
@@ -23,7 +24,7 @@ class Map extends React.Component {
 
   static async getInitialProps() {
     const res = await fetch(
-      "https://raw.githubusercontent.com/TWOIOT-git/TWO-Waste-Dashboard/master/src/bin_data.json"
+      "https://api.lidbot.com/device/customers/taipei-city/sensors"
     );
 
     const data = await res.json();
@@ -32,13 +33,14 @@ class Map extends React.Component {
   }
 
   renderWasteBinMarker = (wasteBin, index) => {
+    let time = moment.unix(wasteBin.updated_on).fromNow();
     return (
       <Marker
         key={`marker-${index}`}
         longitude={wasteBin.longitude}
         latitude={wasteBin.latitude}
       >
-        <FlagMarker name="ROBIN XL" eta="0h 11 min" porcentage={53} />
+        <FlagMarker name={wasteBin.sensor_id} eta={time.toString()} porcentage={wasteBin.fill_percentage} />
       </Marker>
     );
   };
@@ -80,7 +82,8 @@ class Map extends React.Component {
           }
           mapboxApiAccessToken={token}
         >
-          {data.map(this.renderWasteBinMarker)}
+          {console.log(moment.unix(1318781876).toString())}
+          {data.results.map(this.renderWasteBinMarker)}
           {this.renderPopup()}
         </ReactMapGL>
         <style jsx>{`
