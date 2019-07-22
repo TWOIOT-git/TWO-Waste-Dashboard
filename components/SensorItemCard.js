@@ -2,12 +2,18 @@ import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 
+
+import {
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
+} from "recharts";
+
 const SensorItemCard = ({
   name,
   robinSize,
   porcentage,
   location: { city, street, outIn },
   owner,
+    fill_reports,
     time
 }) => {
   return (
@@ -39,12 +45,13 @@ const SensorItemCard = ({
         </div>
       </div>
       <div className="SensorItemCardFooter">
-        <div>
-          <p>OWNED BY: </p>
-        </div>
-        <div>
-          <p>{owner.name}</p>
-        </div>
+          <BarChart
+              data={fill_reports}
+              width={250} height={40}
+          >
+            <Tooltip />
+            <Bar dataKey='v' fill='#00bf8d'/>
+          </BarChart>
       </div>
       <style jsx>
         {`
@@ -78,6 +85,13 @@ const SensorItemCard = ({
               display: flex;
               justify-content: space-between;
 
+              .BarChart {
+                  width: 100%;
+                  height: 50%;
+                  margin: auto;
+                  display: block;
+                }
+                
               > div {
                 p {
                   margin: 0;

@@ -22,7 +22,7 @@ class Sensors extends React.Component {
       this.refresh();
       this.timerID = setInterval(
           () => this.refresh(),
-          30000
+          10000
       );
   }
     componentWillUnmount() {
@@ -52,6 +52,7 @@ class Sensors extends React.Component {
                         owner: {
                             name: sensor.customer_id
                         },
+                        fill_reports: (sensor.reports) ? JSON.parse(sensor.reports).reverse() : [],
                         time: moment.unix(sensor.updated_on).fromNow()
                     })
                 }
