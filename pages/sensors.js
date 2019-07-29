@@ -5,7 +5,7 @@ import Head from "../components/Head";
 import TopTools from "../components/TopTools";
 import SensorItemCard from "../components/SensorItemCard";
 import SensorTable from "../components/SensorTable";
-import axios from "axios";
+import fetch from "isomorphic-unfetch";
 
 class Sensors extends React.Component {
   constructor(props) {
@@ -30,37 +30,42 @@ class Sensors extends React.Component {
     }
 
 
-    refresh() {
+  async refresh() {
       console.log('refreshing sensors');
 
-        axios.get('https://api.lidbot.com/device/customers/taipei-city/sensors')
-            .then(response => {
-                const sensors = response.data.results;
+      try {
+        const response = await fetch("https://api.lidbot.com/device/customers/taipei-city/sensors");
 
-                let data = [];
-                for (let sensor of sensors) {
-                    data.push({
-                        id: sensor.sensor_id,
-                        name: sensor.sensor_id,
-                        robinSize: "Robin XL",
-                        porcentage: sensor.fill_percentage,
-                        location: {
-                            city: "Taipei",
-                            street: "XinYi Rd.",
-                            outIn: "indoor"
-                        },
-                        owner: {
-                            name: sensor.customer_id
-                        },
-                        fill_reports: (sensor.reports) ? JSON.parse(sensor.reports) : [],
-                        time: moment.unix(sensor.updated_on).fromNow()
-                    })
-                }
-                this.setState({ data });
-            })
-            .catch(error => console.log(error))
-            .finally(function () {
-            });
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+
+        const json = await response.json();
+
+        let data = [];
+        for (let sensor of json.results) {
+          data.push({
+            id: sensor.sensor_id,
+            name: sensor.sensor_id,
+            robinSize: "Robin XL",
+            porcentage: sensor.fill_percentage,
+            location: {
+              city: "Taipei",
+              street: "XinYi Rd.",
+              outIn: "indoor"
+            },
+            owner: {
+              name: sensor.customer_id
+            },
+            fill_reports: (sensor.reports) ? JSON.parse(sensor.reports) : [],
+            time: moment.unix(sensor.updated_on).fromNow()
+          })
+        }
+        this.setState({ data });
+
+      } catch (error) {
+        console.log(error);
+      }
     }
 
   render() {
