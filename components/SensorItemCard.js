@@ -22,7 +22,10 @@ const SensorItemCard = ({
         <div>
           <span className={`status ${porcentage < 50 ? "green" : "red"}`} />
           <h2>
-            <Link href="sensor">
+            {/*<Link href="/sensor/[id]" as={`/sensor/${name}`}>*/}
+            {/*  <a>{name}</a>*/}
+            {/*</Link>*/}
+            <Link href={{ pathname: '/sensor', query: { id: name } }} as={`/sensor/${name}`}>
               <a>{name}</a>
             </Link>
           </h2>
@@ -91,7 +94,7 @@ const SensorItemCard = ({
                   margin: auto;
                   display: block;
                 }
-                
+
               > div {
                 p {
                   margin: 0;

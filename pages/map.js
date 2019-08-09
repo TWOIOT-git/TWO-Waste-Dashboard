@@ -6,6 +6,7 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import FlagMarker from "../components/FlagMarker";
 import TopTools from "../components/TopTools";
+import { withAuthSync, ClientContext } from '../utils/auth'
 
 class Map extends React.Component {
   constructor(props) {
@@ -82,7 +83,6 @@ class Map extends React.Component {
           }
           mapboxApiAccessToken={token}
         >
-          {console.log(moment.unix(1318781876).toString())}
           {data.results.map(this.renderWasteBinMarker)}
           {this.renderPopup()}
         </ReactMapGL>
@@ -113,4 +113,5 @@ Map.propTypes = {
   ).isRequired
 };
 
-export default Map;
+// export default withAuthSync(Map)
+export default Map

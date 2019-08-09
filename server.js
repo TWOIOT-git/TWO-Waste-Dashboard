@@ -16,6 +16,10 @@ app.prepare().then(() => {
   server.get(/(.+)\/$/, (req, res) =>
   res.redirect(301, req.url.replace(/\/$/, ""))
   );
+  server.get('/sensor/:id', (req, res) => {
+    console.log('calling route /sensor/:id')
+    return app.render(req, res, '/sensor', { id: req.params.id })
+  })
   server.get("*", handle);
   const httpServer = http.createServer(server);
   httpServer.listen(port, err => {

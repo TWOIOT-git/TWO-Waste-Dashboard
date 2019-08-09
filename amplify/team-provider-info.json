@@ -1,0 +1,19 @@
+{
+    "test": {
+        "awscloudformation": {
+            "AuthRoleName": "two-waste-dashboard-test-20190729152732-authRole",
+            "UnauthRoleArn": "arn:aws:iam::457675404774:role/two-waste-dashboard-test-20190729152732-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::457675404774:role/two-waste-dashboard-test-20190729152732-authRole",
+            "Region": "ap-northeast-1",
+            "DeploymentBucketName": "two-waste-dashboard-test-20190729152732-deployment",
+            "UnauthRoleName": "two-waste-dashboard-test-20190729152732-unauthRole",
+            "StackName": "two-waste-dashboard-test-20190729152732",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:457675404774:stack/two-waste-dashboard-test-20190729152732/54880680-b1d2-11e9-903d-0e819627e6da"
+        },
+        "categories": {
+            "auth": {
+                "twowastedashboarddf8803f0": {}
+            }
+        }
+    }
+}

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 import { withRouter } from "next/router";
 import breakpoints from "../utils/breakpoints";
+import { signOut } from '../utils/auth'
 
 const NESTED_SETTINGS_URLS = [
   "/settings_user_details",
@@ -107,7 +108,6 @@ const tryAddActiveColor = (pathname, href) => {
   }
   return pathname === href ? "#00B284" : "#333333";
 };
-
 // TODO: Add tryAddActiveColor in all fills of icons
 const MenuNavegation = ({
   show,
@@ -119,7 +119,7 @@ const MenuNavegation = ({
     <div>
       <img src={userImage} alt="lidbot user" />
       <h1>
-        Morning, <strong>{userName}</strong>!
+        Hello, <strong>{userName}</strong>!
       </h1>
     </div>
     <div>
@@ -276,7 +276,7 @@ const MenuNavegation = ({
       </Item>
     </div>
     <div>
-      <Item pathname={pathname} text="Logout" link="/logout">
+      <button className="sign-out" type="button" onClick={e => signOut(e)}>
         <svg
           width="20"
           height="20"
@@ -293,16 +293,18 @@ const MenuNavegation = ({
             fill="black"
           />
         </svg>
-      </Item>
+        Log Out
+      </button>
     </div>
     <style jsx>
       {`
         .MenuNavegation {
-          height: 100vh;
+          height: 100%;
           width: 200px;
           background: #ffffff;
           box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
           position: fixed;
+          overflow-y: scroll;
 
           @media (max-width: ${breakpoints.tablet}) {
             z-index: 12;
@@ -316,6 +318,26 @@ const MenuNavegation = ({
               opacity: 1;
               height: 100%;
               overflow-y: scroll;
+            }
+          }
+          
+          button {
+            display: block;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: normal;
+            text-decoration: none;
+            border: none;
+            color: #333333;
+            
+            &:hover {
+              color: #00b284;
+            }
+            
+            svg {
+              padding-right: 10px;
             }
           }
 
@@ -371,8 +393,8 @@ const MenuNavegation = ({
 );
 
 MenuNavegation.propTypes = {
-  userImage: PropTypes.string.isRequired,
-  userName: PropTypes.string.isRequired,
+  userImage: PropTypes.string,
+  userName: PropTypes.string,
   router: PropTypes.shape({
     pathname: PropTypes.string.isRequired
   }).isRequired,

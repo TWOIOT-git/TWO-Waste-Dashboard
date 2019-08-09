@@ -2,31 +2,75 @@ import React from "react";
 import Router from 'next/router'
 import Head from "../components/Head";
 
+import Amplify, { Auth } from 'aws-amplify';
+import awsconfig from '../aws-exports';
+Amplify.configure(awsconfig);
+
 export default class Authentication extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      newPassword: "",
+      passwordRepeat: "",
+      authState: 'signIn',
+      authData: null,
+      authError: null,
+      user: null,
     };
   }
 
   onChange = e => {
     this.setState({
-      [e.target.name]: e.target.valueu
+      [e.target.name]: e.target.value
     });
   };
 
   onSubmit = e => {
     e.preventDefault();
-
-    Router.push('/analytics')
+    this.signIn()
   };
 
+  async signIn() {
+    try {
+      if(this.state.authState === 'NEW_PASSWORD_REQUIRED') {
+        if(this.state.newPassword !== this.state.passwordRepeat) {
+          console.log('PASSWORD_DO_NOT_MATCH')
+          this.setState({authError: "Passwords are not the same."});
+        } else {
+          console.log(this.state.user);
+          console.log('Calling completeNewPassword');
+          const loggedUser = await Auth.completeNewPassword(
+            this.state.user,
+            this.state.newPassword,
+          );
+          console.log(loggedUser);
+          Router.push('/analytics');
+        }
+      } else {
+        const user = await Auth.signIn(this.state.email, this.state.password)
+
+        console.log('sign in success!')
+        console.log(user)
+
+        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+          this.setState({user: user, authState: user.challengeName, authError: 'Please change your password.'})
+        } else {
+          Router.push('/analytics')
+        }
+      }
+    } catch (err) {
+      console.log('error signing up..', err)
+      this.setState({authError: err.message})
+    }
+  }
+
   render() {
-    const { email, password } = this.state;
+    const { email, password, newPassword, passwordRepeat, authError, authState } = this.state;
     const { onChange } = this;
+
     return (
       <section>
         <Head title="lidbot - Login" />
@@ -50,29 +94,60 @@ export default class Authentication extends React.Component {
           <div>
             <h1>WASTE ANALYTICS PLATFORM</h1>
             <p>Welcome back! Login to continue your smart waste management.</p>
+
+            <div className="alert error">
+              {authError}
+            </div>
+
             <form onSubmit={e => this.onSubmit(e)}>
-              <label htmlFor="email">
-                Email
-                <input
-                  name="email"
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={e => onChange(e)}
-                  placeholder="Enter your email"
-                />
-              </label>
-              <label htmlFor="password">
-                Password
-                <input
-                  name="password"
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={e => onChange(e)}
-                  placeholder="Write your password"
-                />
-              </label>
+              <If condition={authState === 'signIn'}>
+                <label htmlFor="email">
+                  Email
+                  <input
+                    name="email"
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={e => onChange(e)}
+                    placeholder="Enter your email"
+                  />
+                </label>
+                <label htmlFor="password">
+                  Password
+                  <input
+                    name="password"
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={e => onChange(e)}
+                    placeholder="Password"
+                  />
+                </label>
+              </If>
+              <If condition={authState === 'NEW_PASSWORD_REQUIRED'}>
+                <label htmlFor="newPassword">
+                  Password
+                  <input
+                    name="newPassword"
+                    id="newPassword"
+                    type="password"
+                    value={newPassword}
+                    onChange={e => onChange(e)}
+                    placeholder="New Password"
+                  />
+                </label>
+                <label htmlFor="passwordRepeat">
+                  Repeat Password
+                  <input
+                    name="passwordRepeat"
+                    id="passwordRepeat"
+                    type="password"
+                    value={passwordRepeat}
+                    onChange={e => onChange(e)}
+                    placeholder="Repeat Password"
+                  />
+                </label>
+              </If>
               <button type="submit">Login</button>
             </form>
           </div>
@@ -86,6 +161,21 @@ export default class Authentication extends React.Component {
               to {
                 -webkit-transform: none;
               }
+            }
+            .alert {
+              border-radius: 4px;
+              padding: 10px;
+              margin-bottom: 20px;
+              font-size: 12px;
+              text-align: center;
+              font-weight: 100;
+              &:empty {
+                display: none;
+              }
+            }
+            .error {
+              background: #d64242;
+              color: #fff;
             }
 
             section {

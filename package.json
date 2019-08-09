@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
+    "dev": "node server.js",
     "start": "NODE_ENV=production node server.js",
     "build": "next build",
     "lint": "npm run lint:eslint",
@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/TWOIOT-git/TWO-Waste-Dashboard#readme",
   "dependencies": {
-    "axios": "^0.19.0",
+    "aws-amplify": "^1.1.32",
+    "aws-amplify-react": "^2.3.11",
     "compression": "^1.7.4",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",

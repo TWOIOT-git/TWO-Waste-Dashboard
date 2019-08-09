@@ -6,8 +6,10 @@ import TopTools from "../components/TopTools";
 import SensorItemCard from "../components/SensorItemCard";
 import SensorTable from "../components/SensorTable";
 import fetch from "isomorphic-unfetch";
+import { withAuthSync, ClientContext } from '../utils/auth'
 
 class Sensors extends React.Component {
+  static contextType = ClientContext;
   constructor(props) {
     super(props);
 
@@ -22,26 +24,24 @@ class Sensors extends React.Component {
       this.refresh();
       this.timerID = setInterval(
           () => this.refresh(),
-          10000
+          60000
       );
   }
-    componentWillUnmount() {
-        clearInterval(this.timerID);
-    }
 
+  componentWillUnmount() {
+      clearInterval(this.timerID);
+  }
 
   async refresh() {
-      console.log('refreshing sensors');
-
       try {
-        const response = await fetch("https://api.lidbot.com/device/customers/taipei-city/sensors");
-
+        let url = "https://api.lidbot.com/device/customers/" + this.context.client_id + "/sensors";
+        console.log('fetching from: ' + url);
+        const response = await fetch(url);
         if (!response.ok) {
           throw Error(response.statusText);
         }
 
         const json = await response.json();
-
         let data = [];
         for (let sensor of json.results) {
           data.push({
@@ -71,8 +71,10 @@ class Sensors extends React.Component {
   render() {
     const { data, layoutMode } = this.state;
     return (
-      <LayoutMenuNavegation>
-        <Head title="lidbot - Sensors" />
+      <LayoutMenuNavegation
+        signOut={true}
+      >
+        <Head title="Sensors | lidbot" />
         <TopTools
           layoutMode={layoutMode}
           onChangeLayout={value => this.setState({ layoutMode: value })}
@@ -114,4 +116,4 @@ class Sensors extends React.Component {
   }
 }
 
-export default Sensors;
+export default withAuthSync(Sensors)

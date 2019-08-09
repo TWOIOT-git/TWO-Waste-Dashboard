@@ -1,3 +1,4 @@
+import { withAuthSync } from '../utils/auth'
 import React from "react";
 import {
   LineChart,
@@ -612,4 +613,4 @@ class Analytics extends React.Component {
   }
 }
 
-export default Analytics;
+export default withAuthSync(Analytics)

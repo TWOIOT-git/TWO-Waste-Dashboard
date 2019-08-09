@@ -1,0 +1,9 @@
+{
+	"auth": {
+		"twowastedashboarddf8803f0": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}

@@ -2,8 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import MenuNavegation from "./MenuNavegation";
 import breakpoints from "../utils/breakpoints";
+import { ClientContext } from '../utils/auth'
 
 class LayoutMenuNavegation extends React.Component {
+  static contextType = ClientContext;
   constructor(props) {
     super(props);
 
@@ -27,8 +29,8 @@ class LayoutMenuNavegation extends React.Component {
     return (
       <div className="LayoutFlex">
         <MenuNavegation
-          userImage="https://www.brand-her.com/wp-content/uploads/2014/02/team1.jpg"
-          userName="Carl"
+          userImage={this.context.picture}
+          userName={this.context.given_name}
           show={show}
         />
         <button className="burger" type="button" onClick={toggleShow}>
