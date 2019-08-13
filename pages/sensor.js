@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
-import SensorItemCard from "../components/SensorItemCard";
+import SensorItemCardExpanded from "../components/SensorItemCardExpanded";
 import moment from "moment";
 import { withAuthSync, ClientContext } from '../utils/auth'
 
@@ -39,20 +39,31 @@ class Sensor extends Component {
   async refresh() {
     try {
       let url = "https://api.lidbot.com/device/customers/" + this.context.client_id + "/sensors/" + this.state.sensor_id;
+
       console.log('fetching from: ' + url);
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw Error(response.statusText);
+      const sensor_response = await fetch(url);
+      if (!sensor_response.ok) {
+        throw Error(sensor_response.statusText);
       }
 
-      const json = await response.json();
+      let reports_url = "https://api.lidbot.com/device/sensors/" + this.state.sensor_id + "/reports/limit/50";
+      console.log('fetching from: ' + reports_url);
+      const reports_response = await fetch(reports_url);
+      if (!reports_response.ok) {
+        throw Error(reports_response.statusText);
+      }
+
+
+      const json = await sensor_response.json();
+      const reports_json = await reports_response.json();
+
       let data = [];
       for (let sensor of json.results) {
         data.push({
           id: sensor.sensor_id,
           name: sensor.sensor_id,
           robinSize: "Robin XL",
-          porcentage: sensor.fill_percentage,
+          percentage: sensor.fill_percentage,
           location: {
             city: "Taipei",
             street: "XinYi Rd.",
@@ -61,7 +72,7 @@ class Sensor extends Component {
           owner: {
             name: sensor.customer_id
           },
-          fill_reports: (sensor.reports) ? JSON.parse(sensor.reports) : [],
+          fill_reports: reports_json.results,
           time: moment.unix(sensor.updated_on).fromNow()
         })
       }
@@ -82,19 +93,12 @@ class Sensor extends Component {
         <div className="Container">
           {data.map(item => (
             <div key={item.id} className="ItemCol">
-              <SensorItemCard {...item} />
+              <SensorItemCardExpanded {...item} />
             </div>
           ))}
           <style jsx>{`
             .Container {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-
-              > div {
-                width: 40vw;
-              }
+              padding: 25px;
             }
           `}</style>
         </div>

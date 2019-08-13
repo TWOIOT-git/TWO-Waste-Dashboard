@@ -2,15 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 
-
 import {
-  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
+  ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend
 } from "recharts";
 
-const SensorItemCard = ({
+const SensorItemCardExpanded = ({
   name,
   robinSize,
-  porcentage,
+  percentage,
   location: { city, street, outIn },
   owner,
     fill_reports,
@@ -20,11 +19,9 @@ const SensorItemCard = ({
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span className={`status ${porcentage < 50 ? "green" : "red"}`} />
+          <span className={`status ${percentage < 50 ? "green" : "red"}`} />
           <h2>
-            <Link href={{ pathname: '/sensor', query: { id: name } }} as={`/sensor/${name}`}>
-              <a>{name}</a>
-            </Link>
+            {name}
           </h2>
           <p>{robinSize}</p>
         </div>
@@ -33,7 +30,7 @@ const SensorItemCard = ({
         <div>
           <div>
             <p>STATUS:</p>
-            <h3>{Math.round(porcentage)}%</h3>
+            <h3>{Math.round(percentage)}%</h3>
             <h5>{time}</h5>
           </div>
           <div>
@@ -45,13 +42,25 @@ const SensorItemCard = ({
         </div>
       </div>
       <div className="SensorItemCardFooter">
-          <BarChart
-              data={fill_reports}
-              width={250} height={40}
-          >
-            <Tooltip />
-            <Bar dataKey='v' fill='#00bf8d'/>
-          </BarChart>
+        <div className="chart-header">
+          <h3>Fill Level</h3>
+          <div className="time-buttons">
+            <div>12 hr</div>
+            <div>1 day</div>
+            <div>3 days</div>
+            <div>7 days</div>
+          </div>
+        </div>
+        <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={fill_reports.reverse()}
+                   margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+          <XAxis dataKey="fill_date"/>
+          <YAxis/>
+          <CartesianGrid tickCount="3" vertical={false}/>
+          <Tooltip />
+          <Line type="monotone" dataKey="fill_percentage" stroke="#00bf8d" dot={false} activeDot={{r: 5}}/>
+        </LineChart>
+        </ResponsiveContainer>
       </div>
       <style jsx>
         {`
@@ -81,47 +90,38 @@ const SensorItemCard = ({
             margin-bottom: 22px;
 
             .SensorItemCardFooter {
-              padding: 14px 30px;
-              display: flex;
-              justify-content: space-between;
-
-              .BarChart {
-                  width: 100%;
-                  height: 50%;
-                  margin: auto;
-                  display: block;
-                }
-
-              > div {
-                p {
+              padding: 40px 30px;
+              
+              > .chart-header {
+                display: flex;
+                margin-bottom: 30px;
+                justify-content: space-between;
+                
+                h3 {
                   margin: 0;
                 }
-
-                &:nth-child(1) {
-                  p {
-                    font-family: Roboto;
-                    font-style: normal;
-                    font-weight: normal;
-                    font-size: 12px;
-                    line-height: normal;
-
-                    color: #a0a0a0;
-                  }
-                }
-
-                &:nth-child(2) {
-                  p {
-                    font-family: Roboto;
-                    font-style: normal;
-                    font-weight: bold;
-                    font-size: 12px;
-                    line-height: normal;
-                    text-align: right;
-
-                    color: #a0a0a0;
+                
+                .time-buttons {
+                  font-size: 13px;
+                  color: #003B2C;
+                  > div {
+                    display: inline-block;
+                    margin-left: 15px;
+                    
+                    &:hover {
+                      color: #00BF8D;
+                      text-decoration: underline;
+                    }
                   }
                 }
               }
+
+              .LineChart {
+                  width: 100%;
+                  height: 100%;
+                  margin: auto;
+                  display: block;
+               }
             }
 
             .SensorItemCardContent {
@@ -161,7 +161,7 @@ const SensorItemCard = ({
                     font-size: 52px;
                     line-height: normal;
 
-                    color: ${porcentage > 50 ? "#da6464" : "#00bf8d"};
+                    color: ${percentage > 50 ? "#da6464" : "#00bf8d"};
                   }
 
                   h4,
@@ -212,21 +212,14 @@ const SensorItemCard = ({
                 padding: 20px 30px;
 
                 h2 {
-                  margin: 0;
-
-                  a {
-                    color: #333333;
+                  margin: 0 0 10px 0;
+                  color: #333333;
                     font-family: Roboto;
                     font-style: normal;
                     font-weight: bold;
-                    font-size: 20px;
+                    font-size: 26px;
                     line-height: normal;
                     text-decoration: none;
-
-                    &:hover {
-                      color: #00bf8d;
-                    }
-                  }
                 }
 
                 p {
@@ -265,10 +258,10 @@ const SensorItemCard = ({
   );
 };
 
-SensorItemCard.propTypes = {
+SensorItemCardExpanded.propTypes = {
   name: PropTypes.string.isRequired,
   robinSize: PropTypes.string.isRequired,
-  porcentage: PropTypes.number.isRequired,
+  percentage: PropTypes.number.isRequired,
   location: PropTypes.shape({
     city: PropTypes.string.isRequired,
     street: PropTypes.string.isRequired,
@@ -279,4 +272,4 @@ SensorItemCard.propTypes = {
   }).isRequired
 };
 
-export default SensorItemCard;
+export default SensorItemCardExpanded;
