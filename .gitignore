@@ -5,11 +5,12 @@ debug.log
 .tmp
 dist
 .next
-
+.env
 build
 .idea
 dev
 #amplify
+aws-exports.js
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/backend/amplify-meta.json
