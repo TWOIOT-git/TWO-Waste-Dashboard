@@ -34,7 +34,7 @@ class Sensors extends React.Component {
 
   async refresh() {
       try {
-        let url = "https://api.lidbot.com/device/customers/" + this.context.client_id + "/sensors";
+        let url = process.env.DEVICE_API + "customers/" + this.context.client_id + "/sensors";
         console.log('fetching from: ' + url);
         const response = await fetch(url);
         if (!response.ok) {

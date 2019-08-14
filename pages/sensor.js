@@ -38,16 +38,13 @@ class Sensor extends Component {
 
   async refresh() {
     try {
-      let url = "https://api.lidbot.com/device/customers/" + this.context.client_id + "/sensors/" + this.state.sensor_id;
-
-      console.log('fetching from: ' + url);
+      let url = process.env.DEVICE_API + "customers/" + this.context.client_id + "/sensors/" + this.state.sensor_id;
       const sensor_response = await fetch(url);
       if (!sensor_response.ok) {
         throw Error(sensor_response.statusText);
       }
 
-      let reports_url = "https://api.lidbot.com/device/sensors/" + this.state.sensor_id + "/reports/limit/50";
-      console.log('fetching from: ' + reports_url);
+      let reports_url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id + "/reports/limit/50";
       const reports_response = await fetch(reports_url);
       if (!reports_response.ok) {
         throw Error(reports_response.statusText);
