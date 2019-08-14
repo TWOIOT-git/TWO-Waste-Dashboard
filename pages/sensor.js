@@ -4,6 +4,8 @@ import Head from "../components/Head";
 import SensorItemCardExpanded from "../components/SensorItemCardExpanded";
 import moment from "moment";
 import { withAuthSync, ClientContext } from '../utils/auth'
+import getConfig from 'next/config'
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 class Sensor extends Component {
   static contextType = ClientContext;
@@ -49,13 +51,13 @@ class Sensor extends Component {
 
   async refresh() {
     try {
-      let url = process.env.DEVICE_API + "customers/" + this.context.client_id + "/sensors/" + this.state.sensor_id;
+      let url = publicRuntimeConfig.deviceApi + "customers/" + this.context.client_id + "/sensors/" + this.state.sensor_id;
       const sensor_response = await fetch(url);
       if (!sensor_response.ok) {
         throw Error(sensor_response.statusText);
       }
 
-      let reports_url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id + "/reports/limit/" + this.state.limit;
+      let reports_url = publicRuntimeConfig.deviceApi + "sensors/" + this.state.sensor_id + "/reports/limit/" + this.state.limit;
       console.log(reports_url);
       const reports_response = await fetch(reports_url);
       if (!reports_response.ok) {

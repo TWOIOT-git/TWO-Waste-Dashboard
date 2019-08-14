@@ -1,17 +1,7 @@
 import React from "react";
-import Router from 'next/router'
 import Head from "../components/Head";
+import { signIn, completeNewPassword } from '../utils/auth'
 
-import Amplify, { Auth } from 'aws-amplify';
-let awsconfig = {
-  aws_project_region: process.env.AWS_PROJECT_REGION,
-  aws_cognito_identity_pool_id: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
-  aws_cognito_region: process.env.AWS_COGNITO_REGION,
-  aws_user_pools_id: process.env.AWS_USER_POOLS_ID,
-  aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
-  oauth: {}
-}
-Amplify.configure(awsconfig);
 
 export default class Authentication extends React.Component {
   constructor(props) {
@@ -49,24 +39,14 @@ export default class Authentication extends React.Component {
         } else {
           console.log(this.state.user);
           console.log('Calling completeNewPassword');
-          const loggedUser = await Auth.completeNewPassword(
+          completeNewPassword(
             this.state.user,
             this.state.newPassword,
           );
-          console.log(loggedUser);
-          Router.push('/analytics');
         }
       } else {
-        const user = await Auth.signIn(this.state.email, this.state.password)
-
-        console.log('sign in success!')
-        console.log(user)
-
-        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-          this.setState({user: user, authState: user.challengeName, authError: 'Please change your password.'})
-        } else {
-          Router.push('/analytics')
-        }
+        var state = await signIn(this.state.email, this.state.password)
+        this.setState(state)
       }
     } catch (err) {
       console.log('error signing up..', err)

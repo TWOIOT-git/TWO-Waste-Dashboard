@@ -8,6 +8,8 @@ import SensorTable from "../components/SensorTable";
 import fetch from "isomorphic-unfetch";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import breakpoints from "../utils/breakpoints";
+import getConfig from 'next/config'
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 class Sensors extends React.Component {
   static contextType = ClientContext;
@@ -35,7 +37,7 @@ class Sensors extends React.Component {
 
   async refresh() {
       try {
-        let url = process.env.DEVICE_API + "customers/" + this.context.client_id + "/sensors";
+        let url = publicRuntimeConfig.deviceApi + "customers/" + this.context.client_id + "/sensors";
         console.log('fetching from: ' + url);
         const response = await fetch(url);
         if (!response.ok) {

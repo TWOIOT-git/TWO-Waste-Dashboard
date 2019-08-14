@@ -1,9 +1,15 @@
 import { Component } from 'react'
 import Router from 'next/router'
-
+import getConfig from 'next/config'
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 import Amplify, { Auth } from 'aws-amplify';
 
 let awsconfig = {
+  // aws_project_region: serverRuntimeConfig.awsProjectRegion,
+  // aws_cognito_identity_pool_id: serverRuntimeConfig.aws_cognito_identity_pool_id,
+  // aws_cognito_region: serverRuntimeConfig.aws_cognito_region,
+  // aws_user_pools_id: serverRuntimeConfig.aws_user_pools_id,
+  // aws_user_pools_web_client_id: serverRuntimeConfig.aws_user_pools_web_client_id,
   aws_project_region: process.env.AWS_PROJECT_REGION,
   aws_cognito_identity_pool_id: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
   aws_cognito_region: process.env.AWS_COGNITO_REGION,
@@ -12,6 +18,7 @@ let awsconfig = {
   oauth: {}
 }
 
+console.log(awsconfig)
 Amplify.configure(awsconfig);
 
 const getDisplayName = Component =>
@@ -19,7 +26,6 @@ const getDisplayName = Component =>
 
 function signOut(e) {
   e.preventDefault();
-  console.log('signOut was clicked.');
 
   Auth.signOut()
     .then(data => {
@@ -31,6 +37,29 @@ function signOut(e) {
       console.log('Sign out error: ');
       console.log(err)
     });
+}
+async function completeNewPassword(user, password) {
+  const loggedUser = await Auth.completeNewPassword(
+    user,
+    password,
+  );
+  console.log(loggedUser);
+  Router.push('/analytics');
+}
+async function signIn(email, password) {
+  try {
+    const user = await Auth.signIn(email, password);
+
+    if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+      return {user: user, authState: user.challengeName, authError: 'Please change your password.'}
+    } else {
+      console.log('sign in success!')
+      Router.push('/analytics')
+    }
+
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 const ClientContext = React.createContext('');
@@ -96,4 +125,4 @@ function withAuthSync(WrappedComponent) {
 }
 
 
-export {signOut, withAuthSync, ClientContext}
+export {signOut, signIn, completeNewPassword, withAuthSync, ClientContext}
