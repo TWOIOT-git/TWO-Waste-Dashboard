@@ -9,6 +9,7 @@ import TopTools from "../components/TopTools";
 import { withAuthSync, ClientContext } from '../utils/auth'
 
 class Map extends React.Component {
+  static contextType = ClientContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -113,5 +114,4 @@ Map.propTypes = {
   ).isRequired
 };
 
-// export default withAuthSync(Map)
-export default Map
+export default withAuthSync(Map)

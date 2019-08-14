@@ -3,6 +3,7 @@ import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import SwitchItem from "../components/SwitchItem";
 import SettingLayout from "../components/SettingLayout";
+import { withAuthSync, ClientContext } from '../utils/auth'
 
 const SettingsNotifications = () => {
   return (
@@ -34,4 +35,4 @@ const SettingsNotifications = () => {
   );
 };
 
-export default SettingsNotifications;
+export default withAuthSync(SettingsNotifications)

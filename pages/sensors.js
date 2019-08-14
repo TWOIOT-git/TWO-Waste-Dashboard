@@ -7,6 +7,7 @@ import SensorItemCard from "../components/SensorItemCard";
 import SensorTable from "../components/SensorTable";
 import fetch from "isomorphic-unfetch";
 import { withAuthSync, ClientContext } from '../utils/auth'
+import breakpoints from "../utils/breakpoints";
 
 class Sensors extends React.Component {
   static contextType = ClientContext;
@@ -95,21 +96,28 @@ class Sensors extends React.Component {
           .SensorsContainer {
             display: flex;
             flex-wrap: wrap;
+            justify-content: space-around;
             padding: 0 30px 30px 30px;
             margin-top: 22px;
 
             .ItemCol {
-              width: 33.3333%;
-
-              &:nth-child(3n + 2) {
-                padding-right: 33px;
-              }
-
-              &:nth-child(3n + 1) {
-                padding-right: 33px;
-              }
+              width: 31%;
             }
           }
+            @media (max-width: ${breakpoints.tablet}) {
+            .SensorsContainer {
+              .ItemCol {
+                width: 45%;
+              }
+              }
+            }
+            @media (max-width: ${breakpoints.phone}) {
+            .SensorsContainer {
+              .ItemCol {
+                width: 100%;
+              }
+              }
+            }
         `}</style>
       </LayoutMenuNavegation>
     );

@@ -1,5 +1,6 @@
 import React from "react";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
+import { withAuthSync, ClientContext } from '../utils/auth'
 
 const ErrorPage = () => {
   return (
@@ -43,4 +44,4 @@ const ErrorPage = () => {
   );
 };
 
-export default ErrorPage
+export default withAuthSync(ErrorPage)

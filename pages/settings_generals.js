@@ -3,6 +3,7 @@ import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import SwitchItem from "../components/SwitchItem";
 import SettingLayout from "../components/SettingLayout";
+import { withAuthSync, ClientContext } from '../utils/auth'
 
 const SettingsGenerals = () => {
   return (
@@ -24,4 +25,4 @@ const SettingsGenerals = () => {
   );
 };
 
-export default SettingsGenerals;
+export default withAuthSync(SettingsGenerals)

@@ -1,19 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Link from "next/link";
 
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend
 } from "recharts";
 
 const SensorItemCardExpanded = ({
-  name,
-  robinSize,
-  percentage,
-  location: { city, street, outIn },
-  owner,
+    name,
+    robinSize,
+    percentage,
+    location: { city, street, outIn },
+    owner,
     fill_reports,
-    time
+    time,
+    onClick,
+    active,
 }) => {
   return (
     <article>
@@ -45,20 +46,35 @@ const SensorItemCardExpanded = ({
         <div className="chart-header">
           <h3>Fill Level</h3>
           <div className="time-buttons">
-            <div>12 hr</div>
-            <div>1 day</div>
-            <div>3 days</div>
-            <div>7 days</div>
+            <div onClick={() => onClick('6')} className={active === '6' ? 'active' : ''}>6 hr</div>
+            <div onClick={() => onClick('12')} className={active === '12' ? 'active' : ''}>12 hr</div>
+            <div onClick={() => onClick('24')} className={active === '24' ? 'active' : ''}>1 day</div>
+            <div onClick={() => onClick('72')} className={active === '72' ? 'active' : ''}>3 days</div>
+            <div onClick={() => onClick('168')} className={active === '168' ? 'active' : ''}>1 week</div>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={fill_reports.reverse()}
+        <LineChart data={fill_reports}
                    margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-          <XAxis dataKey="fill_date"/>
+          <XAxis
+            dataKey="fd"
+            padding={{ left: 20, right: 20 }}
+          />
           <YAxis/>
           <CartesianGrid tickCount="3" vertical={false}/>
-          <Tooltip />
-          <Line type="monotone" dataKey="fill_percentage" stroke="#00bf8d" dot={false} activeDot={{r: 5}}/>
+          <Tooltip
+
+          />
+          <Line
+            type="monotone"
+            name="Fill"
+            unit="%"
+            dataKey="fp"
+            animationDuration={500}
+            stroke="#00bf8d"
+            dot={false}
+            activeDot={{r: 5}}
+          />
         </LineChart>
         </ResponsiveContainer>
       </div>
@@ -111,7 +127,12 @@ const SensorItemCardExpanded = ({
                     &:hover {
                       color: #00BF8D;
                       text-decoration: underline;
+                      cursor: pointer;
                     }
+                  }
+                  .active {
+                    color: #00BF8D;
+                    text-decoration: underline;
                   }
                 }
               }

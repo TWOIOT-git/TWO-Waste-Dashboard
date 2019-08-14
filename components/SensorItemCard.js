@@ -45,13 +45,24 @@ const SensorItemCard = ({
         </div>
       </div>
       <div className="SensorItemCardFooter">
+        <ResponsiveContainer width="100%" height={40}>
           <BarChart
               data={fill_reports}
               width={250} height={40}
           >
             <Tooltip />
-            <Bar dataKey='v' fill='#00bf8d'/>
+            <XAxis
+              dataKey="t"
+              hide={true}
+            />
+            <Bar
+              dataKey='v'
+              fill='#00bf8d'
+              name="Fill"
+              unit="%"
+            />
           </BarChart>
+        </ResponsiveContainer>
       </div>
       <style jsx>
         {`

@@ -19,6 +19,8 @@ class Sensor extends Component {
 
     this.state = {
       sensor_id: this.props.sensor_id,
+      limit: 48,
+      active: '24',
       data: [
       ]
     }
@@ -36,6 +38,15 @@ class Sensor extends Component {
     clearInterval(this.timerID);
   }
 
+  handleClick(time) {
+    console.log('clicked: ' + time);
+    this.setState({
+      active: time,
+      limit: time * 2
+    })
+    this.refresh();
+  }
+
   async refresh() {
     try {
       let url = process.env.DEVICE_API + "customers/" + this.context.client_id + "/sensors/" + this.state.sensor_id;
@@ -44,7 +55,8 @@ class Sensor extends Component {
         throw Error(sensor_response.statusText);
       }
 
-      let reports_url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id + "/reports/limit/50";
+      let reports_url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id + "/reports/limit/" + this.state.limit;
+      console.log(reports_url);
       const reports_response = await fetch(reports_url);
       if (!reports_response.ok) {
         throw Error(reports_response.statusText);
@@ -69,7 +81,13 @@ class Sensor extends Component {
           owner: {
             name: sensor.customer_id
           },
-          fill_reports: reports_json.results,
+          fill_reports: reports_json.results.reverse().map(obj => {
+            var rObj = {
+              fp: Math.round(obj.fill_percentage),
+              fd: moment(obj.fill_date).format('HH:mm Do')
+            };
+            return rObj;
+          }),
           time: moment.unix(sensor.updated_on).fromNow()
         })
       }
@@ -82,7 +100,7 @@ class Sensor extends Component {
 
 
   render() {
-    const { data, sensor_id } = this.state;
+    const { data, sensor_id, active } = this.state;
 
     return (
       <LayoutMenuNavegation>
@@ -90,7 +108,7 @@ class Sensor extends Component {
         <div className="Container">
           {data.map(item => (
             <div key={item.id} className="ItemCol">
-              <SensorItemCardExpanded {...item} />
+              <SensorItemCardExpanded {...item} onClick={(time) => this.handleClick(time)} active={active}/>
             </div>
           ))}
           <style jsx>{`
