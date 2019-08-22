@@ -35,7 +35,7 @@ class Map extends React.Component {
   }
 
   renderWasteBinMarker = (wasteBin, index) => {
-    let time = moment.unix(wasteBin.updated_on).fromNow();
+    let time = moment(wasteBin.updated_on).fromNow();
     return (
       <Marker
         key={`marker-${index}`}

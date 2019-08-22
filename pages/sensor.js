@@ -19,9 +19,12 @@ class Sensor extends Component {
   constructor(props) {
     super(props);
 
+    let now = moment();
+
     this.state = {
       sensor_id: this.props.sensor_id,
-      limit: 48,
+      to: now.valueOf(),
+      from: now.subtract(24, 'hours').valueOf(),
       active: '24',
       data: [
       ]
@@ -41,10 +44,11 @@ class Sensor extends Component {
   }
 
   handleClick(time) {
-    console.log('clicked: ' + time);
+    let now = moment();
     this.setState({
       active: time,
-      limit: time * 2
+      to: now.valueOf(),
+      from: now.subtract(time, 'hours').valueOf(),
     })
     this.refresh();
   }
@@ -57,7 +61,7 @@ class Sensor extends Component {
         throw Error(sensor_response.statusText);
       }
 
-      let reports_url = publicRuntimeConfig.deviceApi + "sensors/" + this.state.sensor_id + "/reports/limit/" + this.state.limit;
+      let reports_url = publicRuntimeConfig.deviceApi + "sensors/" + this.state.sensor_id + "/reports/from/" + this.state.from + "/to/" + this.state.to;
       console.log(reports_url);
       const reports_response = await fetch(reports_url);
       if (!reports_response.ok) {
@@ -83,14 +87,14 @@ class Sensor extends Component {
           owner: {
             name: sensor.customer_id
           },
-          fill_reports: reports_json.results.reverse().map(obj => {
+          fill_reports: reports_json.results.map(obj => {
             var rObj = {
               fp: Math.round(obj.fill_percentage),
-              fd: moment(obj.fill_date).format('HH:mm Do')
+              fd: moment(obj.created_on).format('HH:mm Do')
             };
             return rObj;
           }),
-          time: moment.unix(sensor.updated_on).fromNow()
+          time: moment(sensor.updated_on).fromNow()
         })
       }
       this.setState({ data });

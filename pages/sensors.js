@@ -60,7 +60,13 @@ class Sensors extends React.Component {
             owner: {
               name: sensor.customer_id
             },
-            fill_reports: (sensor.reports) ? JSON.parse(sensor.reports) : [],
+            fill_reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {
+              var rObj = {
+                v: Math.round(obj.v),
+                t: moment(obj.t).format('HH:mm Do')
+              };
+              return rObj;
+            }) : [],
             time: moment.unix(sensor.updated_on).fromNow()
           })
         }
