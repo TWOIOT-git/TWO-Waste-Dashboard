@@ -1,7 +1,7 @@
 const http = require("http");
-const https = require('https');
+// const https = require('https');
 const next = require("next");
-const fs = require('fs')
+// const fs = require('fs')
 const express = require("express");
 const compression = require("compression");
 
@@ -30,10 +30,8 @@ app.prepare().then(() => {
   // redirect http => https on production only
   if(process.env.NODE_ENV === 'production') {
     server.use((req, res, next) => {
-      console.log('secure: ' + req.secure);
-      console.log('proto: ' + req.header('x-forwarded-proto'));
-      if (req.header('x-forwarded-proto') !== 'https' && req.secure !== true) {
-        console.log('redirect');
+      if (req.header('x-forwarded-proto') !== 'https') {
+        console.log('redirect (http => https) ');
         res.redirect(`https://${req.header('host')}${req.url}`)
       } else {
         next()
