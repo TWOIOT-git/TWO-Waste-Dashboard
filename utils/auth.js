@@ -59,6 +59,11 @@ async function signIn(email, password) {
 
   } catch (err) {
     console.log(err)
+
+    return {
+      authState: err.code,
+      authError: err.message
+    }
   }
 }
 

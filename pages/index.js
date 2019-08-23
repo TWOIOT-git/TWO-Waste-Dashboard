@@ -12,7 +12,7 @@ export default class Authentication extends React.Component {
       password: "",
       newPassword: "",
       passwordRepeat: "",
-      authState: 'signIn',
+      authState: 'SIGN_IN',
       authData: null,
       authError: null,
       user: null,
@@ -87,7 +87,7 @@ export default class Authentication extends React.Component {
             </div>
 
             <form onSubmit={e => this.onSubmit(e)}>
-              <If condition={authState === 'signIn'}>
+              <If condition={authState === 'SIGN_IN' || authState === 'NotAuthorizedException'}>
                 <label htmlFor="email">
                   Email
                   <input
