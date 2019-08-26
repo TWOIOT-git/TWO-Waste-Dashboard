@@ -18,8 +18,9 @@ let awsconfig = {
   oauth: {}
 }
 
-console.log(awsconfig)
+// console.log(awsconfig)
 Amplify.configure(awsconfig);
+// Amplify.Logger.LOG_LEVEL = 'DEBUG'
 
 const getDisplayName = Component =>
   Component.displayName || Component.name || 'Component'

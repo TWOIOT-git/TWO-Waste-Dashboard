@@ -1,7 +1,6 @@
 const http = require("http");
-// const https = require('https');
 const next = require("next");
-// const fs = require('fs')
+const fs = require('fs')
 const express = require("express");
 const compression = require("compression");
 
@@ -39,6 +38,12 @@ app.prepare().then(() => {
     })
   }
 
+  // service worker
+  server.get('/sw.js', (req, res) => {
+    res.setHeader('content-type', 'text/javascript');
+    fs.createReadStream('./utils/sw.js').pipe(res);
+  })
+
   server.get("*", handle);
 
   http.createServer(server)
@@ -48,16 +53,5 @@ app.prepare().then(() => {
       console.log(`[HTTP] Listening on port ${port}!`)
     }
   });
-
-  // https.createServer({
-  //   key: fs.readFileSync('certs/server.key'),
-  //   cert: fs.readFileSync('certs/server.cert')
-  // }, server)
-  //   .listen(3001, err => {
-  //   if (err) throw err;
-  //   else {
-  //     console.log(`[HTTPS] Listening on port ${port}!`)
-  //   }
-  // });
 
 });

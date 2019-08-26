@@ -74,9 +74,15 @@ const Desactived = () => (
   </svg>
 );
 
-const Switch = ({ active }) => {
+const Switch = (
+  {
+    active,
+    disabled,
+    onClick
+  }
+  ) => {
   return (
-    <button type="button">
+    <button type="button" disabled={disabled ? true : false} onClick={() => onClick(!active)}>
       <If condition={active}>
         <Active />
       </If>

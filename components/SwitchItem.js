@@ -2,15 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 import Switch from "./Switch";
 
-const SwitchItem = ({ title, description, active }) => {
+const SwitchItem = (
+  { title,
+    description,
+    active,
+    disabled,
+    onClick,
+  }
+  ) => {
   return (
     <div className="SwitchItem">
       <div>
-        <span className="title">{title}</span>
-        <span className="description">{description}</span>
+        <span className={`title ${disabled ? 'disabled' : 'enabled'}`}>{title}</span>
+        <span className={`description ${disabled ? 'disabled' : 'enabled'}`}>{description}</span>
       </div>
       <div>
-        <Switch active={active} />
+        <Switch
+          active={active}
+          disabled={disabled}
+          onClick={onClick}
+        />
       </div>
       <style jsx>
         {`
@@ -31,6 +42,11 @@ const SwitchItem = ({ title, description, active }) => {
               color: #000000;
               opacity: 0.5;
               display: block;
+              
+              
+              &.disabled {
+                color: red;
+              }
             }
 
             .title {
@@ -41,6 +57,11 @@ const SwitchItem = ({ title, description, active }) => {
               font-size: 16px;
               line-height: 19px;
               color: #333333;
+              margin-bottom: 3px;
+              
+              &.disabled {
+                color: #aaa;
+              }
             }
           }
         `}
