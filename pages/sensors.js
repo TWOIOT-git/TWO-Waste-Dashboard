@@ -67,7 +67,7 @@ class Sensors extends React.Component {
               };
               return rObj;
             }) : [],
-            time: moment.unix(sensor.updated_on).fromNow()
+            time: moment(sensor.updated_on).fromNow()
           })
         }
         this.setState({ data });
