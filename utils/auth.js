@@ -2,7 +2,9 @@ import { Component } from 'react'
 import Router from 'next/router'
 import getConfig from 'next/config'
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
+
 import Amplify, { Auth } from 'aws-amplify';
+import Analytics from '@aws-amplify/analytics';
 
 let awsconfig = {
   // aws_project_region: serverRuntimeConfig.awsProjectRegion,
@@ -21,6 +23,16 @@ let awsconfig = {
 // console.log(awsconfig)
 Amplify.configure(awsconfig);
 // Amplify.Logger.LOG_LEVEL = 'DEBUG'
+
+const analyticsConfig = {
+  AWSPinpoint: {
+    appId: process.env.AWS_PINPOINT_APP_ID,
+    region: process.env.AWS_PINPOINT_REGION,
+    mandatorySignIn: false,
+  }
+}
+
+Analytics.configure(analyticsConfig)
 
 const getDisplayName = Component =>
   Component.displayName || Component.name || 'Component'
@@ -55,6 +67,17 @@ async function signIn(email, password) {
       return {user: user, authState: user.challengeName, authError: 'Please change your password.'}
     } else {
       console.log('sign in success!')
+
+      Analytics.updateEndpoint({
+        attributes: {
+          interests: ['science', 'politics', 'travel'],
+        },
+        userId: user.attributes['email'],
+        userAttributes: {
+          username: 'ilovethecloud'
+        }
+      });
+
       Router.push('/analytics')
     }
 
@@ -66,6 +89,17 @@ async function signIn(email, password) {
       authError: err.message
     }
   }
+}
+
+function reloadUserContext() {
+  console.log('reloadUserContext');
+  Auth.currentAuthenticatedUser({
+    bypassCache: true
+  }).then(user => {
+    console.log(user);
+  }).catch(e => {
+    console.log(e);
+  });
 }
 
 const ClientContext = React.createContext('');
@@ -107,6 +141,7 @@ function withAuthSync(WrappedComponent) {
 
       if(authState === 'signedIn') {
         const user = {
+          user: this.state.user,
           given_name: this.state.user.attributes['given_name'],
           family_name: this.state.user.attributes['family_name'],
           locale: this.state.user.attributes['locale'],
@@ -131,4 +166,4 @@ function withAuthSync(WrappedComponent) {
 }
 
 
-export {signOut, signIn, completeNewPassword, withAuthSync, ClientContext}
+export {signOut, signIn, completeNewPassword, withAuthSync, ClientContext, reloadUserContext}

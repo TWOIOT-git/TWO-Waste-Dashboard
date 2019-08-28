@@ -3,8 +3,8 @@ import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import SwitchItem from "../components/SwitchItem";
 import SettingLayout from "../components/SettingLayout";
-import { withAuthSync, ClientContext } from '../utils/auth'
-import { ServiceWorker } from 'aws-amplify';
+import { withAuthSync, reloadUserContext, ClientContext } from '../utils/auth'
+import { Auth, ServiceWorker } from 'aws-amplify';
 const serviceWorker = new ServiceWorker();
 
 function urlB64ToUint8Array(base64String) {
@@ -23,6 +23,8 @@ function urlB64ToUint8Array(base64String) {
 }
 
 class SettingsNotifications extends React.Component {
+  static contextType = ClientContext;
+
   constructor(props) {
     super(props);
 
@@ -46,6 +48,24 @@ class SettingsNotifications extends React.Component {
     };
 
     this.swRegistration = null;
+    this.registerServiceWorker();
+  }
+
+  componentDidMount() {
+    let pushNotifications = this.context.user.attributes['custom:pushNotifications']
+    let emailNotifications = this.context.user.attributes['custom:emailNotifications']
+    let regularEvents = this.context.user.attributes['custom:regularEvents']
+    let suddenAlerts = this.context.user.attributes['custom:suddenAlerts']
+
+    this.setState(prevState => ({
+      pushNotifications: {
+        ...prevState.pushNotifications,
+        active: (pushNotifications !== undefined) ? pushNotifications : false
+      },
+      emailNotifications: (emailNotifications !== undefined) ? emailNotifications : false,
+      regularEvents: (regularEvents !== undefined) ? regularEvents : false,
+      suddenAlerts: (suddenAlerts !== undefined) ? suddenAlerts : false,
+    }))
   }
 
   registerServiceWorker() {
@@ -57,7 +77,6 @@ class SettingsNotifications extends React.Component {
         .then(function(swReg) {
           console.log('Service Worker is registered', swReg);
           that.swRegistration = swReg;
-          that.subsribe();
         })
         .catch(function(error) {
           console.error('Service Worker Error', error);
@@ -67,8 +86,20 @@ class SettingsNotifications extends React.Component {
     }
   }
 
+  showConfirmation() {
+    const title = 'lidbot';
+    const options = {
+      body: "Notifications Enabled",
+      icon: 'static/favicons/apple-icon.png',
+      badge: 'static/favicons/apple-icon.png'
+    };
+
+    this.swRegistration.showNotification(title, options);
+  }
+
   subsribe() {
     const applicationServerPublicKey = process.env.PUSH_NOTIFICATIONS_PUBLIC_KEY;
+    console.log(`applicationServerPublicKey ${applicationServerPublicKey}`)
     const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
 
     let that = this;
@@ -86,6 +117,8 @@ class SettingsNotifications extends React.Component {
           active: true
         }
       }));
+
+      that.showConfirmation();
     })
       .catch(function(err) {
         console.log('Failed to subscribe the user: ', err);
@@ -115,25 +148,45 @@ class SettingsNotifications extends React.Component {
       });
   }
   updateSubscriptionOnServer(subscription) {
-    // TODO: Send subscription to application server
     console.log(JSON.stringify(subscription))
+    Auth.updateUserAttributes(this.context.user, {
+      'custom:pushNotifications': (subscription) ? "true" : "false",
+      'custom:pushSubscription': (subscription) ? JSON.stringify(subscription) : null,
+    })
+      .then(function (result) {
+        console.log(result)
+        reloadUserContext();
+      })
   }
 
-  handleClick(state) {
-    if(state.pushNotifications) {
+  handleClick(newState) {
+    if(newState.pushNotifications) {
 
-      if(state.pushNotifications.active === true) {
-        this.registerServiceWorker();
+      if(newState.pushNotifications.active === true) {
+        this.subsribe();
       } else {
         this.unsubscribeUser();
       }
 
     } else {
       this.setState(prevState => ({
-        emailNotifications: (state.emailNotifications !== undefined) ? state.emailNotifications : this.state.emailNotifications,
-        regularEvents: (state.regularEvents !== undefined) ? state.regularEvents : this.state.regularEvents,
-        suddenAlerts: (state.suddenAlerts !== undefined) ? state.suddenAlerts : this.state.suddenAlerts,
+        emailNotifications: (newState.emailNotifications !== undefined) ? newState.emailNotifications : this.state.emailNotifications,
+        regularEvents: (newState.regularEvents !== undefined) ? newState.regularEvents : this.state.regularEvents,
+        suddenAlerts: (newState.suddenAlerts !== undefined) ? newState.suddenAlerts : this.state.suddenAlerts,
       }))
+
+      Auth.updateUserAttributes(this.context.user, {
+        'custom:emailNotifications': (newState.emailNotifications !== undefined) ? newState.emailNotifications.toString() : this.state.emailNotifications.toString(),
+        'custom:regularEvents': (newState.regularEvents !== undefined) ? newState.regularEvents.toString() : this.state.regularEvents.toString(),
+        'custom:suddenAlerts': (newState.suddenAlerts !== undefined) ? newState.suddenAlerts.toString() : this.state.suddenAlerts.toString(),
+      })
+        .then(function (result) {
+          console.log(result)
+          reloadUserContext();
+        })
+        .catch(function (err) {
+          console.log(err)
+        });
     }
   }
 

@@ -1,6 +1,6 @@
 {
     "identityPoolName": "twowastedashboarddf8803f0_identitypool_df8803f0",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "openIdLambdaRoleName": "twowasdf8803f0_openid_lambda_role",
     "resourceNameTruncated": "twowasdf8803f0",
     "userPoolName": "twowastedashboarddf8803f0_userpool_df8803f0",
