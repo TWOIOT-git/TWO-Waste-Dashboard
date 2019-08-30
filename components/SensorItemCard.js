@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
-
+import { withTranslation } from '../i18n'
 
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
@@ -13,8 +13,9 @@ const SensorItemCard = ({
   porcentage,
   location: { city, street, outIn },
   owner,
-    fill_reports,
-    time
+  fill_reports,
+  time,
+  t
 }) => {
   return (
     <article>
@@ -32,7 +33,7 @@ const SensorItemCard = ({
       <div className="SensorItemCardContent">
         <div>
           <div>
-            <p>STATUS:</p>
+            <p>{t('status')}:</p>
             <h3>{Math.round(porcentage)}%</h3>
             <h5>{time}</h5>
           </div>
@@ -287,7 +288,8 @@ SensorItemCard.propTypes = {
   }).isRequired,
   owner: PropTypes.shape({
     name: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  t: PropTypes.func.isRequired,
 };
 
-export default SensorItemCard;
+export default withTranslation('sensor')(SensorItemCard)

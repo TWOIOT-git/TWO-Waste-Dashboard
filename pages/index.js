@@ -1,9 +1,14 @@
 import React from "react";
 import Head from "../components/Head";
 import { signIn, completeNewPassword } from '../utils/auth'
+import { withTranslation } from '../i18n'
 
 
-export default class Authentication extends React.Component {
+class Authentication extends React.Component {
+  getInitialProps = async () => ({
+    namespacesRequired: ['login'],
+  })
+
   constructor(props) {
     super(props);
 
@@ -79,17 +84,22 @@ export default class Authentication extends React.Component {
             </div>
           </div>
           <div>
-            <h1>WASTE ANALYTICS PLATFORM</h1>
-            <p>Welcome back! Login to continue your smart waste management.</p>
+            <h1>{this.props.t('title')}</h1>
+            <p>{this.props.t('subtitle')}</p>
 
             <div className="alert error">
-              {authError}
+              {this.props.t(authError)}
             </div>
 
             <form onSubmit={e => this.onSubmit(e)}>
-              <If condition={authState === 'SIGN_IN' || authState === 'NotAuthorizedException'}>
+              <If condition={
+                authState === 'SIGN_IN' ||
+                authState === 'NotAuthorizedException' ||
+                authState === 'UserNotFoundException' ||
+                authState === 'NetworkError'
+              }>
                 <label htmlFor="email">
-                  Email
+                  {this.props.t('email')}
                   <input
                     name="email"
                     id="email"
@@ -100,7 +110,7 @@ export default class Authentication extends React.Component {
                   />
                 </label>
                 <label htmlFor="password">
-                  Password
+                  {this.props.t('password')}
                   <input
                     name="password"
                     id="password"
@@ -333,3 +343,5 @@ export default class Authentication extends React.Component {
     );
   }
 }
+
+export default withTranslation('login')(Authentication)

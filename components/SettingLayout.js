@@ -3,12 +3,13 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 import { withRouter } from "next/router";
 import breakpoints from "../utils/breakpoints";
+import { withTranslation } from '../i18n'
 
-const SettingLayout = ({ children, router: { pathname } }) => {
+const SettingLayout = ({ children, router: { pathname }, t }) => {
   return (
     <section>
       <h1>
-        Settings<span>.</span>
+        {t('settings')}<span>.</span>
       </h1>
       <div>
         <div>
@@ -18,7 +19,7 @@ const SettingLayout = ({ children, router: { pathname } }) => {
                 pathname === "/settings_user_details" ? "--active" : ""
               }`}
             >
-              User Detail
+              {t('user-details')}
             </a>
           </Link>
         </div>
@@ -29,7 +30,7 @@ const SettingLayout = ({ children, router: { pathname } }) => {
                 pathname === "/settings_notifications" ? "--active" : ""
               }`}
             >
-              Notifications
+              {t('notifications')}
             </a>
           </Link>
         </div>
@@ -40,7 +41,7 @@ const SettingLayout = ({ children, router: { pathname } }) => {
                 pathname === "/settings_generals" ? "--active" : ""
               }`}
             >
-              General
+              {t('language-region')}
             </a>
           </Link>
         </div>
@@ -116,10 +117,12 @@ const SettingLayout = ({ children, router: { pathname } }) => {
 };
 
 SettingLayout.propTypes = {
+  t: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
   router: PropTypes.shape({
     pathname: PropTypes.string.isRequired
   }).isRequired
 };
 
-export default withRouter(SettingLayout);
+
+export default withTranslation('settings')(withRouter(SettingLayout))

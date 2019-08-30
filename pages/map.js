@@ -7,9 +7,15 @@ import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import FlagMarker from "../components/FlagMarker";
 import TopTools from "../components/TopTools";
 import { withAuthSync, ClientContext } from '../utils/auth'
+import { withTranslation } from '../i18n'
 
 class Map extends React.Component {
   static contextType = ClientContext;
+
+  getInitialProps = async () => ({
+    namespacesRequired: ['map'],
+  })
+
   constructor(props) {
     super(props);
     this.state = {
@@ -114,4 +120,4 @@ Map.propTypes = {
   ).isRequired
 };
 
-export default withAuthSync(Map)
+export default withTranslation('map')(withAuthSync(Map))

@@ -20,6 +20,7 @@ import Head from "../components/Head";
 import calculateColorPerModel from "../utils/calculateColorPerModel";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import breakpoints from "../utils/breakpoints";
+import { withTranslation } from '../i18n'
 
 const dataPieChartWithPaddingAngle = [
   { name: "Group A", value: 400 },
@@ -83,6 +84,10 @@ const data2 = [
 ];
 
 class Analytics extends React.Component {
+  getInitialProps = async () => ({
+    namespacesRequired: ['analytics'],
+  })
+
   constructor(props) {
     super(props);
 
@@ -613,4 +618,4 @@ class Analytics extends React.Component {
   }
 }
 
-export default withAuthSync(Analytics)
+export default withTranslation('analytics')(withAuthSync(Analytics))

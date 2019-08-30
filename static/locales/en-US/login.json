@@ -1,0 +1,10 @@
+{
+  "title": "WASTE ANALYTICS PLATFORM",
+  "subtitle": "Welcome back! Login to continue your smart waste management.",
+  "login": "Login",
+  "NetworkError": "Network error",
+  "UserNotFoundException": "User does not exist.",
+  "NotAuthorizedException": "Incorrect username or password.",
+  "UserNotConfirmedException": "Please finish the confirmation step when signing up",
+  "PasswordResetRequiredException": "An error occurred. Please contact the administrator"
+}

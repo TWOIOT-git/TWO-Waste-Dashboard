@@ -29,8 +29,8 @@ class LayoutMenuNavegation extends React.Component {
     return (
       <div className="LayoutFlex">
         <MenuNavegation
-          userImage={this.context.picture}
-          userName={this.context.given_name}
+          userImage={this.context.user.attributes['picture']}
+          userName={this.context.user.attributes['given_name']}
           show={show}
         />
         <button className="burger" type="button" onClick={toggleShow}>

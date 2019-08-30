@@ -5,6 +5,7 @@ import SwitchItem from "../components/SwitchItem";
 import SettingLayout from "../components/SettingLayout";
 import { withAuthSync, reloadUserContext, ClientContext } from '../utils/auth'
 import { Auth, ServiceWorker } from 'aws-amplify';
+import { withTranslation } from '../i18n'
 const serviceWorker = new ServiceWorker();
 
 function urlB64ToUint8Array(base64String) {
@@ -25,17 +26,21 @@ function urlB64ToUint8Array(base64String) {
 class SettingsNotifications extends React.Component {
   static contextType = ClientContext;
 
+  getInitialProps = async () => ({
+    namespacesRequired: ['settings'],
+  })
+
   constructor(props) {
     super(props);
 
     let pushNotifications = {}
 
     if (Notification.permission === 'denied') {
-      pushNotifications.description = 'You\'ve disallowed notifications in your browser. You\'ll need to open your browser preferences to change that.';
+      pushNotifications.description = this.props.t('push-notifications-blocked');
       pushNotifications.disabled = true;
       pushNotifications.active = false;
     } else {
-      pushNotifications.description = 'Allow browser to send ad-hoc notifications';
+      pushNotifications.description = this.props.t('push-notifications-sub');
       pushNotifications.disabled = false;
       pushNotifications.active = false;
     }
@@ -195,30 +200,30 @@ class SettingsNotifications extends React.Component {
 
     return (
       <LayoutMenuNavegation>
-        <Head title="lidbot - Settings Notifications"/>
+        <Head title={'lidbot - ' + this.props.t('notifications')}/>
         <SettingLayout>
           <SwitchItem
-            title="Push Notifications"
+            title={this.props.t('push-notifications')}
             description={pushNotifications.description}
             active={pushNotifications.active}
             disabled={pushNotifications.disabled}
             onClick={(active) => this.handleClick({pushNotifications: {active}})}
           />
           <SwitchItem
-            title="E-mail Notifications"
-            description="Weekly analytics update send via E-mail"
+            title={this.props.t('email-notifications')}
+            description={this.props.t('email-notifications-sub')}
             active={emailNotifications}
             onClick={(active) => this.handleClick({emailNotifications: active})}
           />
           <SwitchItem
-            title="Regular Events"
-            description="Remind me on regular planned events"
+            title={this.props.t('regular-events')}
+            description={this.props.t('regular-events-sub')}
             active={regularEvents}
             onClick={(active) => this.handleClick({regularEvents: active})}
           />
           <SwitchItem
-            title="Sudden Alerts"
-            description="Alarm notifications on sudden errors"
+            title={this.props.t('sudden-alerts')}
+            description={this.props.t('sudden-alerts-sub')}
             active={suddenAlerts}
             onClick={(active) => this.handleClick({suddenAlerts: active})}
           />
@@ -228,4 +233,4 @@ class SettingsNotifications extends React.Component {
   };
 };
 
-export default withAuthSync(SettingsNotifications)
+export default withTranslation('settings')(withAuthSync(SettingsNotifications))

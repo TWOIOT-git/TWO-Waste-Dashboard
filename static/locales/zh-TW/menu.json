@@ -1,0 +1,12 @@
+{
+  "main-navigation": "主要導航",
+  "admin": "管理",
+  "dashboard": "儀表板",
+  "map-data": "地圖",
+  "sensors": "傳感器",
+  "alerts": "警報",
+  "locations": "地點",
+  "settings": "設置",
+  "ota-updates": "OTA 更新",
+  "log-out": "登出"
+}

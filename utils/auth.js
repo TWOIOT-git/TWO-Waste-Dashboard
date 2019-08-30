@@ -1,17 +1,16 @@
 import { Component } from 'react'
 import Router from 'next/router'
 import getConfig from 'next/config'
+import { i18n } from '../i18n'
+import moment from "moment";
+import 'moment-timezone';
+import { withTranslation } from '../i18n'
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 import Amplify, { Auth } from 'aws-amplify';
 import Analytics from '@aws-amplify/analytics';
 
 let awsconfig = {
-  // aws_project_region: serverRuntimeConfig.awsProjectRegion,
-  // aws_cognito_identity_pool_id: serverRuntimeConfig.aws_cognito_identity_pool_id,
-  // aws_cognito_region: serverRuntimeConfig.aws_cognito_region,
-  // aws_user_pools_id: serverRuntimeConfig.aws_user_pools_id,
-  // aws_user_pools_web_client_id: serverRuntimeConfig.aws_user_pools_web_client_id,
   aws_project_region: process.env.AWS_PROJECT_REGION,
   aws_cognito_identity_pool_id: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
   aws_cognito_region: process.env.AWS_COGNITO_REGION,
@@ -32,7 +31,7 @@ const analyticsConfig = {
   }
 }
 
-Analytics.configure(analyticsConfig)
+// Analytics.configure(analyticsConfig)
 
 const getDisplayName = Component =>
   Component.displayName || Component.name || 'Component'
@@ -51,6 +50,14 @@ function signOut(e) {
       console.log(err)
     });
 }
+function changePassword(oldPassword, newPassword) {
+  Auth.currentAuthenticatedUser()
+    .then(user => {
+      return Auth.changePassword(user, oldPassword, newPassword);
+    })
+    .then(data => console.log(data))
+    .catch(err => console.log(err));
+}
 async function completeNewPassword(user, password) {
   const loggedUser = await Auth.completeNewPassword(
     user,
@@ -67,16 +74,17 @@ async function signIn(email, password) {
       return {user: user, authState: user.challengeName, authError: 'Please change your password.'}
     } else {
       console.log('sign in success!')
+      // Analytics.record('Andrzej-test-event');
 
-      Analytics.updateEndpoint({
-        attributes: {
-          interests: ['science', 'politics', 'travel'],
-        },
-        userId: user.attributes['email'],
-        userAttributes: {
-          username: 'ilovethecloud'
-        }
-      });
+      // Analytics.updateEndpoint({
+      //   attributes: {
+      //     interests: ['science', 'politics', 'travel'],
+      //   },
+      //   userId: user.attributes['email'],
+      //   userAttributes: {
+      //     username: 'ilovethecloud'
+      //   }
+      // });
 
       Router.push('/analytics')
     }
@@ -100,6 +108,15 @@ function reloadUserContext() {
   }).catch(e => {
     console.log(e);
   });
+}
+
+async function updateUserAttributes(attributes) {
+  console.log(`updateUserAttributes: ${attributes}`)
+  let user = await Auth.currentAuthenticatedUser()
+  let result = await Auth.updateUserAttributes(user, attributes)
+  console.log(result)
+  reloadUserContext()
+  return result
 }
 
 const ClientContext = React.createContext('');
@@ -128,10 +145,14 @@ function withAuthSync(WrappedComponent) {
     componentDidMount() {
       Auth.currentAuthenticatedUser().then(user => {
         console.log(user);
+
+        i18n.changeLanguage(user.attributes['custom:language'])
+        moment.locale(user.attributes['custom:language']);
+        moment.tz.setDefault(user.attributes['custom:timezone']);
+
         this.setState({user: user, authState: 'signedIn'});
       }).catch(e => {
         console.log(e);
-        this.setState({authState: 'signIn'});
         Router.push('/')
       });
     }
@@ -141,14 +162,7 @@ function withAuthSync(WrappedComponent) {
 
       if(authState === 'signedIn') {
         const user = {
-          user: this.state.user,
-          given_name: this.state.user.attributes['given_name'],
-          family_name: this.state.user.attributes['family_name'],
-          locale: this.state.user.attributes['locale'],
-          phone_number: this.state.user.attributes['phone_number'],
-          email: this.state.user.attributes['email'],
-          picture: this.state.user.attributes['picture'],
-          client_id: this.state.user.attributes['custom:client_id'],
+          user: this.state.user
         }
         const CustomerContext = React.createContext(user);
 
@@ -157,7 +171,6 @@ function withAuthSync(WrappedComponent) {
             <WrappedComponent {...this.props} />
           </ClientContext.Provider>
           )
-
       } else {
         return <div />
       }
@@ -166,4 +179,9 @@ function withAuthSync(WrappedComponent) {
 }
 
 
-export {signOut, signIn, completeNewPassword, withAuthSync, ClientContext, reloadUserContext}
+
+export {
+  signOut, signIn, completeNewPassword, withAuthSync, ClientContext, reloadUserContext,
+  updateUserAttributes,
+  changePassword
+}

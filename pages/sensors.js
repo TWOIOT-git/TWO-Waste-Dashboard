@@ -10,9 +10,15 @@ import { withAuthSync, ClientContext } from '../utils/auth'
 import breakpoints from "../utils/breakpoints";
 import getConfig from 'next/config'
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
+import { withTranslation } from '../i18n'
 
 class Sensors extends React.Component {
   static contextType = ClientContext;
+
+  getInitialProps = async () => ({
+    namespacesRequired: ['sensor'],
+  })
+
   constructor(props) {
     super(props);
 
@@ -37,7 +43,7 @@ class Sensors extends React.Component {
 
   async refresh() {
       try {
-        let url = publicRuntimeConfig.deviceApi + "customers/" + this.context.client_id + "/sensors";
+        let url = publicRuntimeConfig.deviceApi + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors";
         console.log('fetching from: ' + url);
         const response = await fetch(url);
         if (!response.ok) {
@@ -132,4 +138,4 @@ class Sensors extends React.Component {
   }
 }
 
-export default withAuthSync(Sensors)
+export default withTranslation('sensor')(withAuthSync(Sensors))

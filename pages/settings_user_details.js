@@ -3,33 +3,48 @@ import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import breakpoints from "../utils/breakpoints";
 import SettingLayout from "../components/SettingLayout";
-import { withAuthSync, ClientContext } from '../utils/auth'
+import { withTranslation } from '../i18n'
+import Collapsible from 'react-collapsible';
+
+import {
+  updateUserAttributes,
+  withAuthSync,
+  ClientContext,
+  changePassword
+} from '../utils/auth'
 
 class SettingsUserDetails extends Component {
   static contextType = ClientContext;
+
+  getInitialProps = async () => ({
+    namespacesRequired: ['settings'],
+  })
 
   constructor(props) {
     super(props);
 
     this.state = {
-      given_name: null,
-      family_name: null,
-      email: null,
-      phone_number: null,
-      locale: null,
-      imagePreview: null,
+      given_name: '',
+      family_name: '',
+      email: '',
+      phone_number: '',
+      imagePreview: '',
+      currentPassword: '',
+      newPassword: '',
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      given_name: this.context.given_name,
-      family_name: this.context.family_name,
-      phone_number: this.context.phone_number,
-      email: this.context.email,
-      locale: this.context.locale,
-      client_id: this.context.client_id,
-      imagePreview: this.context.picture
+      given_name: this.context.user.attributes['given_name'],
+      family_name: this.context.user.attributes['family_name'],
+      phone_number: this.context.user.attributes['phone_number'],
+      email: this.context.user.attributes['email'],
+      client_id: this.context.user.attributes['custom:client_id'],
+      imagePreview: this.context.user.attributes['picture']
     })
   }
 
@@ -41,21 +56,36 @@ class SettingsUserDetails extends Component {
 
   onChange = e => {
     this.setState({
-      [e.target.name]: e.target.valueu
+      [e.target.name]: e.target.value
     });
   };
 
+  handleSubmit(e) {
+    e.preventDefault();
+
+    updateUserAttributes({
+      given_name: this.state.given_name,
+      family_name: this.state.family_name,
+      phone_number: this.state.phone_number,
+    })
+  }
+  handleUpdatePassword(e) {
+    e.preventDefault();
+
+    changePassword(this.state.currentPassword, this.state.newPassword)
+  }
+
   render() {
     const {
-      state: { imagePreview, family_name, given_name, email, phone_number, password, locale, client_id },
+      state: { imagePreview, family_name, given_name, email, phone_number, client_id },
       readURL,
       onChange
     } = this;
     return (
       <LayoutMenuNavegation>
-        <Head title="lidbot - Settings User" />
+        <Head title={'lidbot - ' + this.props.t('user-details')}/>
         <SettingLayout>
-          <form>
+          <form onSubmit={this.handleSubmit}>
             <div className="--div-image">
               <div>
                 <img src={imagePreview} alt="preview" />
@@ -63,96 +93,108 @@ class SettingsUserDetails extends Component {
                 <label htmlFor="file">EDIT</label>
               </div>
               <div className="client-info">
-                Client Id
                 <div>{client_id}</div>
+                <div>{email}</div>
               </div>
             </div>
             <div className="--div-inputs">
               <div>
                 <div>
-                  <label htmlFor="firstname">
-                    First Name
+                  <label htmlFor="given_name">
+                    {this.props.t('first-name')}
                     <input
-                      name="firstname"
-                      id="firstname"
+                      name="given_name"
+                      id="given_name"
                       value={given_name}
                       onChange={e => onChange(e)}
-                      placeholder="Enter your First Name"
+                      placeholder={this.props.t('enter-first-name')}
                     />
                   </label>
                 </div>
                 <div>
-                  <label htmlFor="lastname">
-                    Last Name
+                  <label htmlFor="family_name">
+                    {this.props.t('last-name')}
                     <input
-                      name="lastname"
-                      id="lastname"
+                      name="family_name"
+                      id="family_name"
                       value={family_name}
                       onChange={e => onChange(e)}
-                      placeholder="Enter your Last Name"
+                      placeholder={this.props.t('enter-last-name')}
                     />
                   </label>
                 </div>
                 <div>
-                  <label htmlFor="email">
-                    E-mail
+                  <label htmlFor="phone_number">
+                    {this.props.t('phone')}
                     <input
-                      name="email"
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={e => onChange(e)}
-                      placeholder="Enter your Email"
-                    />
-                  </label>
-                </div>
-                <div>
-                  <label htmlFor="phone">
-                    Phone
-                    <input
-                      name="phone"
-                      id="phone"
+                      name="phone_number"
+                      id="phone_number"
                       inputMode="tel"
                       type="phone"
                       value={phone_number}
                       onChange={e => onChange(e)}
-                      placeholder="Enter your Phone"
+                      placeholder={this.props.t('enter-phone')}
                     />
                   </label>
                 </div>
-                <div>
-                  <label htmlFor="password">
-                    Password
-                    <input
-                      name="password"
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={e => onChange(e)}
-                      placeholder="Enter your Password"
-                    />
-                  </label>
-                </div>
-                  <label htmlFor="locale">
-                    Locale
-                    <input
-                      name="locale"
-                      id="locale"
-                      value={locale}
-                      onChange={e => onChange(e)}
-                      placeholder="Locale"
-                    />
-                  </label>
                 <div />
                 <div>
-                  <button type="submit">SAVE CHANGES</button>
+                  <button type="submit">{this.props.t('save-changes')}</button>
                 </div>
               </div>
             </div>
           </form>
+          {/*<Collapsible*/}
+          {/*  trigger={this.props.t('section-password')}*/}
+          {/*>*/}
+          <form onSubmit={this.handleUpdatePassword}>
+            <div className="--div-inputs">
+              <div>
+                <div>
+                <div>
+                  <label htmlFor="currentPassword">
+                    {this.props.t('current-password')}
+                    <input
+                      name="currentPassword"
+                      id="currentPassword"
+                      type="password"
+                      value={this.state.currentPassword}
+                      onChange={e => onChange(e)}
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label htmlFor="newPassword">
+                    {this.props.t('new-password')}
+                    <input
+                      name="newPassword"
+                      id="newPassword"
+                      type="password"
+                      value={this.state.newPassword}
+                      onChange={e => onChange(e)}
+                    />
+                  </label>
+                </div>
+              </div>
+              </div>
+              <div>
+                <button type="submit">{this.props.t('save-password')}</button>
+              </div>
+            </div>
+          </form>
+          {/*</Collapsible>*/}
         </SettingLayout>
         <style jsx>
           {`
+          
+            .Collapsible {
+              border: solid 1px #f2f2f2;
+            }
+            .Collapsible__trigger {
+              border: solid 1px #f2f2f2;
+              padding: 10px;
+            }
+            
             form {
             .client-info {
               color: #555;
@@ -179,8 +221,8 @@ class SettingsUserDetails extends Component {
                   border: none;
                   color: white;
                   text-transform: uppercase;
-                  width: 100%;
-                  height: 50px;
+                  width: 200px;
+                  height: 40px;
                   cursor: pointer;
                   transition: 0.2s all ease;
                   outline: none;
@@ -284,4 +326,4 @@ class SettingsUserDetails extends Component {
   }
 }
 
-export default withAuthSync(SettingsUserDetails)
+export default withTranslation('settings')(withAuthSync(SettingsUserDetails))

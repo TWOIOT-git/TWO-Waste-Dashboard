@@ -9,12 +9,16 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+const nextI18NextMiddleware = require('next-i18next/middleware').default
+const nextI18next = require('./i18n')
+
 // Start the server
 app.prepare().then(() => {
   const server = express();
 
   server.disable("x-powered-by");
   server.use(compression());
+  server.use(nextI18NextMiddleware(nextI18next))
 
   // remove trailing slash
   server.get(/(.+)\/$/, (req, res) =>

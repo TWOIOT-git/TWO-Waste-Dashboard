@@ -5,15 +5,14 @@ import SensorItemCardExpanded from "../components/SensorItemCardExpanded";
 import moment from "moment";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import getConfig from 'next/config'
+import { withTranslation } from '../i18n'
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 class Sensor extends Component {
   static contextType = ClientContext;
 
   static async getInitialProps ({ query: { id } }) {
-    console.log('@sensor getInitialProps')
-    console.log(`sensor id: ${id}`)
-    return { sensor_id: id }
+    return { sensor_id: id, namespacesRequired: ['sensor'] }
   }
 
   constructor(props) {
@@ -55,7 +54,7 @@ class Sensor extends Component {
 
   async refresh() {
     try {
-      let url = publicRuntimeConfig.deviceApi + "customers/" + this.context.client_id + "/sensors/" + this.state.sensor_id;
+      let url = publicRuntimeConfig.deviceApi + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors/" + this.state.sensor_id;
       const sensor_response = await fetch(url);
       if (!sensor_response.ok) {
         throw Error(sensor_response.statusText);
@@ -128,4 +127,4 @@ class Sensor extends Component {
   }
 }
 
-export default withAuthSync(Sensor)
+export default withTranslation('sensor')(withAuthSync(Sensor))

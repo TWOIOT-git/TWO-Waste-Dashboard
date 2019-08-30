@@ -4,6 +4,7 @@ import Link from "next/link";
 import { withRouter } from "next/router";
 import breakpoints from "../utils/breakpoints";
 import { signOut } from '../utils/auth'
+import { withTranslation } from '../i18n'
 
 const NESTED_SETTINGS_URLS = [
   "/settings_user_details",
@@ -113,18 +114,19 @@ const MenuNavegation = ({
   show,
   userImage,
   userName,
-  router: { pathname }
+  router: { pathname },
+  t
 }) => (
   <div className={`MenuNavegation ${show ? "--show" : ""}`}>
     <div>
       <img src={userImage} alt="lidbot user" />
       <h1>
-        Hello, <strong>{userName}</strong>!
+        {t('greetings')}, <strong>{userName}</strong>!
       </h1>
     </div>
     <div>
-      <h2>Main Navigation</h2>
-      <Item pathname={pathname} text="Dashboard" link="/analytics">
+      <h2>{t('main-navigation')}</h2>
+      <Item pathname={pathname} text={t('dashboard')} link="/analytics">
         <svg
           width="19"
           height="14"
@@ -138,7 +140,7 @@ const MenuNavegation = ({
           />
         </svg>
       </Item>
-      <Item pathname={pathname} text="Map Data" link="/map">
+      <Item pathname={pathname} text={t('map-data')} link="/map">
         <svg
           width="20"
           height="20"
@@ -152,7 +154,7 @@ const MenuNavegation = ({
           />
         </svg>
       </Item>
-      <Item pathname={pathname} text="Sensors" link="/sensors">
+      <Item pathname={pathname} text={t('sensors')} link="/sensors">
         <svg
           width="20"
           height="20"
@@ -198,7 +200,7 @@ const MenuNavegation = ({
           />
         </svg>
       </Item>
-      <Item pathname={pathname} text="Alerts" link="/alerts" numberNews={23}>
+      <Item pathname={pathname} text={t('alerts')} link="/alerts" numberNews={23}>
         <svg
           width="20"
           height="20"
@@ -214,8 +216,8 @@ const MenuNavegation = ({
       </Item>
     </div>
     <div>
-      <h2>Admin</h2>
-      <Item pathname={pathname} text="Locations" link="/locations">
+      <h2>{t('admin')}</h2>
+      <Item pathname={pathname} text={t('locations')} link="/locations">
         <svg
           width="20"
           height="20"
@@ -231,7 +233,7 @@ const MenuNavegation = ({
       </Item>
       <Item
         pathname={pathname}
-        text="Settings"
+        text={t('settings')}
         link="/settings_user_details"
         arrayNestedLinks={NESTED_SETTINGS_URLS}
       >
@@ -252,7 +254,7 @@ const MenuNavegation = ({
           />
         </svg>
       </Item>
-      <Item pathname={pathname} text="OTA Updates" link="/ota">
+      <Item pathname={pathname} text={t('ota-updates')} link="/ota">
         <svg
           width="20"
           height="20"
@@ -293,7 +295,7 @@ const MenuNavegation = ({
             fill="black"
           />
         </svg>
-        Log Out
+        {t('log-out')}
       </button>
     </div>
     <style jsx>
@@ -398,7 +400,8 @@ MenuNavegation.propTypes = {
   router: PropTypes.shape({
     pathname: PropTypes.string.isRequired
   }).isRequired,
-  show: PropTypes.bool.isRequired
+  show: PropTypes.bool.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
-export default withRouter(MenuNavegation);
+export default withTranslation('menu')(withRouter(MenuNavegation))

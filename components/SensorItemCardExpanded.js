@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend
 } from "recharts";
+import { withTranslation } from '../i18n'
 
 const SensorItemCardExpanded = ({
     name,
@@ -15,6 +15,7 @@ const SensorItemCardExpanded = ({
     time,
     onClick,
     active,
+  t
 }) => {
   return (
     <article>
@@ -30,12 +31,12 @@ const SensorItemCardExpanded = ({
       <div className="SensorItemCardContent">
         <div>
           <div>
-            <p>STATUS:</p>
+            <p>{t('status')}:</p>
             <h3>{Math.round(percentage)}%</h3>
             <h5>{time}</h5>
           </div>
           <div>
-            <p>LOCATION:</p>
+            <p>{t('location')}:</p>
             <h4>{city}</h4>
             <h5>{street}</h5>
             <h6>{outIn}</h6>
@@ -44,13 +45,13 @@ const SensorItemCardExpanded = ({
       </div>
       <div className="SensorItemCardFooter">
         <div className="chart-header">
-          <h3>Fill Level</h3>
+          <h3>{t('fill-level')}</h3>
           <div className="time-buttons">
-            <div onClick={() => onClick('6')} className={active === '6' ? 'active' : ''}>6 hr</div>
-            <div onClick={() => onClick('12')} className={active === '12' ? 'active' : ''}>12 hr</div>
-            <div onClick={() => onClick('24')} className={active === '24' ? 'active' : ''}>1 day</div>
-            <div onClick={() => onClick('72')} className={active === '72' ? 'active' : ''}>3 days</div>
-            <div onClick={() => onClick('168')} className={active === '168' ? 'active' : ''}>1 week</div>
+            <div onClick={() => onClick('6')} className={active === '6' ? 'active' : ''}>6 {t('hour')}</div>
+            <div onClick={() => onClick('12')} className={active === '12' ? 'active' : ''}>12 {t('hour')}</div>
+            <div onClick={() => onClick('24')} className={active === '24' ? 'active' : ''}>1 {t('day')}</div>
+            <div onClick={() => onClick('72')} className={active === '72' ? 'active' : ''}>3 {t('days')}</div>
+            <div onClick={() => onClick('168')} className={active === '168' ? 'active' : ''}>1 {t('week')}</div>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={400}>
@@ -290,7 +291,8 @@ SensorItemCardExpanded.propTypes = {
   }).isRequired,
   owner: PropTypes.shape({
     name: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  t: PropTypes.func.isRequired,
 };
 
-export default SensorItemCardExpanded;
+export default withTranslation('sensor')(SensorItemCardExpanded)
