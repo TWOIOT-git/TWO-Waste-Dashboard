@@ -97,7 +97,12 @@ class SettingsUserDetails extends Component {
                 <div>{email}</div>
               </div>
             </div>
-            <div className="--div-inputs">
+            <Collapsible
+              trigger={<button className='Collapsible'>{this.props.t("section-user-details")}</button>}
+              open={true}
+              transitionTime={200}
+            >
+              <div className="--div-inputs">
               <div>
                 <div>
                   <label htmlFor="given_name">
@@ -143,10 +148,12 @@ class SettingsUserDetails extends Component {
                 </div>
               </div>
             </div>
+            </Collapsible>
           </form>
-          {/*<Collapsible*/}
-          {/*  trigger={this.props.t('section-password')}*/}
-          {/*>*/}
+          <Collapsible
+            trigger={<button className='Collapsible'>{this.props.t("section-password")}</button>}
+            transitionTime={200}
+          >
           <form onSubmit={this.handleUpdatePassword}>
             <div className="--div-inputs">
               <div>
@@ -182,13 +189,20 @@ class SettingsUserDetails extends Component {
               </div>
             </div>
           </form>
-          {/*</Collapsible>*/}
+          </Collapsible>
         </SettingLayout>
         <style jsx>
           {`
           
             .Collapsible {
-              border: solid 1px #f2f2f2;
+              background: #00b284;
+              width: 100%;
+              text-align: left;
+              padding: 10px;
+              color: #fff;
+              font-weight: 400;
+              text-decoration: none;
+              cursor: pointer;
             }
             .Collapsible__trigger {
               border: solid 1px #f2f2f2;
@@ -202,6 +216,7 @@ class SettingsUserDetails extends Component {
             }
               .--div-inputs {
                 margin-top: 40px;
+                margin-bottom: 40px;
 
                 > div {
                   display: grid;
@@ -284,6 +299,7 @@ class SettingsUserDetails extends Component {
               }
 
               .--div-image {
+                margin-bottom: 40px;
                 > div {
                   > img {
                     border: 2px solid #00b284;

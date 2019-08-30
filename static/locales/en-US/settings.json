@@ -19,6 +19,7 @@
   "save-changes": "Save Changes",
   "save-password": "Save Password",
   "section-password": "Password",
+  "section-user-details": "Edit Profile",
 
   "push-notifications": "Push Notifications",
   "push-notifications-sub": "Allow browser to send ad-hoc notifications.",
