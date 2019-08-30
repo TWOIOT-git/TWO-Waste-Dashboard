@@ -1,0 +1,9 @@
+{
+  "status": "Status",
+  "location": "Location",
+  "fill-level": "Fill Level",
+  "hour": "hr",
+  "day": "Day",
+  "days": "Days",
+  "week": "Week"
+}
