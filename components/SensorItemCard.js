@@ -8,47 +8,46 @@ import {
 } from "recharts";
 
 const SensorItemCard = ({
-  name,
-  robinSize,
-  porcentage,
-  location: { city, street, outIn },
-  owner,
-  fill_reports,
-  time,
-  t
+                          sensor_id,
+                          fill_percentage,
+                          reports,
+                          bin_type,
+                          bin_location,
+                          updated_on,
+                          t
 }) => {
   return (
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span className={`status ${porcentage < 50 ? "green" : "red"}`} />
+          <span className={`status ${fill_percentage < 50 ? "green" : "red"}`} />
           <h2>
-            <Link href={{ pathname: '/sensor', query: { id: name } }} as={`/sensor/${name}`}>
-              <a>{name}</a>
+            <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
+              <a>{sensor_id}</a>
             </Link>
           </h2>
-          <p>{robinSize}</p>
+          {/*<p>{robinSize}</p>*/}
         </div>
       </div>
       <div className="SensorItemCardContent">
         <div>
           <div>
             <p>{t('status')}:</p>
-            <h3>{Math.round(porcentage)}%</h3>
-            <h5>{time}</h5>
+            <h3>{Math.round(fill_percentage)}%</h3>
+            <h5>{updated_on}</h5>
           </div>
           <div>
             <p>LOCATION:</p>
-            <h4>{city}</h4>
-            <h5>{street}</h5>
-            <h6>{outIn}</h6>
+            {/*<h4>{city}</h4>*/}
+            {/*<h5>{street}</h5>*/}
+            {/*<h6>{outIn}</h6>*/}
           </div>
         </div>
       </div>
       <div className="SensorItemCardFooter">
         <ResponsiveContainer width="100%" height={40}>
           <BarChart
-              data={fill_reports}
+              data={reports}
               width={250} height={40}
           >
             <Tooltip />
@@ -173,7 +172,7 @@ const SensorItemCard = ({
                     font-size: 52px;
                     line-height: normal;
 
-                    color: ${porcentage > 50 ? "#da6464" : "#00bf8d"};
+                    color: ${fill_percentage > 50 ? "#da6464" : "#00bf8d"};
                   }
 
                   h4,
@@ -278,17 +277,10 @@ const SensorItemCard = ({
 };
 
 SensorItemCard.propTypes = {
-  name: PropTypes.string.isRequired,
-  robinSize: PropTypes.string.isRequired,
-  porcentage: PropTypes.number.isRequired,
-  location: PropTypes.shape({
-    city: PropTypes.string.isRequired,
-    street: PropTypes.string.isRequired,
-    outIn: PropTypes.string.isRequired
-  }).isRequired,
-  owner: PropTypes.shape({
-    name: PropTypes.string.isRequired
-  }).isRequired,
+  sensor_id: PropTypes.string.isRequired,
+  reports: PropTypes.string.isRequired,
+  fill_percentage: PropTypes.number.isRequired,
+  updated_on: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
 };
 

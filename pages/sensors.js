@@ -11,6 +11,36 @@ import breakpoints from "../utils/breakpoints";
 import getConfig from 'next/config'
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 import { withTranslation } from '../i18n'
+import gql from 'graphql-tag'
+import { graphql, compose } from 'react-apollo'
+import withData from '../withData'
+import * as queries from '../src/graphql/queries'
+
+const subscription = gql`
+    subscription onCreateSensor {
+        onCreateSensor {
+            sensor_id
+            fill_percentage
+            created_on
+            customer_id
+        }
+    }
+`;
+const mutation = gql`
+    mutation createSensor($sensor_id: ID!, $fill_percentage: Float, $customer_id: String, $created_on: AWSTimestamp) {
+        createSensor(input: {
+            sensor_id: $sensor_id,
+            fill_percentage: $fill_percentage,
+            customer_id: $customer_id,
+            created_on: $created_on
+        }) {
+            sensor_id
+            fill_percentage
+            customer_id
+            created_on
+        }
+    }
+`
 
 class Sensors extends React.Component {
   static contextType = ClientContext;
@@ -30,58 +60,29 @@ class Sensors extends React.Component {
   }
 
   componentDidMount() {
-      this.refresh();
-      this.timerID = setInterval(
-          () => this.refresh(),
-          60000
-      );
+    this.props.subscribeToNewTodos()
+
+    let data = [];
+    this.props.sensors().map(sensor => (
+      data.push({
+        ...sensor,
+        reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {
+          var rObj = {
+            v: Math.round(obj.v),
+            t: moment(obj.t).format('HH:mm Do')
+          };
+          return rObj;
+        }) : [],
+        updated_on: moment(sensor.updated_on).fromNow()
+      })
+
+    ))
+
+    this.setState({ data });
   }
 
   componentWillUnmount() {
-      clearInterval(this.timerID);
   }
-
-  async refresh() {
-      try {
-        let url = publicRuntimeConfig.deviceApi + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors";
-        console.log('fetching from: ' + url);
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-
-        const json = await response.json();
-        let data = [];
-        for (let sensor of json.results) {
-          data.push({
-            id: sensor.sensor_id,
-            name: sensor.sensor_id,
-            robinSize: "Robin XL",
-            porcentage: sensor.fill_percentage,
-            location: {
-              city: "Taipei",
-              street: "XinYi Rd.",
-              outIn: "indoor"
-            },
-            owner: {
-              name: sensor.customer_id
-            },
-            fill_reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {
-              var rObj = {
-                v: Math.round(obj.v),
-                t: moment(obj.t).format('HH:mm Do')
-              };
-              return rObj;
-            }) : [],
-            time: moment(sensor.updated_on).fromNow()
-          })
-        }
-        this.setState({ data });
-
-      } catch (error) {
-        console.log(error);
-      }
-    }
 
   render() {
     const { data, layoutMode } = this.state;
@@ -97,7 +98,7 @@ class Sensors extends React.Component {
         <div className="SensorsContainer">
           <If condition={layoutMode === "cards"}>
             {data.map(item => (
-              <div key={item.id} className="ItemCol">
+              <div key={item.sensor_id} className="ItemCol">
                 <SensorItemCard {...item} />
               </div>
             ))}
@@ -138,4 +139,56 @@ class Sensors extends React.Component {
   }
 }
 
-export default withTranslation('sensor')(withAuthSync(Sensors))
+const SensorsWithData = compose(
+  graphql(mutation, {
+    props: props => ({
+      createSensor: todo => {
+        props.mutate({
+          variables: todo,
+          optimisticResponse: {
+            __typename: 'Mutation',
+            createSensor: { ...todo,  __typename: 'Sensor' }
+          },
+          update: (proxy, { data: { createSensor } }) => {
+          }
+        })
+      }
+    })
+  }),
+  graphql(gql(queries.listSensors), {
+    options: props => ({
+      fetchPolicy: 'cache-and-network',
+      variables: {
+        filter: {
+          customer_id: {
+            contains: props.customerId
+          }
+        },
+        limit: 300
+      }
+    }),
+    props: props => ({
+      sensors: () => {
+        console.log(props.data.listSensors)
+        return props.data.listSensors ? props.data.listSensors.items : []
+      },
+      subscribeToNewTodos: params => {
+        props.data.subscribeToMore({
+          document: subscription,
+          updateQuery: (prev, { subscriptionData: { data : { onCreateSensor } } }) => {
+            console.log('onCreateSensor: ', onCreateSensor)
+            return {
+              ...prev,
+              listSensors: {
+                __typename: 'SensorConnection',
+                items: [onCreateSensor, ...prev.listSensors.items.filter(todo => todo.sensor_id !== onCreateSensor.sensor_id)]
+              }
+            }
+          }
+        })
+      }
+    })
+  })
+)(Sensors)
+
+export default withTranslation('sensor')(withAuthSync(withData(SensorsWithData)))

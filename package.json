@@ -36,15 +36,21 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
     "next": "^8.1.0",
+    "next-apollo": "^1.0.13",
+    "next-apollo-appsync": "^0.0.7",
     "next-i18next": "^1.1.1",
     "postcss-nested": "^4.1.2",
     "react": "^16.8.6",
     "react-collapsible": "^2.6.0",
     "react-dom": "^16.8.6",
+    "react-apollo": "^2.1.4",
     "react-map-gl": "^4.1.2",
     "react-select": "^3.0.4",
     "recharts": "^1.5.0",
-    "styled-jsx-plugin-postcss": "^2.0.0"
+    "styled-jsx-plugin-postcss": "^2.0.0",
+    "aws-appsync": "^1.0.22",
+    "aws-appsync-react": "^1.0.13",
+    "graphql-tag": "^2.9.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

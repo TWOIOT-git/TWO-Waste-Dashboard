@@ -1,14 +1,11 @@
 import { Component } from 'react'
 import Router from 'next/router'
-import getConfig from 'next/config'
 import { i18n } from '../i18n'
-import moment from "moment";
-import 'moment-timezone';
-import { withTranslation } from '../i18n'
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
+import moment from "moment"
+import 'moment-timezone'
 
-import Amplify, { Auth } from 'aws-amplify';
-import Analytics from '@aws-amplify/analytics';
+import Amplify, { Auth } from 'aws-amplify'
+import Analytics from '@aws-amplify/analytics'
 
 let awsconfig = {
   aws_project_region: process.env.AWS_PROJECT_REGION,
@@ -16,76 +13,69 @@ let awsconfig = {
   aws_cognito_region: process.env.AWS_COGNITO_REGION,
   aws_user_pools_id: process.env.AWS_USER_POOLS_ID,
   aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
+  aws_appsync_graphqlEndpoint: process.env.AWS_APPSYNC_GRAPHQLENDPOINT,
+  aws_appsync_region: process.env.AWS_APPSYNC_REGION,
+  aws_appsync_authenticationType: process.env.AWS_APPSYNC_AUTHENTICATIONTYPE,
+  aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
+  API: {
+    graphql_headers: async () => ({
+      'My-Custom-Header': 'my value'
+    })
+  },
   oauth: {}
 }
 
-// console.log(awsconfig)
-Amplify.configure(awsconfig);
+Amplify.configure(awsconfig)
 // Amplify.Logger.LOG_LEVEL = 'DEBUG'
-
-const analyticsConfig = {
-  AWSPinpoint: {
-    appId: process.env.AWS_PINPOINT_APP_ID,
-    region: process.env.AWS_PINPOINT_REGION,
-    mandatorySignIn: false,
-  }
-}
-
+//
+// const analyticsConfig = {
+//   AWSPinpoint: {
+//     appId: process.env.AWS_PINPOINT_APP_ID,
+//     region: process.env.AWS_PINPOINT_REGION,
+//   }
+// }
 // Analytics.configure(analyticsConfig)
 
 const getDisplayName = Component =>
   Component.displayName || Component.name || 'Component'
 
 function signOut(e) {
-  e.preventDefault();
+  e.preventDefault()
 
   Auth.signOut()
     .then(data => {
-      console.log('Sign out successful');
+      console.log('Sign out successful')
       console.log(data)
       Router.push('/')
     })
     .catch(err => {
-      console.log('Sign out error: ');
+      console.log('Sign out error: ')
       console.log(err)
-    });
+    })
 }
 function changePassword(oldPassword, newPassword) {
   Auth.currentAuthenticatedUser()
     .then(user => {
-      return Auth.changePassword(user, oldPassword, newPassword);
+      return Auth.changePassword(user, oldPassword, newPassword)
     })
     .then(data => console.log(data))
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
 }
 async function completeNewPassword(user, password) {
   const loggedUser = await Auth.completeNewPassword(
     user,
     password,
-  );
-  console.log(loggedUser);
-  Router.push('/analytics');
+  )
+  console.log(loggedUser)
+  Router.push('/analytics')
 }
 async function signIn(email, password) {
   try {
-    const user = await Auth.signIn(email, password);
+    const user = await Auth.signIn(email, password)
 
     if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
       return {user: user, authState: user.challengeName, authError: 'Please change your password.'}
     } else {
-      console.log('sign in success!')
-      // Analytics.record('Andrzej-test-event');
-
-      // Analytics.updateEndpoint({
-      //   attributes: {
-      //     interests: ['science', 'politics', 'travel'],
-      //   },
-      //   userId: user.attributes['email'],
-      //   userAttributes: {
-      //     username: 'ilovethecloud'
-      //   }
-      // });
-
       Router.push('/analytics')
     }
 
@@ -100,14 +90,14 @@ async function signIn(email, password) {
 }
 
 function reloadUserContext() {
-  console.log('reloadUserContext');
+  console.log('reloadUserContext')
   Auth.currentAuthenticatedUser({
     bypassCache: true
   }).then(user => {
-    console.log(user);
+    console.log(user)
   }).catch(e => {
-    console.log(e);
-  });
+    console.log(e)
+  })
 }
 
 async function updateUserAttributes(attributes) {
@@ -119,7 +109,7 @@ async function updateUserAttributes(attributes) {
   return result
 }
 
-const ClientContext = React.createContext('');
+const ClientContext = React.createContext('')
 
 function withAuthSync(WrappedComponent) {
   return class extends Component {
@@ -127,7 +117,7 @@ function withAuthSync(WrappedComponent) {
 
     static async getInitialProps (ctx) {
       console.log('@auth getInitialProps')
-      const pageProps = WrappedComponent.getInitialProps && await WrappedComponent.getInitialProps(ctx);
+      const pageProps = WrappedComponent.getInitialProps && await WrappedComponent.getInitialProps(ctx)
       return { ...pageProps }
     }
 
@@ -144,31 +134,31 @@ function withAuthSync(WrappedComponent) {
 
     componentDidMount() {
       Auth.currentAuthenticatedUser().then(user => {
-        console.log(user);
+        console.log(user)
 
         i18n.changeLanguage(user.attributes['custom:language'])
-        moment.locale(user.attributes['custom:language']);
-        moment.tz.setDefault(user.attributes['custom:timezone']);
+        moment.locale(user.attributes['custom:language'])
+        moment.tz.setDefault(user.attributes['custom:timezone'])
 
-        this.setState({user: user, authState: 'signedIn'});
+        this.setState({user: user, authState: 'signedIn'})
       }).catch(e => {
-        console.log(e);
+        console.log(e)
         Router.push('/')
-      });
+      })
     }
 
     render () {
-      const { authState } = this.state;
+      const { authState } = this.state
 
       if(authState === 'signedIn') {
         const user = {
           user: this.state.user
         }
-        const CustomerContext = React.createContext(user);
+        const CustomerContext = React.createContext(user)
 
         return (
           <ClientContext.Provider value={user}>
-            <WrappedComponent {...this.props} />
+            <WrappedComponent {...this.props} customerId={this.state.user.attributes['custom:client_id']}/>
           </ClientContext.Provider>
           )
       } else {
