@@ -15,32 +15,8 @@ import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
 import withData from '../withData'
 import * as queries from '../src/graphql/queries'
+import * as subscriptions from '../src/graphql/subscriptions'
 
-const subscription = gql`
-    subscription onCreateSensor {
-        onCreateSensor {
-            sensor_id
-            fill_percentage
-            created_on
-            customer_id
-        }
-    }
-`;
-const mutation = gql`
-    mutation createSensor($sensor_id: ID!, $fill_percentage: Float, $customer_id: String, $created_on: AWSTimestamp) {
-        createSensor(input: {
-            sensor_id: $sensor_id,
-            fill_percentage: $fill_percentage,
-            customer_id: $customer_id,
-            created_on: $created_on
-        }) {
-            sensor_id
-            fill_percentage
-            customer_id
-            created_on
-        }
-    }
-`
 
 class Sensors extends React.Component {
   static contextType = ClientContext;
@@ -60,7 +36,7 @@ class Sensors extends React.Component {
   }
 
   componentDidMount() {
-    this.props.subscribeToNewTodos()
+    this.props.subscribeToNewSensors()
 
     let data = [];
     this.props.sensors().map(sensor => (
@@ -73,7 +49,6 @@ class Sensors extends React.Component {
           };
           return rObj;
         }) : [],
-        updated_on: moment(sensor.updated_on).fromNow()
       })
 
     ))
@@ -140,48 +115,25 @@ class Sensors extends React.Component {
 }
 
 const SensorsWithData = compose(
-  graphql(mutation, {
-    props: props => ({
-      createSensor: todo => {
-        props.mutate({
-          variables: todo,
-          optimisticResponse: {
-            __typename: 'Mutation',
-            createSensor: { ...todo,  __typename: 'Sensor' }
-          },
-          update: (proxy, { data: { createSensor } }) => {
-          }
-        })
-      }
-    })
-  }),
   graphql(gql(queries.listSensors), {
     options: props => ({
-      fetchPolicy: 'cache-and-network',
-      variables: {
-        filter: {
-          customer_id: {
-            contains: props.customerId
-          }
-        },
-        limit: 300
-      }
+      fetchPolicy: 'cache-and-network'
     }),
     props: props => ({
       sensors: () => {
         console.log(props.data.listSensors)
         return props.data.listSensors ? props.data.listSensors.items : []
       },
-      subscribeToNewTodos: params => {
+      subscribeToNewSensors: params => {
         props.data.subscribeToMore({
-          document: subscription,
+          document: gql(subscriptions.onCreateSensor),
           updateQuery: (prev, { subscriptionData: { data : { onCreateSensor } } }) => {
             console.log('onCreateSensor: ', onCreateSensor)
             return {
               ...prev,
               listSensors: {
                 __typename: 'SensorConnection',
-                items: [onCreateSensor, ...prev.listSensors.items.filter(todo => todo.sensor_id !== onCreateSensor.sensor_id)]
+                items: [onCreateSensor, ...prev.listSensors.items]
               }
             }
           }

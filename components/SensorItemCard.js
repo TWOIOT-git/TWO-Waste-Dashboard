@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
+import moment from "moment";
 import { withTranslation } from '../i18n'
 
 import {
@@ -14,6 +15,11 @@ const SensorItemCard = ({
                           bin_type,
                           bin_location,
                           updated_on,
+                          min_distance,
+                          max_distance,
+                          latitude,
+                          longitude,
+                          firmware_version,
                           t
 }) => {
   return (
@@ -26,7 +32,8 @@ const SensorItemCard = ({
               <a>{sensor_id}</a>
             </Link>
           </h2>
-          {/*<p>{robinSize}</p>*/}
+          <p>{bin_type}</p>
+          <p>{firmware_version}</p>
         </div>
       </div>
       <div className="SensorItemCardContent">
@@ -34,13 +41,13 @@ const SensorItemCard = ({
           <div>
             <p>{t('status')}:</p>
             <h3>{Math.round(fill_percentage)}%</h3>
-            <h5>{updated_on}</h5>
+            <h5>{moment(updated_on).fromNow()}</h5>
           </div>
           <div>
             <p>LOCATION:</p>
-            {/*<h4>{city}</h4>*/}
-            {/*<h5>{street}</h5>*/}
-            {/*<h6>{outIn}</h6>*/}
+            <h4>{bin_location}</h4>
+            <h5>{longitude}</h5>
+            <h5>{latitude}</h5>
           </div>
         </div>
       </div>
@@ -278,7 +285,7 @@ const SensorItemCard = ({
 
 SensorItemCard.propTypes = {
   sensor_id: PropTypes.string.isRequired,
-  reports: PropTypes.string.isRequired,
+  reports: PropTypes.array.isRequired,
   fill_percentage: PropTypes.number.isRequired,
   updated_on: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,

@@ -17,10 +17,18 @@ type Query {
 
 type Sensor {
   created_on: AWSTimestamp
+  updated_on: AWSTimestamp
   customer_id: String
   fill_percentage: Float
   sensor_id: ID!
   reports: String
+  bin_location: String
+  bin_type: String
+  min_distance: Int
+  max_distance: Int
+  latitude: Float
+  longitude: Float
+  firmware_version: String
 }
 
 type SensorConnection {
@@ -29,17 +37,25 @@ type SensorConnection {
 }
 
 type Subscription {
-  onCreateSensor(created_on: AWSTimestamp, customer_id: String, fill_percentage: Float, sensor_id: ID, reports: String): Sensor @aws_subscribe(mutations : ["createSensor"])
-  onDeleteSensor(created_on: AWSTimestamp, customer_id: String, fill_percentage: Float, sensor_id: ID, reports: String): Sensor @aws_subscribe(mutations : ["deleteSensor"])
-  onUpdateSensor(created_on: AWSTimestamp, customer_id: String, fill_percentage: Float, sensor_id: ID, reports: String): Sensor @aws_subscribe(mutations : ["updateSensor"])
+  onCreateSensor: Sensor @aws_subscribe(mutations : ["createSensor"])
+  onDeleteSensor: Sensor @aws_subscribe(mutations : ["deleteSensor"])
+  onUpdateSensor: Sensor @aws_subscribe(mutations : ["updateSensor"])
 }
 
 input CreateSensorInput {
   created_on: AWSTimestamp
+  updated_on: AWSTimestamp
   customer_id: String
   fill_percentage: Float
   sensor_id: ID!
   reports: String
+  bin_location: String
+  bin_type: String
+  min_distance: Int
+  max_distance: Int
+  latitude: Float
+  longitude: Float
+  firmware_version: String
 }
 
 input DeleteSensorInput {
@@ -90,10 +106,19 @@ input TableIntFilterInput {
 
 input TableSensorFilterInput {
   created_on: TableIntFilterInput
+  updated_on: TableIntFilterInput
   customer_id: TableStringFilterInput
   fill_percentage: TableFloatFilterInput
   sensor_id: TableIDFilterInput
   reports: TableStringFilterInput
+  bin_location: TableStringFilterInput
+  bin_type: TableStringFilterInput
+  min_distance: Int
+  max_distance: Int
+  latitude: Float
+  longitude: Float
+  firmware_version: String
+
 }
 
 input TableStringFilterInput {
@@ -111,8 +136,17 @@ input TableStringFilterInput {
 
 input UpdateSensorInput {
   created_on: AWSTimestamp
+  updated_on: AWSTimestamp
   customer_id: String
   fill_percentage: Float
   sensor_id: ID!
   reports: String
+  bin_location: String
+  bin_type: String
+  min_distance: Int
+  max_distance: Int
+  latitude: Float
+  longitude: Float
+  firmware_version: String
+
 }
