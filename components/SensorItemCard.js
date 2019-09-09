@@ -44,7 +44,7 @@ const SensorItemCard = ({
             <h5>{moment(updated_on).fromNow()}</h5>
           </div>
           <div>
-            <p>LOCATION:</p>
+            <p>{t('location')}:</p>
             <h4>{bin_location}</h4>
             <h5>{longitude}</h5>
             <h5>{latitude}</h5>

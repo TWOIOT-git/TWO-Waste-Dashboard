@@ -4,42 +4,48 @@ import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend
 } from "recharts";
 import { withTranslation } from '../i18n'
+import moment from "moment"
 
 const SensorItemCardExpanded = ({
-    name,
-    robinSize,
-    percentage,
-    location: { city, street, outIn },
-    owner,
-    fill_reports,
-    time,
-    onClick,
-    active,
-  t
+                                  sensor_id,
+                                  fill_percentage,
+                                  reports,
+                                  bin_type,
+                                  bin_location,
+                                  updated_on,
+                                  min_distance,
+                                  max_distance,
+                                  latitude,
+                                  longitude,
+                                  firmware_version,
+                                  t,
+                                  active,
+                                  onClick
 }) => {
   return (
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span className={`status ${percentage < 50 ? "green" : "red"}`} />
+          <span className={`status ${fill_percentage < 50 ? "green" : "red"}`} />
           <h2>
-            {name}
+            <a>{sensor_id}</a>
           </h2>
-          <p>{robinSize}</p>
+          <p>{bin_type}</p>
+          <p>{firmware_version}</p>
         </div>
       </div>
       <div className="SensorItemCardContent">
         <div>
           <div>
             <p>{t('status')}:</p>
-            <h3>{Math.round(percentage)}%</h3>
-            <h5>{time}</h5>
+            <h3>{Math.round(fill_percentage)}%</h3>
+            <h5>{moment(updated_on).fromNow()}</h5>
           </div>
           <div>
             <p>{t('location')}:</p>
-            <h4>{city}</h4>
-            <h5>{street}</h5>
-            <h6>{outIn}</h6>
+            <h4>{bin_location}</h4>
+            <h5>{longitude}</h5>
+            <h5>{latitude}</h5>
           </div>
         </div>
       </div>
@@ -55,10 +61,10 @@ const SensorItemCardExpanded = ({
           </div>
         </div>
         <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={fill_reports}
+        <LineChart data={reports}
                    margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
           <XAxis
-            dataKey="fd"
+            dataKey="t"
             padding={{ left: 20, right: 20 }}
           />
           <YAxis/>
@@ -70,7 +76,7 @@ const SensorItemCardExpanded = ({
             type="monotone"
             name="Fill"
             unit="%"
-            dataKey="fp"
+            dataKey="v"
             animationDuration={500}
             stroke="#00bf8d"
             dot={false}
@@ -183,7 +189,7 @@ const SensorItemCardExpanded = ({
                     font-size: 52px;
                     line-height: normal;
 
-                    color: ${percentage > 50 ? "#da6464" : "#00bf8d"};
+                    color: ${fill_percentage > 50 ? "#da6464" : "#00bf8d"};
                   }
 
                   h4,
@@ -281,17 +287,10 @@ const SensorItemCardExpanded = ({
 };
 
 SensorItemCardExpanded.propTypes = {
-  name: PropTypes.string.isRequired,
-  robinSize: PropTypes.string.isRequired,
-  percentage: PropTypes.number.isRequired,
-  location: PropTypes.shape({
-    city: PropTypes.string.isRequired,
-    street: PropTypes.string.isRequired,
-    outIn: PropTypes.string.isRequired
-  }).isRequired,
-  owner: PropTypes.shape({
-    name: PropTypes.string.isRequired
-  }).isRequired,
+  sensor_id: PropTypes.string.isRequired,
+  reports: PropTypes.array.isRequired,
+  fill_percentage: PropTypes.number.isRequired,
+  updated_on: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
 };
 

@@ -9,14 +9,7 @@ import fetch from "isomorphic-unfetch";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import breakpoints from "../utils/breakpoints";
 import getConfig from 'next/config'
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 import { withTranslation } from '../i18n'
-import gql from 'graphql-tag'
-import { graphql, compose } from 'react-apollo'
-import withData from '../withData'
-import * as queries from '../src/graphql/queries'
-import * as subscriptions from '../src/graphql/subscriptions'
-
 
 class Sensors extends React.Component {
   static contextType = ClientContext;
@@ -36,27 +29,45 @@ class Sensors extends React.Component {
   }
 
   componentDidMount() {
-    this.props.subscribeToNewSensors()
+      this.refresh();
+      this.timerID = setInterval(
+          () => this.refresh(),
+          60000
+      );
+  }
 
+  componentWillUnmount() {
+      clearInterval(this.timerID);
+  }
+
+  async refresh() {
+      try {
+        let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors";
+        console.log('fetching from: ' + url);
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+
+        const json = await response.json();
     let data = [];
-    this.props.sensors().map(sensor => (
+        for (let sensor of json.results) {
       data.push({
         ...sensor,
         reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {
           var rObj = {
             v: Math.round(obj.v),
-            t: moment(obj.t).format('HH:mm Do')
+            t: moment(obj.t).format('HH:mm')
           };
           return rObj;
         }) : [],
       })
-
-    ))
-
+        }
     this.setState({ data });
-  }
 
-  componentWillUnmount() {
+      } catch (error) {
+        console.log(error);
+  }
   }
 
   render() {
@@ -114,33 +125,4 @@ class Sensors extends React.Component {
   }
 }
 
-const SensorsWithData = compose(
-  graphql(gql(queries.listSensors), {
-    options: props => ({
-      fetchPolicy: 'cache-and-network'
-    }),
-    props: props => ({
-      sensors: () => {
-        console.log(props.data.listSensors)
-        return props.data.listSensors ? props.data.listSensors.items : []
-      },
-      subscribeToNewSensors: params => {
-        props.data.subscribeToMore({
-          document: gql(subscriptions.onCreateSensor),
-          updateQuery: (prev, { subscriptionData: { data : { onCreateSensor } } }) => {
-            console.log('onCreateSensor: ', onCreateSensor)
-            return {
-              ...prev,
-              listSensors: {
-                __typename: 'SensorConnection',
-                items: [onCreateSensor, ...prev.listSensors.items]
-              }
-            }
-          }
-        })
-      }
-    })
-  })
-)(Sensors)
-
-export default withTranslation('sensor')(withAuthSync(withData(SensorsWithData)))
+export default withTranslation('sensor')(withAuthSync(Sensors))

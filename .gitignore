@@ -8,7 +8,7 @@ dist
 .env
 build
 .idea
-dev
+scripts
 certs
 amplify/\#current-cloud-backend
 amplify/.config/local-*

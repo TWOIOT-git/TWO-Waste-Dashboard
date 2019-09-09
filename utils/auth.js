@@ -36,9 +36,6 @@ Amplify.configure(awsconfig)
 // }
 // Analytics.configure(analyticsConfig)
 
-const getDisplayName = Component =>
-  Component.displayName || Component.name || 'Component'
-
 function signOut(e) {
   e.preventDefault()
 
@@ -113,11 +110,9 @@ const ClientContext = React.createContext('')
 
 function withAuthSync(WrappedComponent) {
   return class extends Component {
-    static displayName = `withAuthSync(${getDisplayName(WrappedComponent)})`
-
     static async getInitialProps (ctx) {
-      console.log('@auth getInitialProps')
       const pageProps = WrappedComponent.getInitialProps && await WrappedComponent.getInitialProps(ctx)
+      console.log('@auth getInitialProps: ', pageProps)
       return { ...pageProps }
     }
 
@@ -134,7 +129,7 @@ function withAuthSync(WrappedComponent) {
 
     componentDidMount() {
       Auth.currentAuthenticatedUser().then(user => {
-        console.log(user)
+        console.log('Current user: ', user)
 
         i18n.changeLanguage(user.attributes['custom:language'])
         moment.locale(user.attributes['custom:language'])
@@ -151,14 +146,16 @@ function withAuthSync(WrappedComponent) {
       const { authState } = this.state
 
       if(authState === 'signedIn') {
-        const user = {
-          user: this.state.user
-        }
-        const CustomerContext = React.createContext(user)
-
         return (
-          <ClientContext.Provider value={user}>
-            <WrappedComponent {...this.props} customerId={this.state.user.attributes['custom:client_id']}/>
+          <ClientContext.Provider value={
+            {
+              user: this.state.user
+            }}
+          >
+            <WrappedComponent
+              customerId={this.state.user.attributes['custom:client_id']}
+              {...this.props}
+            />
           </ClientContext.Provider>
           )
       } else {

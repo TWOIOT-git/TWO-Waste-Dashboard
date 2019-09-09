@@ -6,7 +6,6 @@ import moment from "moment";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import getConfig from 'next/config'
 import { withTranslation } from '../i18n'
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 class Sensor extends Component {
   static contextType = ClientContext;
@@ -31,15 +30,7 @@ class Sensor extends Component {
   }
 
   componentDidMount() {
-    this.refresh();
-    this.timerID = setInterval(
-      () => this.refresh(),
-      60000
-    );
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
+    this.getSensor();
   }
 
   handleClick(time) {
@@ -49,18 +40,18 @@ class Sensor extends Component {
       to: now.valueOf(),
       from: now.subtract(time, 'hours').valueOf(),
     })
-    this.refresh();
+    this.getSensor();
   }
 
-  async refresh() {
+  async getSensor() {
     try {
-      let url = publicRuntimeConfig.deviceApi + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors/" + this.state.sensor_id;
+      let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors/" + this.state.sensor_id;
       const sensor_response = await fetch(url);
       if (!sensor_response.ok) {
         throw Error(sensor_response.statusText);
       }
 
-      let reports_url = publicRuntimeConfig.deviceApi + "sensors/" + this.state.sensor_id + "/reports/from/" + this.state.from + "/to/" + this.state.to;
+      let reports_url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id + "/reports/from/" + this.state.from + "/to/" + this.state.to;
       console.log(reports_url);
       const reports_response = await fetch(reports_url);
       if (!reports_response.ok) {
@@ -74,26 +65,13 @@ class Sensor extends Component {
       let data = [];
       for (let sensor of json.results) {
         data.push({
-          id: sensor.sensor_id,
-          name: sensor.sensor_id,
-          robinSize: "Robin XL",
-          percentage: sensor.fill_percentage,
-          location: {
-            city: "Taipei",
-            street: "XinYi Rd.",
-            outIn: "indoor"
-          },
-          owner: {
-            name: sensor.customer_id
-          },
-          fill_reports: reports_json.results.map(obj => {
-            var rObj = {
-              fp: Math.round(obj.fill_percentage),
-              fd: moment(obj.created_on).format('HH:mm Do')
-            };
-            return rObj;
-          }),
-          time: moment(sensor.updated_on).fromNow()
+          ...sensor,
+          reports: (reports_json.results) ? (reports_json.results).map(obj => {
+            return {
+              v: Math.round(obj.fill_percentage),
+              t: moment(obj.created_on).format('HH:mm')
+            }
+          }) : [],
         })
       }
       this.setState({ data });

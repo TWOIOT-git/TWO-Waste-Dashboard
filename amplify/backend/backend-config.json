@@ -6,10 +6,6 @@
 			"dependsOn": []
 		}
 	},
-	"analytics": {
-		"lidbotanalytics": {
-			"service": "Pinpoint",
-			"providerPlugin": "awscloudformation"
-		}
-	}
+	"analytics": {},
+	"api": {}
 }
