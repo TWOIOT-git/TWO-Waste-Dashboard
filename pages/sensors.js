@@ -8,7 +8,6 @@ import SensorTable from "../components/SensorTable";
 import fetch from "isomorphic-unfetch";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import breakpoints from "../utils/breakpoints";
-import getConfig from 'next/config'
 import { withTranslation } from '../i18n'
 
 class Sensors extends React.Component {
@@ -29,18 +28,10 @@ class Sensors extends React.Component {
   }
 
   componentDidMount() {
-      this.refresh();
-      this.timerID = setInterval(
-          () => this.refresh(),
-          60000
-      );
+      this.getSensors();
   }
 
-  componentWillUnmount() {
-      clearInterval(this.timerID);
-  }
-
-  async refresh() {
+  async getSensors() {
       try {
         let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors";
         console.log('fetching from: ' + url);
@@ -55,11 +46,11 @@ class Sensors extends React.Component {
       data.push({
         ...sensor,
         reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {
-          var rObj = {
+          console.log(obj.t)
+          return {
             v: Math.round(obj.v),
             t: moment(obj.t).format('HH:mm')
-          };
-          return rObj;
+          }
         }) : [],
       })
         }

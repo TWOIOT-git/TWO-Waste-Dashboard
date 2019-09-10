@@ -4,7 +4,6 @@ import Head from "../components/Head";
 import SensorItemCardExpanded from "../components/SensorItemCardExpanded";
 import moment from "moment";
 import { withAuthSync, ClientContext } from '../utils/auth'
-import getConfig from 'next/config'
 import { withTranslation } from '../i18n'
 
 class Sensor extends Component {
@@ -90,7 +89,7 @@ class Sensor extends Component {
         <Head title={`lidbot - ${sensor_id}`} />
         <div className="Container">
           {data.map(item => (
-            <div key={item.id} className="ItemCol">
+            <div key={item.sensor_id} className="ItemCol">
               <SensorItemCardExpanded {...item} onClick={(time) => this.handleClick(time)} active={active}/>
             </div>
           ))}

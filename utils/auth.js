@@ -5,7 +5,6 @@ import moment from "moment"
 import 'moment-timezone'
 
 import Amplify, { Auth } from 'aws-amplify'
-import Analytics from '@aws-amplify/analytics'
 
 let awsconfig = {
   aws_project_region: process.env.AWS_PROJECT_REGION,
@@ -17,24 +16,9 @@ let awsconfig = {
   aws_appsync_region: process.env.AWS_APPSYNC_REGION,
   aws_appsync_authenticationType: process.env.AWS_APPSYNC_AUTHENTICATIONTYPE,
   aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
-  API: {
-    graphql_headers: async () => ({
-      'My-Custom-Header': 'my value'
-    })
-  },
-  oauth: {}
 }
 
 Amplify.configure(awsconfig)
-// Amplify.Logger.LOG_LEVEL = 'DEBUG'
-//
-// const analyticsConfig = {
-//   AWSPinpoint: {
-//     appId: process.env.AWS_PINPOINT_APP_ID,
-//     region: process.env.AWS_PINPOINT_REGION,
-//   }
-// }
-// Analytics.configure(analyticsConfig)
 
 function signOut(e) {
   e.preventDefault()
@@ -164,7 +148,6 @@ function withAuthSync(WrappedComponent) {
     }
   }
 }
-
 
 
 export {
