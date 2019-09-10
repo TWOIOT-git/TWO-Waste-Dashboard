@@ -8,13 +8,8 @@ import { withAuthSync, updateUserAttributes, ClientContext } from '../utils/auth
 import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone';
+import {determineTimezone, determineLanguage, timezones, languages} from '../utils/locale'
 
-const languages = [
-  { value: 'de-DE', label: 'Deutsch'},
-  { value: 'es-ES', label: 'Español'},
-  { value: 'en-US', label: 'English'},
-  { value: 'zh-TW', label: '中文'},
-]
 
 class SettingsGenerals extends React.Component {
   static contextType = ClientContext;
@@ -33,37 +28,13 @@ class SettingsGenerals extends React.Component {
 
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handleTimezoneChange = this.handleTimezoneChange.bind(this);
-    this.timeZones= this.timeZones.bind(this);
   }
 
   componentDidMount() {
-    let timezones = this.timeZones()
-    let timezone = this.context.user.attributes['custom:timezone']
-    let language = this.context.user.attributes['custom:language']
-
     this.setState({
-      language: languages.find(o => o.value === language),
-      timezone: timezones.find(o => o.value === timezone),
+      language: determineLanguage(this.context.user),
+      timezone: determineTimezone(this.context.user),
     })
-  }
-
-  timeZones() {
-    const timeZones = moment.tz.names();
-    const offsetTmz = [];
-
-    for (const i in timeZones) {
-      const tz = moment.tz(timeZones[i]).format('Z').replace(':00', '').replace(':30', '.5');
-      let x = (tz === 0) ? 0 : parseInt(tz).toFixed(2);
-
-      const timeZone = {
-        label: `(GMT${moment.tz(timeZones[i]).format('Z')})${timeZones[i]}`,
-        value: `${timeZones[i]}`,
-        time: `${x}`,
-      };
-      offsetTmz.push(timeZone);
-    }
-
-    return _.sortBy(offsetTmz, [function (el) { return -(el.time); }]);
   }
 
   handleTimezoneChange = selectedOption => {
@@ -96,8 +67,6 @@ class SettingsGenerals extends React.Component {
   }
 
   render() {
-    const timezones = this.timeZones();
-
     return (
       <LayoutMenuNavegation>
         <Head title={'lidbot - ' + this.props.t('language-region')}/>

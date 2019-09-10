@@ -57,10 +57,10 @@ class SettingsNotifications extends React.Component {
   }
 
   componentDidMount() {
-    let pushNotifications = this.context.user.attributes['custom:pushNotifications']
-    let emailNotifications = this.context.user.attributes['custom:emailNotifications']
-    let regularEvents = this.context.user.attributes['custom:regularEvents']
-    let suddenAlerts = this.context.user.attributes['custom:suddenAlerts']
+    let pushNotifications = this.context.user.attributes['custom:push_notifications']
+    let emailNotifications = this.context.user.attributes['custom:email_notifications']
+    let regularEvents = this.context.user.attributes['custom:regular_events']
+    let suddenAlerts = this.context.user.attributes['custom:sudden_alerts']
 
     this.setState(prevState => ({
       pushNotifications: {
@@ -155,8 +155,8 @@ class SettingsNotifications extends React.Component {
   updateSubscriptionOnServer(subscription) {
     console.log(JSON.stringify(subscription))
     Auth.updateUserAttributes(this.context.user, {
-      'custom:pushNotifications': (subscription) ? "true" : "false",
-      'custom:pushSubscription': (subscription) ? JSON.stringify(subscription) : null,
+      'custom:push_notifications': (subscription) ? "true" : "false",
+      'custom:push_subscription': (subscription) ? JSON.stringify(subscription) : null,
     })
       .then(function (result) {
         console.log(result)
@@ -181,9 +181,9 @@ class SettingsNotifications extends React.Component {
       }))
 
       Auth.updateUserAttributes(this.context.user, {
-        'custom:emailNotifications': (newState.emailNotifications !== undefined) ? newState.emailNotifications.toString() : this.state.emailNotifications.toString(),
-        'custom:regularEvents': (newState.regularEvents !== undefined) ? newState.regularEvents.toString() : this.state.regularEvents.toString(),
-        'custom:suddenAlerts': (newState.suddenAlerts !== undefined) ? newState.suddenAlerts.toString() : this.state.suddenAlerts.toString(),
+        'custom:email_notifications': (newState.emailNotifications !== undefined) ? newState.emailNotifications.toString() : this.state.emailNotifications.toString(),
+        'custom:regular_events': (newState.regularEvents !== undefined) ? newState.regularEvents.toString() : this.state.regularEvents.toString(),
+        'custom:sudden_alerts': (newState.suddenAlerts !== undefined) ? newState.suddenAlerts.toString() : this.state.suddenAlerts.toString(),
       })
         .then(function (result) {
           console.log(result)

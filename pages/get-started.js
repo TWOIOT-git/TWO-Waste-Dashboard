@@ -1,8 +1,7 @@
 import React from "react";
 import Head from "../components/Head";
-import { signIn, completeNewPassword } from '../utils/auth'
+import { signUp} from '../utils/auth'
 import { withTranslation } from '../i18n'
-import Link from "next/link"
 
 
 class Authentication extends React.Component {
@@ -16,11 +15,9 @@ class Authentication extends React.Component {
     this.state = {
       email: "",
       password: "",
-      newPassword: "",
-      passwordRepeat: "",
-      authState: 'SIGN_IN',
-      authData: null,
-      authError: null,
+      verificationCode: "",
+      authState: 'SIGN_UP',
+      authCode: null,
       user: null,
     };
   }
@@ -33,40 +30,27 @@ class Authentication extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    this.signIn()
+
+    this.signUp()
   };
 
-  async signIn() {
-    try {
-      if(this.state.authState === 'NEW_PASSWORD_REQUIRED') {
-        if(this.state.newPassword !== this.state.passwordRepeat) {
-          console.log('PASSWORD_DO_NOT_MATCH')
-          this.setState({authError: "Passwords are not the same."});
-        } else {
-          console.log(this.state.user);
-          console.log('Calling completeNewPassword');
-          completeNewPassword(
-            this.state.user,
-            this.state.newPassword,
-          );
-        }
-      } else {
-        var state = await signIn(this.state.email, this.state.password)
-        this.setState(state)
-      }
-    } catch (err) {
-      console.log('error signing up..', err)
-      this.setState({authError: err.message})
-    }
+  async signUp() {
+    let state = await signUp(this.state.email, this.state.password)
+    this.setState(state)
   }
 
   render() {
-    const { email, password, newPassword, passwordRepeat, authError, authState } = this.state;
+    const { email, password, authCode, authState, verificationCode } = this.state;
     const { onChange } = this;
+
+    let disableEmailPassword = false
+    if(authState === 'CONFIRM_CODE') {
+      disableEmailPassword = true
+    }
 
     return (
       <section>
-        <Head title="Login | Lidbot" />
+        <Head title="Get Started | Lidbot" />
         <div>
           <div>
             <div>
@@ -76,9 +60,9 @@ class Authentication extends React.Component {
                 className="logo"
               />
             </div>
-            <div>
+            <div className="welcome-image">
               <img
-                src="/static/images/login_waste.png"
+                src="/static/images/sensor.png"
                 alt="lidbot waste logo"
                 className="waste"
               />
@@ -89,13 +73,10 @@ class Authentication extends React.Component {
             <p>{this.props.t('subtitle')}</p>
 
             <div className="alert error">
-              {this.props.t(authError)}
+              {this.props.t(authCode)}
             </div>
 
             <form onSubmit={e => this.onSubmit(e)}>
-              <If condition={
-                authState !== 'NEW_PASSWORD_REQUIRED'
-              }>
                 <label htmlFor="email">
                   {this.props.t('email')}
                   <input
@@ -103,6 +84,7 @@ class Authentication extends React.Component {
                     id="email"
                     type="email"
                     value={email}
+                    disabled={disableEmailPassword}
                     onChange={e => onChange(e)}
                     placeholder="Enter your email"
                   />
@@ -114,39 +96,27 @@ class Authentication extends React.Component {
                     id="password"
                     type="password"
                     value={password}
+                    disabled={disableEmailPassword}
                     onChange={e => onChange(e)}
                     placeholder="Password"
                   />
                 </label>
-              </If>
-              <If condition={authState === 'NEW_PASSWORD_REQUIRED'}>
-                <label htmlFor="newPassword">
-                  Password
+              <If condition={
+                authState === 'CONFIRM_CODE'
+              }>
+                <label htmlFor="verificationCode">
+                  {this.props.t('verificationCode')}
                   <input
-                    name="newPassword"
-                    id="newPassword"
-                    type="password"
-                    value={newPassword}
+                    name="verificationCode"
+                    id="verificationCode"
+                    type="number"
+                    value={verificationCode}
                     onChange={e => onChange(e)}
-                    placeholder="New Password"
-                  />
-                </label>
-                <label htmlFor="passwordRepeat">
-                  Repeat Password
-                  <input
-                    name="passwordRepeat"
-                    id="passwordRepeat"
-                    type="password"
-                    value={passwordRepeat}
-                    onChange={e => onChange(e)}
-                    placeholder="Repeat Password"
+                    placeholder={this.props.t('verificationCode')}
                   />
                 </label>
               </If>
-              <button type="submit">Login</button>
-              <Link href='/get-started'>
-                <a>{this.props.t('signup')}</a>
-              </Link>
+              <button type="submit">{this.props.t('signup')}</button>
             </form>
           </div>
         </div>
@@ -158,6 +128,12 @@ class Authentication extends React.Component {
               }
               to {
                 -webkit-transform: none;
+              }
+            }
+            .welcome-image {
+              img {
+                max-width:100%;
+                max-height:100%;
               }
             }
             .alert {
@@ -345,4 +321,4 @@ class Authentication extends React.Component {
   }
 }
 
-export default withTranslation('login')(Authentication)
+export default withTranslation('signup')(Authentication)

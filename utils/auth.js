@@ -1,24 +1,33 @@
 import { Component } from 'react'
 import Router from 'next/router'
-import { i18n } from '../i18n'
+import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone'
+import awsconfig from "../src/aws-exports"
+import {determineTimezone, determineLanguage} from '../utils/locale'
+
 
 import Amplify, { Auth } from 'aws-amplify'
 
-let awsconfig = {
-  aws_project_region: process.env.AWS_PROJECT_REGION,
-  aws_cognito_identity_pool_id: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
-  aws_cognito_region: process.env.AWS_COGNITO_REGION,
-  aws_user_pools_id: process.env.AWS_USER_POOLS_ID,
-  aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
-  aws_appsync_graphqlEndpoint: process.env.AWS_APPSYNC_GRAPHQLENDPOINT,
-  aws_appsync_region: process.env.AWS_APPSYNC_REGION,
-  aws_appsync_authenticationType: process.env.AWS_APPSYNC_AUTHENTICATIONTYPE,
-  aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
-}
+const dev = process.env.NODE_ENV !== "production";
 
-Amplify.configure(awsconfig)
+if(dev) {
+  console.log('dev')
+  Amplify.configure(awsconfig)
+} else {
+  console.log('prod')
+  Amplify.configure({
+    aws_project_region: process.env.AWS_PROJECT_REGION,
+    aws_cognito_identity_pool_id: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
+    aws_cognito_region: process.env.AWS_COGNITO_REGION,
+    aws_user_pools_id: process.env.AWS_USER_POOLS_ID,
+    aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
+    aws_appsync_graphqlEndpoint: process.env.AWS_APPSYNC_GRAPHQLENDPOINT,
+    aws_appsync_region: process.env.AWS_APPSYNC_REGION,
+    aws_appsync_authenticationType: process.env.AWS_APPSYNC_AUTHENTICATIONTYPE,
+    aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
+  })
+}
 
 function signOut(e) {
   e.preventDefault()
@@ -70,6 +79,50 @@ async function signIn(email, password) {
   }
 }
 
+async function signUp(email, password) {
+  try {
+    let user = await Auth.signUp({
+      username: email,
+      password: password,
+      attributes: {
+        email: email
+      },
+    })
+
+    console.log(user)
+
+    return {
+      user: user,
+      authState: 'CONFIRM_CODE',
+    }
+  } catch (e) {
+    console.log(e)
+
+    return {
+      authCode: e.code,
+      authMessage: e.message
+    }
+  }
+}
+
+async function confirmSignUp(username, code) {
+  // After retrieving the confirmation code from the user
+  try {
+    let data = await Auth.confirmSignUp(username, code, {
+      forceAliasCreation: true
+    })
+
+    console.log(data)
+  } catch (e) {
+    console.log(e)
+
+    return {
+      authCode: e.code,
+      authMessage: e.message
+    }
+  }
+}
+
 function reloadUserContext() {
   console.log('reloadUserContext')
   Auth.currentAuthenticatedUser({
@@ -115,9 +168,20 @@ function withAuthSync(WrappedComponent) {
       Auth.currentAuthenticatedUser().then(user => {
         console.log('Current user: ', user)
 
-        i18n.changeLanguage(user.attributes['custom:language'])
-        moment.locale(user.attributes['custom:language'])
-        moment.tz.setDefault(user.attributes['custom:timezone'])
+        let language = determineLanguage(user).value
+
+        if(language) {
+          console.log(`setting language to: ${language}`)
+          i18n.changeLanguage(language)
+          moment.locale(language)
+        }
+
+        let timezone = determineTimezone(user).value
+
+        if(timezone) {
+          console.log(`setting timezone to: ${timezone}`)
+          moment.tz.setDefault(timezone)
+        }
 
         this.setState({user: user, authState: 'signedIn'})
       }).catch(e => {
@@ -152,6 +216,7 @@ function withAuthSync(WrappedComponent) {
 
 export {
   signOut, signIn, completeNewPassword, withAuthSync, ClientContext, reloadUserContext,
+  signUp,
   updateUserAttributes,
   changePassword
 }
