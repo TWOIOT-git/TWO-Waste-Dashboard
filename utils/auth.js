@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone'
-import awsconfig from "../src/aws-exports"
+
 import {determineTimezone, determineLanguage} from '../utils/locale'
 
 
@@ -11,9 +11,14 @@ import Amplify, { Auth } from 'aws-amplify'
 
 const dev = process.env.NODE_ENV !== "production";
 
-if(dev) {
+async function configDev() {
   console.log('dev')
-  Amplify.configure(awsconfig)
+  let config = await import ("../src/aws-exports")
+  Amplify.configure(config)
+}
+
+if(dev) {
+  configDev()
 } else {
   console.log('prod')
   Amplify.configure({
