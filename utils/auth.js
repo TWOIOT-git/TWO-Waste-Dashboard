@@ -12,13 +12,13 @@ import Amplify, { Auth } from 'aws-amplify'
 const dev = process.env.NODE_ENV !== "production";
 
 async function configDev() {
-  console.log('dev')
-  let config = await import ("../src/aws-exports")
-  Amplify.configure(config)
+  // console.log('dev')
+  // let config = await import ("../src/aws-exports")
+  // Amplify.configure(config)
 }
 
 if(dev) {
-  configDev()
+  // configDev()
 } else {
   console.log('prod')
   Amplify.configure({
