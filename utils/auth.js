@@ -10,7 +10,7 @@ import {determineTimezone, determineLanguage} from '../utils/locale'
 
 import Amplify, { Auth } from 'aws-amplify'
 
-if(process.env.NODE_ENV !== "production") {
+// if(process.env.NODE_ENV !== "production") {
   // console.log('prod')
   Amplify.configure({
     aws_project_region: process.env.AWS_PROJECT_REGION,
@@ -23,10 +23,10 @@ if(process.env.NODE_ENV !== "production") {
     aws_appsync_authenticationType: process.env.AWS_APPSYNC_AUTHENTICATIONTYPE,
     aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
   })
-} else {
+// } else {
   // console.log('dev')
   // Amplify.configure(config)
-}
+// }
 
 function signOut(e) {
   e.preventDefault()
