@@ -3,6 +3,7 @@ import Router from 'next/router'
 import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone'
+import uuid from 'uuid/v1'
 // import config from "../src/aws-exports"
 
 import {determineTimezone, determineLanguage} from '../utils/locale'
@@ -85,6 +86,7 @@ async function signUp(email, password) {
       password: password,
       attributes: {
         email: email,
+        'custom:client_id': uuid()
       },
     })
 

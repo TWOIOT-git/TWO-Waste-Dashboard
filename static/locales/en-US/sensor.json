@@ -5,5 +5,10 @@
   "hour": "hr",
   "day": "Day",
   "days": "Days",
-  "week": "Week"
+  "week": "Week",
+  "register-sensor": "Link an existing sensor to your account",
+  "no-sensors": "You currently have no sensors linked to your account",
+  "no-sensors-sub-1": "Please ",
+  "no-sensors-sub-link": "contact us",
+  "no-sensors-sub-2": " to make an order if you already have a sensor you can register it here:"
 }

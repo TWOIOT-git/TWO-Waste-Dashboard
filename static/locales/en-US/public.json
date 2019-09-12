@@ -35,5 +35,6 @@
   "and-our": " and our ",
   "privacy": "Privacy Policy.",
   "password-reset-success": "Password Changed!",
-  "password-reset-success-sub": "Your password has been successfully updated. You can now "
+  "password-reset-success-sub": "Your password has been successfully updated. You can now ",
+  "enter-password": "Enter password"
 }

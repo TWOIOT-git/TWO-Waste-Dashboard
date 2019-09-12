@@ -31,17 +31,21 @@ class SettingsUserDetails extends Component {
       imagePreview: '',
       currentPassword: '',
       newPassword: '',
+      client_name: '',
     };
 
+    this.readURL = this.readURL.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      given_name: this.context.user.attributes['given_name'],
+      given_name: (this.context.user.attributes['given_name']) ? this.context.user.attributes['given_name'] : '',
       family_name: this.context.user.attributes['family_name'],
       phone_number: this.context.user.attributes['phone_number'],
+      client_name: this.context.user.attributes['custom:client_name'],
       email: this.context.user.attributes['email'],
       client_id: this.context.user.attributes['custom:client_id'],
       imagePreview: this.context.user.attributes['picture']
@@ -73,6 +77,9 @@ class SettingsUserDetails extends Component {
     if(this.state.phone_number) {
       attributes.phone_number = this.state.phone_number
     }
+    if(this.state.client_name) {
+      attributes['custom:client_name'] = this.state.client_name
+    }
 
     updateUserAttributes(attributes)
   }
@@ -83,11 +90,6 @@ class SettingsUserDetails extends Component {
   }
 
   render() {
-    const {
-      state: { imagePreview, family_name, given_name, email, phone_number, client_id },
-      readURL,
-      onChange
-    } = this;
     return (
       <LayoutMenuNavegation>
         <Head title={'lidbot - ' + this.props.t('user-details')}/>
@@ -95,13 +97,12 @@ class SettingsUserDetails extends Component {
           <form onSubmit={this.handleSubmit}>
             <div className="--div-image">
               <div>
-                <img src={imagePreview} />
-                <input type="file" name="file" id="file" onChange={readURL} />
+                <img src={this.state.imagePreview} />
+                <input type="file" name="file" id="file" onChange={this.readURL} />
                 <label htmlFor="file">EDIT</label>
               </div>
               <div className="client-info">
-                <div>{client_id}</div>
-                <div>{email}</div>
+                <div>{this.state.email}</div>
               </div>
             </div>
             <Collapsible
@@ -117,8 +118,8 @@ class SettingsUserDetails extends Component {
                     <input
                       name="given_name"
                       id="given_name"
-                      value={given_name}
-                      onChange={e => onChange(e)}
+                      value={this.state.given_name}
+                      onChange={this.onChange}
                       placeholder={this.props.t('enter-first-name')}
                     />
                   </label>
@@ -129,8 +130,8 @@ class SettingsUserDetails extends Component {
                     <input
                       name="family_name"
                       id="family_name"
-                      value={family_name}
-                      onChange={e => onChange(e)}
+                      value={this.state.family_name}
+                      onChange={this.onChange}
                       placeholder={this.props.t('enter-last-name')}
                     />
                   </label>
@@ -143,9 +144,21 @@ class SettingsUserDetails extends Component {
                       id="phone_number"
                       inputMode="tel"
                       type="phone"
-                      value={phone_number}
-                      onChange={e => onChange(e)}
+                      value={this.state.phone_number}
+                      onChange={this.onChange}
                       placeholder={this.props.t('enter-phone')}
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label htmlFor="client_name">
+                    {this.props.t('company-name')}
+                    <input
+                      name="client_name"
+                      id="client_name"
+                      value={this.state.client_name}
+                      onChange={this.onChange}
+                      placeholder={this.props.t('enter-company-name')}
                     />
                   </label>
                 </div>

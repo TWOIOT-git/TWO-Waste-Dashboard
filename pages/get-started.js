@@ -4,6 +4,7 @@ import Head from "../components/Head";
 import HeaderMenu from "../components/HeaderMenu";
 import { signUp, confirmSignUp, resendSignUp } from '../utils/auth'
 import { withTranslation } from '../i18n'
+// import PasswordMask from 'react-password-mask';
 
 
 class Authentication extends React.Component {
@@ -103,6 +104,7 @@ class Authentication extends React.Component {
                     name="email"
                     id="email"
                     type="email"
+                    autoFocus
                     value={email}
                     disabled={disableEmailPassword}
                     onChange={e => onChange(e)}
@@ -117,7 +119,7 @@ class Authentication extends React.Component {
                     value={password}
                     disabled={disableEmailPassword}
                     onChange={e => onChange(e)}
-                    placeholder="Password"
+                    placeholder={this.props.t('enter-password')}
                   />
                 </label>
               <If condition={
@@ -313,7 +315,7 @@ class Authentication extends React.Component {
                         font-family: Roboto;
                         font-style: normal;
                         font-weight: normal;
-                        font-size: 12px;
+                        font-size: 16px;
                         line-height: normal;
                         border-bottom: 1px solid #00b284;
                         height: 40px;
