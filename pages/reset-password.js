@@ -1,28 +1,24 @@
 import React from "react";
 import Head from "../components/Head";
 import HeaderMenu from "../components/HeaderMenu";
-import { signIn, completeNewPassword } from '../utils/auth'
+import { forgotPasswordSubmit } from '../utils/auth'
 import { withTranslation } from '../i18n'
 import Link from "next/link"
 
 
-class Authentication extends React.Component {
-  getInitialProps = async () => ({
-    namespacesRequired: ['public'],
-  })
-
+class ResetPassword extends React.Component {
+  static async getInitialProps ({ query: { email, code } }) {
+    return { email: email, code: code }
+  }
   constructor(props) {
     super(props);
 
     this.state = {
-      email: "",
-      password: "",
-      newPassword: "",
-      passwordRepeat: "",
-      authState: 'SIGN_IN',
-      authData: null,
-      authError: null,
-      user: null,
+      code: props.code,
+      email: props.email,
+      newPassword: '',
+      confirmPassword: '',
+      authCode: 'PasswordChangedSuccessfully'
     };
   }
 
@@ -32,124 +28,68 @@ class Authentication extends React.Component {
     });
   };
 
-  onSubmit = e => {
+  async onSubmit(e) {
     e.preventDefault();
-    this.signIn()
+
+    if(this.state.newPassword !== this.state.confirmPassword) {
+      this.setState({authCode: "PASSWORD_DO_NOT_MATCH"});
+    } else {
+      let state = await forgotPasswordSubmit(this.state.email, this.state.code, this.state.newPassword)
+      this.setState(state)
+    }
   };
 
-  async signIn() {
-    try {
-      if(this.state.authState === 'NEW_PASSWORD_REQUIRED') {
-        if(this.state.newPassword !== this.state.passwordRepeat) {
-          console.log('PASSWORD_DO_NOT_MATCH')
-          this.setState({authError: "Passwords are not the same."});
-        } else {
-          console.log(this.state.user);
-          console.log('Calling completeNewPassword');
-          completeNewPassword(
-            this.state.user,
-            this.state.newPassword,
-          );
-        }
-      } else {
-        var state = await signIn(this.state.email, this.state.password)
-        this.setState(state)
-      }
-    } catch (err) {
-      console.log('error signing up..', err)
-      this.setState({authError: err.message})
-    }
-  }
-
   render() {
-    const { email, password, newPassword, passwordRepeat, authError, authState } = this.state;
     const { onChange } = this;
 
     return (
       <section>
         <HeaderMenu />
-        <Head title="Sign in | Lidbot" />
-
+        <Head title={`${this.props.t('password-reset')} | Lidbot`} />
         <div>
           <div>
-            <div>
-              <img
-                src="/static/icons/logo.png"
-                alt="lidbot logo"
-                className="logo"
-              />
-            </div>
-            <div>
-              <img
-                src="/static/images/login_waste.png"
-                alt="lidbot waste logo"
-                className="waste"
-              />
-            </div>
-          </div>
-          <div>
-            <h1>{this.props.t('title')}</h1>
-            <p>{this.props.t('subtitle')}</p>
+            <If condition={this.state.authCode !== 'PasswordChangedSuccessfully'}>
+              <h1>{this.props.t('password-reset')}</h1>
+              <p>{this.props.t('new-password-prompt')}</p>
 
-            <div className="alert error">
-              {this.props.t(authError)}
-            </div>
+              <div className="alert error">
+                {this.props.t(this.state.authCode)}
+              </div>
 
-            <form onSubmit={e => this.onSubmit(e)}>
-              <If condition={
-                authState !== 'NEW_PASSWORD_REQUIRED'
-              }>
-                <label htmlFor="email">
-                  {this.props.t('enter-email-password')}
-                  <input
-                    name="email"
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={e => onChange(e)}
-                    placeholder="you@example.com"
-                  />
-                </label>
-                <label htmlFor="password">
-                  <input
-                    name="password"
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={e => onChange(e)}
-                    placeholder="Password"
-                  />
-                </label>
-              </If>
-              <If condition={authState === 'NEW_PASSWORD_REQUIRED'}>
+              <form onSubmit={e => this.onSubmit(e)}>
                 <label htmlFor="newPassword">
-                  Password
+                  {this.props.t('new-password')}
                   <input
                     name="newPassword"
                     id="newPassword"
                     type="password"
-                    value={newPassword}
+                    autoFocus
+                    size={40}
+                    value={this.state.newPassword}
                     onChange={e => onChange(e)}
-                    placeholder="New Password"
                   />
                 </label>
-                <label htmlFor="passwordRepeat">
-                  Repeat Password
-                  <input
-                    name="passwordRepeat"
-                    id="passwordRepeat"
-                    type="password"
-                    value={passwordRepeat}
-                    onChange={e => onChange(e)}
-                    placeholder="Repeat Password"
-                  />
-                </label>
-              </If>
-              <button type="submit">{this.props.t('sign-in')}</button>
+              <label htmlFor="confirmPassword">
+                {this.props.t('confirm-new-password')}
+                <input
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  type="password"
+                  value={this.state.confirmPassword}
+                  onChange={e => onChange(e)}
+                />
+              </label>
+              <button type="submit">{this.props.t('change-password')}</button>
             </form>
-            <Link href={`/forgot?email=${email}`} as={`/forgot/${email}`}>
-              <a className="link-label">{this.props.t('forgotten-password')}</a>
-            </Link>
+            </If>
+            <If condition={this.state.authCode === 'PasswordChangedSuccessfully'}>
+              <h1>{this.props.t('password-reset-success')}</h1>
+              <p>{this.props.t('password-reset-success-sub')}
+              <Link href='/'>
+                <a className="link-label">{this.props.t('sign-in')}.</a>
+              </Link>
+              </p>
+            </If>
           </div>
         </div>
         <style jsx>
@@ -162,12 +102,19 @@ class Authentication extends React.Component {
                 -webkit-transform: none;
               }
             }
-            .link-label {
+            .sign-up {
+              text-align: center;
               color: #757575;
               text-decoration: none;
               font-size: 12px;
               letter-spacing: 0.02em;
-              margin-bottom: 50px;
+              margin-bottom: 10px;
+            }
+            a {
+              color: #333;
+              &:hover {
+                color: #00b284;
+              }
             }
             .alert {
               border-radius: 4px;
@@ -197,17 +144,14 @@ class Authentication extends React.Component {
               }
 
               > div {
-                width: 840px;
-                display: flex;
-                padding-top: 50px;
-                margin-top: 100px;
+                width: 640px;
+                padding: 50px;
 
                 background: #ffffff;
                 box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
                 animation: Enter 0.5s forwards;
 
                 @media (max-width: 876px) {
-                  flex-direction: column;
                   width: 100%;
                   padding: 5%;
                   height: unset;
@@ -216,45 +160,8 @@ class Authentication extends React.Component {
                 }
 
                 > div {
-                  width: 50%;
-
-                  @media (max-width: 876px) {
-                    width: 100%;
-                  }
-
                   &:nth-child(1) {
-                    display: flex;
-                    justify-content: space-between;
-                    flex-direction: column;
-
-                    .logo {
-                      margin-left: 37px;
-
-                      @media (max-width: 876px) {
-                        margin-left: 0;
-                        margin-bottom: 10vh;
-                      }
-                    }
-
-                    .waste {
-                      @media (max-width: 876px) {
-                        display: none;
-                      }
-                    }
-                  }
-
-                  &:nth-child(2) {
-                    display: flex;
-                    justify-content: space-between;
-                    flex-direction: column;
-                    padding-right: 50px;
-
-                    @media (max-width: 876px) {
-                      padding-right: 0;
-                    }
-
                     h1 {
-                      margin-top: 0;
                       font-family: Roboto;
                       font-style: normal;
                       font-weight: 900;
@@ -276,6 +183,7 @@ class Authentication extends React.Component {
 
                     form {
                       width: 100%;
+                      margin-top: 50px;
 
                       label {
                         width: 100%;
@@ -296,7 +204,7 @@ class Authentication extends React.Component {
                         font-family: Roboto;
                         font-style: normal;
                         font-weight: normal;
-                        font-size: 12px;
+                        font-size: 16px;
                         line-height: normal;
                         border-bottom: 1px solid #00b284;
                         height: 40px;
@@ -326,8 +234,7 @@ class Authentication extends React.Component {
                         color: white;
                         width: 100%;
                         height: 50px;
-                        margin-top: 30px;
-                        margin-bottom: 30px;
+                        margin-top: 50px;
                         cursor: pointer;
                         transition: 0.2s all ease;
                         outline: none;
@@ -354,4 +261,4 @@ class Authentication extends React.Component {
   }
 }
 
-export default withTranslation('public')(Authentication)
+export default withTranslation('public')(ResetPassword)

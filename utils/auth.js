@@ -3,23 +3,14 @@ import Router from 'next/router'
 import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone'
+import config from "../src/aws-exports"
 
 import {determineTimezone, determineLanguage} from '../utils/locale'
 
 
 import Amplify, { Auth } from 'aws-amplify'
 
-const dev = process.env.NODE_ENV !== "production";
-
-async function configDev() {
-  // console.log('dev')
-  // let config = await import ("../src/aws-exports")
-  // Amplify.configure(config)
-}
-
-if(dev) {
-  // configDev()
-} else {
+if(process.env.NODE_ENV !== "production") {
   console.log('prod')
   Amplify.configure({
     aws_project_region: process.env.AWS_PROJECT_REGION,
@@ -32,6 +23,9 @@ if(dev) {
     aws_appsync_authenticationType: process.env.AWS_APPSYNC_AUTHENTICATIONTYPE,
     aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
   })
+} else {
+  console.log('dev')
+  Amplify.configure(config)
 }
 
 function signOut(e) {
@@ -75,7 +69,7 @@ async function signIn(email, password) {
     }
 
   } catch (err) {
-    console.log(err)
+    console.log('Error while signing in: ', err)
 
     return {
       authState: err.code,
@@ -90,7 +84,7 @@ async function signUp(email, password) {
       username: email,
       password: password,
       attributes: {
-        email: email
+        email: email,
       },
     })
 
@@ -110,14 +104,67 @@ async function signUp(email, password) {
   }
 }
 
-async function confirmSignUp(username, code) {
-  // After retrieving the confirmation code from the user
+async function confirmSignUp(username, password, code) {
   try {
     let data = await Auth.confirmSignUp(username, code, {
       forceAliasCreation: true
     })
 
-    console.log(data)
+    console.log('sign up confirmed: ', data)
+    signIn(username, password)
+  } catch (e) {
+    console.log(e)
+
+    return {
+      authCode: e.code,
+      authMessage: e.message
+    }
+  }
+}
+
+async function resendSignUp(username) {
+  try {
+    let data = await Auth.resendSignUp(username)
+    console.log('code resent successfully: ', data);
+
+    return {
+      authCode: 'CodeResentSuccessfully'
+    }
+  } catch (e) {
+    console.log(e)
+
+    return {
+      authCode: e.code,
+      authMessage: e.message
+    }
+  }
+}
+
+async function forgotPassword(username) {
+  try {
+    let data = await Auth.forgotPassword(username)
+    console.log(data);
+
+    return {
+      authCode: 'CodeResentSuccessfully'
+    }
+  } catch (e) {
+    console.log(e)
+
+    return {
+      authCode: e.code,
+      authMessage: e.message
+    }
+  }
+}
+async function forgotPasswordSubmit(username, code, newPassword) {
+  try {
+    let data = await Auth.forgotPasswordSubmit(username, code, newPassword)
+    console.log(data);
+
+    return {
+      authCode: 'PasswordChangedSuccessfully'
+    }
   } catch (e) {
     console.log(e)
 
@@ -222,6 +269,10 @@ function withAuthSync(WrappedComponent) {
 export {
   signOut, signIn, completeNewPassword, withAuthSync, ClientContext, reloadUserContext,
   signUp,
+  confirmSignUp,
+  resendSignUp,
+  forgotPassword,
+  forgotPasswordSubmit,
   updateUserAttributes,
   changePassword
 }

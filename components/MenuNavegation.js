@@ -119,7 +119,7 @@ const MenuNavegation = ({
 }) => (
   <div className={`MenuNavegation ${show ? "--show" : ""}`}>
     <div>
-      <img src={userImage} alt="lidbot user" />
+      <img src={userImage}/>
       <h1>
         {t('greetings')}, <strong>{userName}</strong>!
       </h1>

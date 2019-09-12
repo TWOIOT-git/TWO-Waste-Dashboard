@@ -1,8 +1,0 @@
-{
-  "title": "WASTE ANALYTICS PLATFORM",
-  "subtitle": "Sign up to continue your smart waste management.",
-  "signup": "Sign Up",
-  "NetworkError": "Network error",
-  "InvalidParameterException": "Password must have length greater than or equal to 6.",
-  "UsernameExistsException": "An account with the given email already exists."
-}

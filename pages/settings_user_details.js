@@ -63,11 +63,18 @@ class SettingsUserDetails extends Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    updateUserAttributes({
-      given_name: this.state.given_name,
-      family_name: this.state.family_name,
-      phone_number: this.state.phone_number,
-    })
+    let attributes = {}
+    if(this.state.given_name) {
+      attributes.given_name = this.state.given_name
+    }
+    if(this.state.family_name) {
+      attributes.family_name = this.state.family_name
+    }
+    if(this.state.phone_number) {
+      attributes.phone_number = this.state.phone_number
+    }
+
+    updateUserAttributes(attributes)
   }
   handleUpdatePassword(e) {
     e.preventDefault();
@@ -88,7 +95,7 @@ class SettingsUserDetails extends Component {
           <form onSubmit={this.handleSubmit}>
             <div className="--div-image">
               <div>
-                <img src={imagePreview} alt="preview" />
+                <img src={imagePreview} />
                 <input type="file" name="file" id="file" onChange={readURL} />
                 <label htmlFor="file">EDIT</label>
               </div>

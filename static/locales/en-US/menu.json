@@ -9,5 +9,6 @@
   "locations": "Locations",
   "settings": "Settings",
   "ota-updates": "OTA Updates",
-  "log-out": "Log Out"
+  "log-out": "Log Out",
+  "sign"
 }

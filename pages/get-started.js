@@ -1,12 +1,14 @@
 import React from "react";
+import ReactCodeInput from 'react-verification-code-input';
 import Head from "../components/Head";
-import { signUp} from '../utils/auth'
+import HeaderMenu from "../components/HeaderMenu";
+import { signUp, confirmSignUp, resendSignUp } from '../utils/auth'
 import { withTranslation } from '../i18n'
 
 
 class Authentication extends React.Component {
   getInitialProps = async () => ({
-    namespacesRequired: ['login'],
+    namespacesRequired: ['public'],
   })
 
   constructor(props) {
@@ -20,6 +22,8 @@ class Authentication extends React.Component {
       authCode: null,
       user: null,
     };
+
+    this.resendSignUp = this.resendSignUp.bind(this);
   }
 
   onChange = e => {
@@ -28,14 +32,29 @@ class Authentication extends React.Component {
     });
   };
 
-  onSubmit = e => {
+  onSignUp = e => {
     e.preventDefault();
-
     this.signUp()
   };
-
   async signUp() {
+    if(!this.state.password) {
+      this.setState({
+        authCode: "Password cannot be empty"
+      })
+      return
+    }
     let state = await signUp(this.state.email, this.state.password)
+    this.setState(state)
+  }
+
+  async onConfirmSignUp(e) {
+    console.log(e)
+    let state = await confirmSignUp(this.state.email, this.state.password, e)
+    this.setState(state)
+  };
+
+  async resendSignUp() {
+    let state = await resendSignUp(this.state.email)
     this.setState(state)
   }
 
@@ -50,6 +69,7 @@ class Authentication extends React.Component {
 
     return (
       <section>
+        <HeaderMenu />
         <Head title="Get Started | Lidbot" />
         <div>
           <div>
@@ -76,9 +96,9 @@ class Authentication extends React.Component {
               {this.props.t(authCode)}
             </div>
 
-            <form onSubmit={e => this.onSubmit(e)}>
-                <label htmlFor="email">
-                  {this.props.t('email')}
+            <form onSubmit={e => this.onSignUp(e)}>
+                <label htmlFor="email" className={disableEmailPassword ? 'disabled' : 'enabled'}>
+                  {this.props.t('enter-email-password')}
                   <input
                     name="email"
                     id="email"
@@ -86,11 +106,10 @@ class Authentication extends React.Component {
                     value={email}
                     disabled={disableEmailPassword}
                     onChange={e => onChange(e)}
-                    placeholder="Enter your email"
+                    placeholder="you@example.com"
                   />
                 </label>
-                <label htmlFor="password">
-                  {this.props.t('password')}
+              <label htmlFor="password" className={disableEmailPassword ? 'disabled' : 'enabled'}>
                   <input
                     name="password"
                     id="password"
@@ -104,19 +123,22 @@ class Authentication extends React.Component {
               <If condition={
                 authState === 'CONFIRM_CODE'
               }>
-                <label htmlFor="verificationCode">
-                  {this.props.t('verificationCode')}
-                  <input
-                    name="verificationCode"
-                    id="verificationCode"
-                    type="number"
-                    value={verificationCode}
-                    onChange={e => onChange(e)}
-                    placeholder={this.props.t('verificationCode')}
+                <label className="verification-code">
+                  <ReactCodeInput
+                    title={this.props.t('verification-code')}
+                    onComplete={e => this.onConfirmSignUp(e)}
+                    type="text"
                   />
                 </label>
+                <a className='resend-verification' onClick={this.resendSignUp}>{this.props.t('Resend Verification Code')}</a>
               </If>
-              <button type="submit">{this.props.t('signup')}</button>
+              <button type="submit">{this.props.t('sign-up-button')}</button>
+              <div className="link-label">
+                {this.props.t('sign-up-local-notice')}
+                <a href="https://lidbot.com/terms-of-service" target="_blank">{this.props.t('terms')}</a>
+                {this.props.t('and-our')}
+                <a href="https://lidbot.com/privacy" target="_blank">{this.props.t('privacy')}</a>
+              </div>
             </form>
           </div>
         </div>
@@ -130,11 +152,31 @@ class Authentication extends React.Component {
                 -webkit-transform: none;
               }
             }
+            a {
+              color: #00b284;
+            }
             .welcome-image {
               img {
                 max-width:100%;
                 max-height:100%;
               }
+            }
+            .verification-code {
+              margin-bottom: 5px;
+            }
+            .resend-verification {
+              font-size: 12px;
+              color: #757575;
+              padding: 5px 0;
+              cursor: pointer;
+            }
+            .link-label {
+              color: #757575;
+              text-decoration: none;
+              font-size: 12px;
+              letter-spacing: 0.02em;
+              margin-bottom: 50px;
+              line-height: 1.5;
             }
             .alert {
               border-radius: 4px;
@@ -156,7 +198,6 @@ class Authentication extends React.Component {
               display: flex;
               align-items: center;
               justify-content: center;
-              height: 100vh;
               background-color: white;
 
               @media (max-width: 876px) {
@@ -165,9 +206,9 @@ class Authentication extends React.Component {
 
               > div {
                 width: 840px;
-                height: 560px;
                 display: flex;
                 padding-top: 50px;
+                margin: 120px 0 70px;
 
                 background: #ffffff;
                 box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
@@ -215,6 +256,7 @@ class Authentication extends React.Component {
                     justify-content: space-between;
                     flex-direction: column;
                     padding-right: 50px;
+                    margin-bottom: 50px;
 
                     @media (max-width: 876px) {
                       padding-right: 0;
@@ -253,6 +295,15 @@ class Authentication extends React.Component {
                         margin-top: 20px;
                         display: block;
                         color: #00b284;
+                        
+                        &.disabled {
+                          color: #757575;
+                        }
+                      }
+                      input:disabled,
+                      input[disabled] {
+                        background-color: #fafafa;
+                        color: #757575;
                       }
 
                       input {
@@ -290,11 +341,10 @@ class Authentication extends React.Component {
                         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
                         border: none;
                         color: white;
-                        text-transform: uppercase;
                         width: 100%;
                         height: 50px;
                         margin-top: 30px;
-                        margin-bottom: 60px;
+                        margin-bottom: 30px;
                         cursor: pointer;
                         transition: 0.2s all ease;
                         outline: none;
@@ -321,4 +371,4 @@ class Authentication extends React.Component {
   }
 }
 
-export default withTranslation('signup')(Authentication)
+export default withTranslation('public')(Authentication)

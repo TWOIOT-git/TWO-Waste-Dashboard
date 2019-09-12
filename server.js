@@ -30,6 +30,14 @@ app.prepare().then(() => {
     return app.render(req, res, '/sensor', { id: req.params.id })
   })
 
+  server.get('/forgot/:email', (req, res) => {
+    return app.render(req, res, '/forgot', { email: req.params.email })
+  })
+
+  server.get('/reset-password/:email/:code', (req, res) => {
+    return app.render(req, res, '/reset-password', { email: req.params.email, code: req.params.code })
+  })
+
   // redirect http => https on production only
   if(process.env.NODE_ENV === 'production') {
     server.use((req, res, next) => {
