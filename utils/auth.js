@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone'
-import config from "../src/aws-exports"
+// import config from "../src/aws-exports"
 
 import {determineTimezone, determineLanguage} from '../utils/locale'
 
@@ -11,7 +11,7 @@ import {determineTimezone, determineLanguage} from '../utils/locale'
 import Amplify, { Auth } from 'aws-amplify'
 
 if(process.env.NODE_ENV !== "production") {
-  console.log('prod')
+  // console.log('prod')
   Amplify.configure({
     aws_project_region: process.env.AWS_PROJECT_REGION,
     aws_cognito_identity_pool_id: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
@@ -24,8 +24,8 @@ if(process.env.NODE_ENV !== "production") {
     aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
   })
 } else {
-  console.log('dev')
-  Amplify.configure(config)
+  // console.log('dev')
+  // Amplify.configure(config)
 }
 
 function signOut(e) {
