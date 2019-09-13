@@ -19,6 +19,7 @@
   "PASSWORD_DO_NOT_MATCH": "Hmm, the passwords you entered didn’t match. Please try again!",
   "CodeMismatchException": "Invalid verification code provided, please try again.",
   "InvalidPasswordException": "Password not long enough",
+  "VerificationCodeSent": "Please enter a verification code we sent to your email address.",
   "sign-in": "Sign in",
   "sign-up": "Create an account",
   "enter-email-password": "Enter your email address and password.",
@@ -36,5 +37,7 @@
   "privacy": "Privacy Policy.",
   "password-reset-success": "Password Changed!",
   "password-reset-success-sub": "Your password has been successfully updated. You can now ",
-  "enter-password": "Enter password"
+  "enter-password": "Enter password",
+  "NoEmail": "Please enter your email",
+  "NoPassword": "Please enter your password"
 }

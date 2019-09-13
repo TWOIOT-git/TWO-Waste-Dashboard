@@ -120,9 +120,11 @@ const MenuNavegation = ({
   <div className={`MenuNavegation ${show ? "--show" : ""}`}>
     <div>
       <img src={userImage}/>
-      <h1>
-        {t('greetings')}, <strong>{userName}</strong>!
-      </h1>
+      <If condition={userName}>
+        <h1>
+          {t('greetings')}, <strong>{userName}</strong>!
+        </h1>
+      </If>
     </div>
     <div>
       <h2>{t('main-navigation')}</h2>

@@ -1,14 +1,14 @@
 {
-    "projectName": "TWO-Waste-Dashboard",
+    "projectName": "lidbot",
     "version": "2.0",
     "frontend": "javascript",
     "javascript": {
         "framework": "react",
         "config": {
-            "SourceDir": "pages",
+            "SourceDir": "src",
             "DistributionDir": "build",
-            "BuildCommand": "npm run-script build",
-            "StartCommand": "npm run-script start"
+            "BuildCommand": "npm run build",
+            "StartCommand": "npm run dev"
         }
     },
     "providers": [

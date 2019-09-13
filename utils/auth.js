@@ -4,30 +4,24 @@ import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone'
 import uuid from 'uuid/v1'
-// import config from "../src/aws-exports"
 
 import {determineTimezone, determineLanguage} from '../utils/locale'
 
 
 import Amplify, { Auth } from 'aws-amplify'
 
-// if(process.env.NODE_ENV !== "production") {
-  // console.log('prod')
-  Amplify.configure({
-    aws_project_region: process.env.AWS_PROJECT_REGION,
-    aws_cognito_identity_pool_id: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
-    aws_cognito_region: process.env.AWS_COGNITO_REGION,
-    aws_user_pools_id: process.env.AWS_USER_POOLS_ID,
-    aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
-    aws_appsync_graphqlEndpoint: process.env.AWS_APPSYNC_GRAPHQLENDPOINT,
-    aws_appsync_region: process.env.AWS_APPSYNC_REGION,
-    aws_appsync_authenticationType: process.env.AWS_APPSYNC_AUTHENTICATIONTYPE,
-    aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
-  })
-// } else {
-  // console.log('dev')
-  // Amplify.configure(config)
-// }
+
+Amplify.configure({
+  aws_project_region: process.env.AWS_PROJECT_REGION,
+  aws_cognito_identity_pool_id: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
+  aws_cognito_region: process.env.AWS_COGNITO_REGION,
+  aws_user_pools_id: process.env.AWS_USER_POOLS_ID,
+  aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
+  aws_appsync_graphqlEndpoint: process.env.AWS_APPSYNC_GRAPHQLENDPOINT,
+  aws_appsync_region: process.env.AWS_APPSYNC_REGION,
+  aws_appsync_authenticationType: process.env.AWS_APPSYNC_AUTHENTICATIONTYPE,
+  aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
+})
 
 function signOut(e) {
   e.preventDefault()
@@ -73,8 +67,7 @@ async function signIn(email, password) {
     console.log('Error while signing in: ', err)
 
     return {
-      authState: err.code,
-      authError: err.message
+      errorAuthCode: e.code
     }
   }
 }
@@ -95,13 +88,13 @@ async function signUp(email, password) {
     return {
       user: user,
       authState: 'CONFIRM_CODE',
+      successAuthCode: 'VerificationCodeSent'
     }
   } catch (e) {
     console.log(e)
 
     return {
-      authCode: e.code,
-      authMessage: e.message
+      errorAuthCode: e.code
     }
   }
 }
@@ -118,8 +111,7 @@ async function confirmSignUp(username, password, code) {
     console.log(e)
 
     return {
-      authCode: e.code,
-      authMessage: e.message
+      errorAuthCode: e.code
     }
   }
 }
@@ -136,8 +128,7 @@ async function resendSignUp(username) {
     console.log(e)
 
     return {
-      authCode: e.code,
-      authMessage: e.message
+      errorAuthCode: e.code
     }
   }
 }
@@ -154,8 +145,7 @@ async function forgotPassword(username) {
     console.log(e)
 
     return {
-      authCode: e.code,
-      authMessage: e.message
+      errorAuthCode: e.code
     }
   }
 }
@@ -171,8 +161,7 @@ async function forgotPasswordSubmit(username, code, newPassword) {
     console.log(e)
 
     return {
-      authCode: e.code,
-      authMessage: e.message
+      errorAuthCode: e.code
     }
   }
 }

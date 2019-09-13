@@ -1,11 +1,40 @@
 {
-	"auth": {
-		"twowastedashboarddf8803f0": {
-			"service": "Cognito",
+	"function": {
+		"lidbotCustomMessage": {
+			"service": "Lambda",
 			"providerPlugin": "awscloudformation",
-			"dependsOn": []
+			"build": true
+		},
+		"lidbotPostConfirmation": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true
 		}
 	},
-	"analytics": {},
-	"api": {}
+	"auth": {
+		"lidbot": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "lidbotCustomMessage",
+					"triggerProvider": "Cognito",
+					"attributes": [
+						"Arn",
+						"Name"
+					]
+				},
+				{
+					"category": "function",
+					"resourceName": "lidbotPostConfirmation",
+					"triggerProvider": "Cognito",
+					"attributes": [
+						"Arn",
+						"Name"
+					]
+				}
+			]
+		}
+	}
 }

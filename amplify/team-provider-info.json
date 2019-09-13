@@ -1,18 +1,28 @@
 {
-    "test": {
+    "dev": {
         "awscloudformation": {
-            "AuthRoleName": "two-waste-dashboard-test-20190729152732-authRole",
-            "UnauthRoleArn": "arn:aws:iam::457675404774:role/two-waste-dashboard-test-20190729152732-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::457675404774:role/two-waste-dashboard-test-20190729152732-authRole",
+            "AuthRoleName": "lidbot-dev-20190910122032-authRole",
+            "UnauthRoleArn": "arn:aws:iam::457675404774:role/lidbot-dev-20190910122032-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::457675404774:role/lidbot-dev-20190910122032-authRole",
             "Region": "ap-northeast-1",
-            "DeploymentBucketName": "two-waste-dashboard-test-20190729152732-deployment",
-            "UnauthRoleName": "two-waste-dashboard-test-20190729152732-unauthRole",
-            "StackName": "two-waste-dashboard-test-20190729152732",
-            "StackId": "arn:aws:cloudformation:ap-northeast-1:457675404774:stack/two-waste-dashboard-test-20190729152732/54880680-b1d2-11e9-903d-0e819627e6da"
+            "DeploymentBucketName": "lidbot-dev-20190910122032-deployment",
+            "UnauthRoleName": "lidbot-dev-20190910122032-unauthRole",
+            "StackName": "lidbot-dev-20190910122032",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:457675404774:stack/lidbot-dev-20190910122032/54addb40-d382-11e9-a334-0e72822fc3e0"
         },
         "categories": {
+            "function": {
+                "lidbotCustomMessage": {
+                    "REDIRECTURL": "https://analytics.lidbot.com/analytics",
+                    "EMAILSUBJECT": "Welcome to Lidbot!",
+                    "EMAILMESSAGE": "Your account was successfully created. Please click the link below to complete the setup process:"
+                },
+                "lidbotPostConfirmation": {
+                    "GROUP": "lidbot"
+                }
+            },
             "auth": {
-                "twowastedashboarddf8803f0": {}
+                "lidbot": {}
             }
         }
     }

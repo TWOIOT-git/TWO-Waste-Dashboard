@@ -43,9 +43,9 @@ class SettingsUserDetails extends Component {
   componentDidMount() {
     this.setState({
       given_name: (this.context.user.attributes['given_name']) ? this.context.user.attributes['given_name'] : '',
-      family_name: this.context.user.attributes['family_name'],
-      phone_number: this.context.user.attributes['phone_number'],
-      client_name: this.context.user.attributes['custom:client_name'],
+      family_name: (this.context.user.attributes['family_name']) ? this.context.user.attributes['family_name'] : '',
+      phone_number: (this.context.user.attributes['phone_number']) ? this.context.user.attributes['phone_number'] : '',
+      client_name: (this.context.user.attributes['client_name']) ? this.context.user.attributes['client_name'] : '',
       email: this.context.user.attributes['email'],
       client_id: this.context.user.attributes['custom:client_id'],
       imagePreview: this.context.user.attributes['picture']
@@ -68,18 +68,10 @@ class SettingsUserDetails extends Component {
     e.preventDefault();
 
     let attributes = {}
-    if(this.state.given_name) {
-      attributes.given_name = this.state.given_name
-    }
-    if(this.state.family_name) {
-      attributes.family_name = this.state.family_name
-    }
-    if(this.state.phone_number) {
-      attributes.phone_number = this.state.phone_number
-    }
-    if(this.state.client_name) {
-      attributes['custom:client_name'] = this.state.client_name
-    }
+    attributes.given_name = this.state.given_name
+    attributes.family_name = this.state.family_name
+    attributes.phone_number = this.state.phone_number
+    attributes['custom:client_name'] = this.state.client_name
 
     updateUserAttributes(attributes)
   }

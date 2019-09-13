@@ -4,7 +4,6 @@ import Head from "../components/Head";
 import HeaderMenu from "../components/HeaderMenu";
 import { signUp, confirmSignUp, resendSignUp } from '../utils/auth'
 import { withTranslation } from '../i18n'
-// import PasswordMask from 'react-password-mask';
 
 
 class Authentication extends React.Component {
@@ -20,7 +19,8 @@ class Authentication extends React.Component {
       password: "",
       verificationCode: "",
       authState: 'SIGN_UP',
-      authCode: null,
+      errorAuthCode: null,
+      successAuthCode: null,
       user: null,
     };
 
@@ -38,12 +38,20 @@ class Authentication extends React.Component {
     this.signUp()
   };
   async signUp() {
-    if(!this.state.password) {
+    if(!this.state.email) {
       this.setState({
-        authCode: "Password cannot be empty"
+        errorAuthCode: "NoEmail",
       })
       return
     }
+
+    if(!this.state.password) {
+      this.setState({
+        errorAuthCode: "NoPassword",
+      })
+      return
+    }
+
     let state = await signUp(this.state.email, this.state.password)
     this.setState(state)
   }
@@ -60,7 +68,7 @@ class Authentication extends React.Component {
   }
 
   render() {
-    const { email, password, authCode, authState, verificationCode } = this.state;
+    const { email, password, authState } = this.state;
     const { onChange } = this;
 
     let disableEmailPassword = false
@@ -72,7 +80,17 @@ class Authentication extends React.Component {
       <section>
         <HeaderMenu />
         <Head title="Get Started | Lidbot" />
-        <div>
+        <If condition={this.state.errorAuthCode}>
+          <div className="alert error">
+            {this.props.t(this.state.errorAuthCode)}
+          </div>
+        </If>
+        <If condition={this.state.successAuthCode}>
+          <div className="alert info">
+            {this.props.t(this.state.successAuthCode)}
+          </div>
+        </If>
+        <div className="main">
           <div>
             <div>
               <img
@@ -92,10 +110,6 @@ class Authentication extends React.Component {
           <div>
             <h1>{this.props.t('title')}</h1>
             <p>{this.props.t('subtitle')}</p>
-
-            <div className="alert error">
-              {this.props.t(authCode)}
-            </div>
 
             <form onSubmit={e => this.onSignUp(e)}>
                 <label htmlFor="email" className={disableEmailPassword ? 'disabled' : 'enabled'}>
@@ -180,26 +194,12 @@ class Authentication extends React.Component {
               margin-bottom: 50px;
               line-height: 1.5;
             }
-            .alert {
-              border-radius: 4px;
-              padding: 10px;
-              margin-bottom: 20px;
-              font-size: 12px;
-              text-align: center;
-              font-weight: 100;
-              &:empty {
-                display: none;
-              }
-            }
-            .error {
-              background: #d64242;
-              color: #fff;
-            }
 
             section {
               display: flex;
               align-items: center;
               justify-content: center;
+              flex-direction: column;
               background-color: white;
 
               @media (max-width: 876px) {
@@ -207,14 +207,20 @@ class Authentication extends React.Component {
               }
 
               > div {
+                position: absolute;
                 width: 840px;
                 display: flex;
                 padding-top: 50px;
-                margin: 120px 0 70px;
+                margin: 0;
+                top: 150px;
 
                 background: #ffffff;
                 box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
                 animation: Enter 0.5s forwards;
+                
+                &.main {
+                  margin-bottom: 5%;
+                }
 
                 @media (max-width: 876px) {
                   flex-direction: column;
@@ -223,6 +229,23 @@ class Authentication extends React.Component {
                   height: unset;
                   box-shadow: none;
                   animation: none;
+                }
+                
+                &.alert {
+                  top: 85px;
+                  border-radius: 4px;
+                  padding: 15px;
+                  font-size: 14px;
+                  font-weight: 400;
+                
+                  &.error {
+                    border: 1px solid #d64242;
+                    color: #d64242;
+                  }
+                  &.info {
+                    border: 1px solid #75e900;
+                    color: #75e900;
+                  }
                 }
 
                 > div {
@@ -234,7 +257,7 @@ class Authentication extends React.Component {
 
                   &:nth-child(1) {
                     display: flex;
-                    justify-content: space-between;
+                    justify-content: flex-start;
                     flex-direction: column;
 
                     .logo {
@@ -258,7 +281,6 @@ class Authentication extends React.Component {
                     justify-content: space-between;
                     flex-direction: column;
                     padding-right: 50px;
-                    margin-bottom: 50px;
 
                     @media (max-width: 876px) {
                       padding-right: 0;

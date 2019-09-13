@@ -1,0 +1,14 @@
+{
+    "trigger": true,
+    "modules": [
+        "add-to-group"
+    ],
+    "parentResource": "lidbot",
+    "functionName": "lidbotPostConfirmation",
+    "parentStack": "auth",
+    "triggerEnvs": "[]",
+    "triggerTemplate": "PostConfirmation.json.ejs",
+    "roleName": "lidbotPostConfirmation",
+    "skipEdit": true,
+    "resourceName": "lidbotPostConfirmation"
+}
