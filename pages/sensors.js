@@ -39,7 +39,6 @@ class Sensors extends React.Component {
   async getSensors() {
       try {
         let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors";
-        console.log('fetching from: ' + url);
         const response = await fetch(url);
         if (!response.ok) {
           throw Error(response.statusText);
@@ -51,7 +50,6 @@ class Sensors extends React.Component {
       data.push({
         ...sensor,
         reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {
-          console.log(obj.t)
           return {
             v: Math.round(obj.v),
             t: moment(obj.t).format('HH:mm')

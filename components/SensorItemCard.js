@@ -17,8 +17,6 @@ const SensorItemCard = ({
                           updated_on,
                           min_distance,
                           max_distance,
-                          latitude,
-                          longitude,
                           firmware_version,
                           t
 }) => {
@@ -39,15 +37,12 @@ const SensorItemCard = ({
       <div className="SensorItemCardContent">
         <div>
           <div>
-            <p>{t('status')}:</p>
             <h3>{Math.round(fill_percentage)}%</h3>
             <h5>{moment(updated_on).fromNow()}</h5>
           </div>
           <div>
             <p>{t('location')}:</p>
             <h4>{bin_location}</h4>
-            <h5>{longitude}</h5>
-            <h5>{latitude}</h5>
           </div>
         </div>
       </div>
@@ -176,7 +171,7 @@ const SensorItemCard = ({
                     font-family: Roboto;
                     font-style: normal;
                     font-weight: bold;
-                    font-size: 52px;
+                    font-size: 42px;
                     line-height: normal;
 
                     color: ${fill_percentage > 50 ? "#da6464" : "#00bf8d"};

@@ -1,44 +1,44 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { withTranslation } from '../i18n'
+import Link from "next/link";
+import moment from "moment";
 
 const SensorTable = ({ items }) => {
   return (
     <div className="SensorTable">
       <div className="SensorTableHeader">
         <div>Status</div>
-        <div>Name</div>
-        <div>Unit</div>
-        <div>City</div>
-        <div>Placed</div>
-        <div>Address</div>
-        <div>Company</div>
+        <div>Id</div>
+        <div>Type</div>
+        <div>Location</div>
+        <div>Updated</div>
       </div>
       {items.map(
         ({
-          name,
-          robinSize,
-          status,
-          porcentage,
-          location: { city, street, outIn },
-          owner,
-          id
+           sensor_id,
+           fill_percentage,
+           bin_type,
+           bin_location,
+           updated_on,
+           t
         }) => (
-          <div key={id} className="SensorTableItem">
+          <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
+          <div key={sensor_id} className="SensorTableItem">
             <div className="status">
               <span
                 className={`circle ${status === "no-full" ? "green" : "red"}`}
               />
-              <span style={{ color: porcentage > 50 ? "#da6464" : "#00bf8d" }}>
-                {porcentage}%
+              <span style={{ color: fill_percentage > 50 ? "#da6464" : "#00bf8d" }}>
+                {fill_percentage}%
               </span>
             </div>
-            <div className="name">{name}</div>
-            <div className="detail --upper">{robinSize}</div>
-            <div className="detail">{city}</div>
-            <div className="detail --capital">{outIn}</div>
-            <div className="detail">{street}</div>
-            <div className="detail --light">{owner.name}</div>
+            <div className="name">{sensor_id}</div>
+            <div className="detail">{bin_type}</div>
+            <div className="detail">{bin_location}</div>
+            <div className="detail">{moment(updated_on).fromNow()}</div>
           </div>
+          </Link>
         )
       )}
 
@@ -97,6 +97,7 @@ const SensorTable = ({ items }) => {
           }
 
           .SensorTableItem {
+            cursor: pointer;
             width: 100%;
             background: #ffffff;
             box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
@@ -187,20 +188,12 @@ const SensorTable = ({ items }) => {
 SensorTable.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      robinSize: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-      porcentage: PropTypes.string.isRequired,
-      location: PropTypes.shape({
-        city: PropTypes.string.isRequired,
-        street: PropTypes.string.isRequired,
-        outIn: PropTypes.string.isRequired
-      }).isRequired,
-      owner: PropTypes.shape({
-        name: PropTypes.string.isRequired
-      }).isRequired
+      sensor_id: PropTypes.string.isRequired,
+      fill_percentage: PropTypes.number.isRequired,
+      updated_on: PropTypes.number.isRequired,
+      t: PropTypes.func.isRequired
     }).isRequired
   ).isRequired
 };
 
-export default SensorTable;
+export default withTranslation('sensor')(SensorTable)

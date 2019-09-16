@@ -9,7 +9,7 @@ class TopTools extends React.Component {
 
     this.state = {
       openFilters: false,
-      tags: ["Outdoor", "Fehrbelliner Straße", "Robin XL"]
+      tags: []
     };
   }
 
