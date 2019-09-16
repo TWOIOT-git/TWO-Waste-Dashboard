@@ -2,16 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 import MenuNavegation from "./MenuNavegation";
 import breakpoints from "../utils/breakpoints";
-import { ClientContext } from '../utils/auth'
+import { ClientContext, getUserImage } from '../utils/auth'
 
 class LayoutMenuNavegation extends React.Component {
   static contextType = ClientContext;
+
   constructor(props) {
     super(props);
 
     this.state = {
-      show: false
+      show: false,
+      imagePreview: null,
     };
+  }
+
+  componentDidMount() {
+    getUserImage(this.context.user.attributes['picture']).then((key) => {
+      this.setState({
+        imagePreview: key
+      })
+    })
   }
 
   toggleShow = () => {
@@ -29,7 +39,7 @@ class LayoutMenuNavegation extends React.Component {
     return (
       <div className="LayoutFlex">
         <MenuNavegation
-          userImage={this.context.user.attributes['picture']}
+          userImage={this.state.imagePreview}
           userName={this.context.user.attributes['given_name']}
           show={show}
         />

@@ -40,7 +40,7 @@ class TopTools extends React.Component {
         <div className="TopTools">
           <div>
             <label htmlFor="search">
-              <img src="/static/icons/search.png" alt="search in lidbot" />
+              <img src="/static/icons/search.png" alt="Search in lidbot" />
               <input placeholder="Search for..." id="search" name="search" />
               <If condition={openFilters}>
                 <div className="filterAbsolute">
@@ -48,9 +48,9 @@ class TopTools extends React.Component {
                 </div>
               </If>
             </label>
-            <button type="button" onClick={toggleFilters}>
-              <img src="/static/icons/filter.png" alt="search in lidbot" />
-            </button>
+            {/*<button type="button" onClick={toggleFilters}>*/}
+            {/*  <img src="/static/icons/filter.png" alt="search in lidbot" />*/}
+            {/*</button>*/}
           </div>
           <If condition={layoutMode}>
             <button
@@ -138,6 +138,7 @@ class TopTools extends React.Component {
                 font-weight: normal;
                 font-size: 16px;
                 line-height: normal;
+                padding: 25px 15px;
 
                 color: rgba(84, 84, 84, 0.5);
               }

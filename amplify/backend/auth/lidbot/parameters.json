@@ -1,4 +1,7 @@
 {
+    "identityPoolName": "lidbot_identitypool_dfd1ecb4",
+    "allowUnauthenticatedIdentities": false,
+    "openIdLambdaRoleName": "lidbotdfd1ecb4_openid_lambda_role",
     "resourceNameTruncated": "lidbotb7609e96",
     "userPoolName": "lidbot_userpool",
     "autoVerifiedAttributes": [
@@ -31,7 +34,7 @@
     "userpoolClientLambdaRole": "lidbotb7609e96_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
     "useDefault": "manual",
-    "authSelections": "userPoolOnly",
+    "authSelections": "identityPoolAndUserPool",
     "resourceName": "lidbot",
     "usernameAttributes": [
         "email"

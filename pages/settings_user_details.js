@@ -4,12 +4,17 @@ import Head from "../components/Head";
 import breakpoints from "../utils/breakpoints";
 import SettingLayout from "../components/SettingLayout";
 import { withTranslation } from '../i18n'
-import Collapsible from 'react-collapsible';
+import { Logger, Storage } from 'aws-amplify';
+import uuid from 'uuid/v1'
+
+const logger = new Logger('SettingsUserDetails');
 
 import {
   updateUserAttributes,
   withAuthSync,
   ClientContext,
+  getUserImage,
+  removeUserImage,
   changePassword
 } from '../utils/auth'
 
@@ -28,7 +33,8 @@ class SettingsUserDetails extends Component {
       family_name: '',
       email: '',
       phone_number: '',
-      imagePreview: '',
+      imagePreview: null,
+      imageS3Key: null,
       currentPassword: '',
       newPassword: '',
       client_name: '',
@@ -41,21 +47,70 @@ class SettingsUserDetails extends Component {
   }
 
   componentDidMount() {
+    let imageS3Key = null
+    if(this.context.user.attributes['picture']) {
+      imageS3Key = this.context.user.attributes['picture']
+    }
+
     this.setState({
       given_name: (this.context.user.attributes['given_name']) ? this.context.user.attributes['given_name'] : '',
       family_name: (this.context.user.attributes['family_name']) ? this.context.user.attributes['family_name'] : '',
       phone_number: (this.context.user.attributes['phone_number']) ? this.context.user.attributes['phone_number'] : '',
-      client_name: (this.context.user.attributes['client_name']) ? this.context.user.attributes['client_name'] : '',
+      imageS3Key: imageS3Key,
       email: this.context.user.attributes['email'],
       client_id: this.context.user.attributes['custom:client_id'],
-      imagePreview: this.context.user.attributes['picture']
+      client_name: (this.context.user.attributes['custom:client_name']) ? this.context.user.attributes['custom:client_name'] : '',
+    })
+
+    getUserImage(imageS3Key).
+    then((key) => {
+      this.setState({
+        imagePreview: key
+      })
+    }).
+    catch((err) => {
+      })
+  }
+
+  removeImage = event => {
+    removeUserImage(this.state.imageS3Key)
+    updateUserAttributes({
+      picture: ''
+    })
+
+    this.setState({
+      imagePreview: null
     })
   }
 
   readURL = event => {
+    const file = event.target.files[0];
+
     this.setState({
-      imagePreview: URL.createObjectURL(event.target.files[0])
-    });
+      imagePreview: URL.createObjectURL(file)
+    })
+
+    let imageS3Key = this.state.imageS3Key
+
+    Storage.put(`${uuid()}-${file.name}`, file, {
+      level: 'private',
+      contentType: file.type
+    })
+      .then (result => {
+
+        console.log('removing: ', imageS3Key)
+        removeUserImage(imageS3Key) // remove previos
+
+        updateUserAttributes({
+          picture: result.key
+        })
+        this.setState({
+          imageS3Key: result.key
+        })
+      })
+      .catch(err => {
+        logger.error(err)
+      });
   };
 
   onChange = e => {
@@ -84,25 +139,25 @@ class SettingsUserDetails extends Component {
   render() {
     return (
       <LayoutMenuNavegation>
-        <Head title={'lidbot - ' + this.props.t('user-details')}/>
+        <Head title={'Lidbot - ' + this.props.t('user-details')}/>
         <SettingLayout>
           <form onSubmit={this.handleSubmit}>
             <div className="--div-image">
               <div>
-                <img src={this.state.imagePreview} />
+                <If condition={this.state.imagePreview}>
+                  <img src={this.state.imagePreview} />
+                </If>
+                <If condition={!this.state.imagePreview}>
+                  <div className="placeholder"></div>
+                </If>
                 <input type="file" name="file" id="file" onChange={this.readURL} />
-                <label htmlFor="file">EDIT</label>
-              </div>
-              <div className="client-info">
-                <div>{this.state.email}</div>
+                <label htmlFor="file">Upload an image</label>
+                <If condition={this.state.imagePreview}>
+                  <span onClick={this.removeImage}>Remove</span>
+                </If>
               </div>
             </div>
-            <Collapsible
-              trigger={<button className='Collapsible'>{this.props.t("section-user-details")}</button>}
-              open={true}
-              transitionTime={200}
-            >
-              <div className="--div-inputs">
+            <div className="--div-inputs">
               <div>
                 <div>
                   <label htmlFor="given_name">
@@ -125,6 +180,19 @@ class SettingsUserDetails extends Component {
                       value={this.state.family_name}
                       onChange={this.onChange}
                       placeholder={this.props.t('enter-last-name')}
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label htmlFor="email">
+                    {this.props.t('email')}
+                    <input
+                      name="email"
+                      id="email"
+                      type="email"
+                      value={this.state.email}
+                      onChange={this.onChange}
+                      placeholder={this.props.t('enter-email')}
                     />
                   </label>
                 </div>
@@ -160,12 +228,7 @@ class SettingsUserDetails extends Component {
                 </div>
               </div>
             </div>
-            </Collapsible>
           </form>
-          <Collapsible
-            trigger={<button className='Collapsible'>{this.props.t("section-password")}</button>}
-            transitionTime={200}
-          >
           <form onSubmit={this.handleUpdatePassword}>
             <div className="--div-inputs">
               <div>
@@ -201,7 +264,6 @@ class SettingsUserDetails extends Component {
               </div>
             </div>
           </form>
-          </Collapsible>
         </SettingLayout>
         <style jsx>
           {`
@@ -311,13 +373,23 @@ class SettingsUserDetails extends Component {
               }
 
               .--div-image {
+                font-family: Roboto;
                 margin-bottom: 40px;
                 > div {
+                  display: flex;
+                  align-items: center;
                   > img {
-                    border: 2px solid #00b284;
+                    border: 1px solid #00b284;
                     border-radius: 50%;
                     width: 164px;
                     height: 164px;
+                  }
+                  > .placeholder {
+                    border: 1px solid #00b284;
+                    border-radius: 50%;
+                    width: 164px;
+                    height: 164px;
+                    background: #f6f6f6;
                   }
 
                   > input {
@@ -334,15 +406,28 @@ class SettingsUserDetails extends Component {
                   }
 
                   > label {
-                    font-size: 1.25em;
-                    font-weight: 700;
-                    color: white;
+                    font-size: 16px;
+                    font-weight: 400;
                     display: inline-block;
                     cursor: pointer;
                     margin-left: 40px;
-                    background: #00b284;
-                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+                    border: 1px solid #757575;
+                    border-radius: 3px;
                     padding: 10px 20px;
+                    
+                    &:hover {
+                      border: 1px solid #00b284;
+                      color: #00b284;
+                    }
+                  }
+                  > span {
+                    margin-left: 20px;
+                    color: #00b284;
+                    font-size: 14px;
+                    
+                    &:hover {
+                      text-decoration: underline;
+                    }
                   }
                 }
               }

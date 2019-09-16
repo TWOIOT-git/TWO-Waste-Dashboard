@@ -119,7 +119,12 @@ const MenuNavegation = ({
 }) => (
   <div className={`MenuNavegation ${show ? "--show" : ""}`}>
     <div>
-      <img src={userImage}/>
+      <If condition={userImage}>
+        <img src={userImage}/>
+      </If>
+      <If condition={!userImage}>
+        <div className="placeholder"></div>
+      </If>
       <If condition={userName}>
         <h1>
           {t('greetings')}, <strong>{userName}</strong>!
@@ -127,7 +132,7 @@ const MenuNavegation = ({
       </If>
     </div>
     <div>
-      <h2>{t('main-navigation')}</h2>
+      {/*<h2>{t('main-navigation')}</h2>*/}
       <Item pathname={pathname} text={t('dashboard')} link="/analytics">
         <svg
           width="19"
@@ -218,7 +223,7 @@ const MenuNavegation = ({
       </Item>
     </div>
     <div>
-      <h2>{t('admin')}</h2>
+      {/*<h2>{t('admin')}</h2>*/}
       {/*<Item pathname={pathname} text={t('locations')} link="/locations">*/}
       {/*  <svg*/}
       {/*    width="20"*/}
@@ -357,11 +362,19 @@ const MenuNavegation = ({
               text-align: center;
 
               img {
-                border: 2px solid #00b284;
+                border: 1px solid #00b284;
                 border-radius: 50%;
-                width: 84px;
-                height: 84px;
+                width: 80px;
+                height: 80px;
               }
+              > .placeholder {
+                    border: 1px solid #00b284;
+                    border-radius: 50%;
+                    width: 80px;
+                    display: inline-block;
+                    height: 80px;
+                    background: #f6f6f6;
+                  }
 
               h1 {
                 font-family: Roboto;

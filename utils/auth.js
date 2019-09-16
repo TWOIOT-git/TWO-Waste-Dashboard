@@ -7,21 +7,25 @@ import uuid from 'uuid/v1'
 
 import {determineTimezone, determineLanguage} from '../utils/locale'
 
+import Amplify, { Auth, Storage, Logger } from 'aws-amplify'
 
-import Amplify, { Auth } from 'aws-amplify'
-
+// Amplify.Logger.LOG_LEVEL = 'DEBUG';
+const logger = new Logger('auth');
 
 Amplify.configure({
-  aws_project_region: process.env.AWS_PROJECT_REGION,
-  aws_cognito_identity_pool_id: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
-  aws_cognito_region: process.env.AWS_COGNITO_REGION,
-  aws_user_pools_id: process.env.AWS_USER_POOLS_ID,
-  aws_user_pools_web_client_id: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
-  aws_appsync_graphqlEndpoint: process.env.AWS_APPSYNC_GRAPHQLENDPOINT,
-  aws_appsync_region: process.env.AWS_APPSYNC_REGION,
-  aws_appsync_authenticationType: process.env.AWS_APPSYNC_AUTHENTICATIONTYPE,
-  aws_appsync_apiKey: process.env.AWS_APPSYNC_APIKEY,
-})
+  Auth: {
+    identityPoolId: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
+    region: process.env.AWS_PROJECT_REGION,
+    userPoolId: process.env.AWS_USER_POOLS_ID,
+    userPoolWebClientId: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
+  },
+  Storage: {
+    AWSS3: {
+      bucket: process.env.AWS_USER_FILES_S3_BUCKET,
+      region: process.env.AWS_USER_FILES_S3_BUCKET_REGION,
+    }
+  }
+});
 
 function signOut(e) {
   e.preventDefault()
@@ -166,6 +170,27 @@ async function forgotPasswordSubmit(username, code, newPassword) {
   }
 }
 
+async function getUserImage(key) {
+  if(!key) {
+    throw 'key param not found'
+  }
+
+  let result = await Storage.get(key, {
+    level: 'private'
+  })
+
+  logger.debug('getUserImage: ', result)
+
+  return result
+}
+function removeUserImage(key) {
+  if(key) {
+    Storage.remove(key, {level: 'private'})
+      .then(result => console.log(result))
+      .catch(err => console.log(err));
+  }
+}
+
 function reloadUserContext() {
   console.log('reloadUserContext')
   Auth.currentAuthenticatedUser({
@@ -262,6 +287,8 @@ export {
   signUp,
   confirmSignUp,
   resendSignUp,
+  getUserImage,
+  removeUserImage,
   forgotPassword,
   forgotPasswordSubmit,
   updateUserAttributes,

@@ -36,5 +36,11 @@
 				}
 			]
 		}
+	},
+	"storage": {
+		"lidbotanalyticsapp": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }

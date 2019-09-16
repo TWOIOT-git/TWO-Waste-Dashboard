@@ -48,8 +48,7 @@ class SettingsNotifications extends React.Component {
     this.state = {
       pushNotifications: pushNotifications,
       emailNotifications: false,
-      regularEvents: false,
-      suddenAlerts: false,
+      mobileNotifications: false,
     };
 
     this.swRegistration = null;
@@ -59,8 +58,7 @@ class SettingsNotifications extends React.Component {
   componentDidMount() {
     let pushNotifications = this.context.user.attributes['custom:push_notifications']
     let emailNotifications = this.context.user.attributes['custom:email_notifications']
-    let regularEvents = this.context.user.attributes['custom:regular_events']
-    let suddenAlerts = this.context.user.attributes['custom:sudden_alerts']
+    let mobileNotifications = this.context.user.attributes['custom:regular_events']
 
     this.setState(prevState => ({
       pushNotifications: {
@@ -68,8 +66,7 @@ class SettingsNotifications extends React.Component {
         active: (pushNotifications !== undefined) ? pushNotifications : false
       },
       emailNotifications: (emailNotifications !== undefined) ? emailNotifications : false,
-      regularEvents: (regularEvents !== undefined) ? regularEvents : false,
-      suddenAlerts: (suddenAlerts !== undefined) ? suddenAlerts : false,
+      mobileNotifications: (mobileNotifications !== undefined) ? mobileNotifications : false,
     }))
   }
 
@@ -92,7 +89,7 @@ class SettingsNotifications extends React.Component {
   }
 
   showConfirmation() {
-    const title = 'lidbot';
+    const title = 'Lidbot';
     const options = {
       body: "Notifications Enabled",
       icon: 'static/favicons/apple-icon.png',
@@ -176,14 +173,12 @@ class SettingsNotifications extends React.Component {
     } else {
       this.setState(prevState => ({
         emailNotifications: (newState.emailNotifications !== undefined) ? newState.emailNotifications : this.state.emailNotifications,
-        regularEvents: (newState.regularEvents !== undefined) ? newState.regularEvents : this.state.regularEvents,
-        suddenAlerts: (newState.suddenAlerts !== undefined) ? newState.suddenAlerts : this.state.suddenAlerts,
+        mobileNotifications: (newState.mobileNotifications !== undefined) ? newState.mobileNotifications : this.state.mobileNotifications,
       }))
 
       Auth.updateUserAttributes(this.context.user, {
         'custom:email_notifications': (newState.emailNotifications !== undefined) ? newState.emailNotifications.toString() : this.state.emailNotifications.toString(),
-        'custom:regular_events': (newState.regularEvents !== undefined) ? newState.regularEvents.toString() : this.state.regularEvents.toString(),
-        'custom:sudden_alerts': (newState.suddenAlerts !== undefined) ? newState.suddenAlerts.toString() : this.state.suddenAlerts.toString(),
+        'custom:mobile_notifications': (newState.mobileNotifications !== undefined) ? newState.mobileNotifications.toString() : this.state.mobileNotifications.toString(),
       })
         .then(function (result) {
           console.log(result)
@@ -196,11 +191,11 @@ class SettingsNotifications extends React.Component {
   }
 
   render() {
-    const { pushNotifications, emailNotifications, regularEvents, suddenAlerts } = this.state;
+    const { pushNotifications, emailNotifications } = this.state;
 
     return (
       <LayoutMenuNavegation>
-        <Head title={'lidbot - ' + this.props.t('notifications')}/>
+        <Head title={'Lidbot - ' + this.props.t('notifications')}/>
         <SettingLayout>
           <SwitchItem
             title={this.props.t('push-notifications')}
@@ -216,16 +211,10 @@ class SettingsNotifications extends React.Component {
             onClick={(active) => this.handleClick({emailNotifications: active})}
           />
           <SwitchItem
-            title={this.props.t('regular-events')}
-            description={this.props.t('regular-events-sub')}
-            active={regularEvents}
-            onClick={(active) => this.handleClick({regularEvents: active})}
-          />
-          <SwitchItem
-            title={this.props.t('sudden-alerts')}
-            description={this.props.t('sudden-alerts-sub')}
-            active={suddenAlerts}
-            onClick={(active) => this.handleClick({suddenAlerts: active})}
+            title={this.props.t('mobile-notifications')}
+            description={this.props.t('mobile-notifications-sub')}
+            active={this.state.mobileNotifications}
+            onClick={(active) => this.handleClick({ mobileNotifications: active })}
           />
         </SettingLayout>
       </LayoutMenuNavegation>
