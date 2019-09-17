@@ -9,7 +9,7 @@ import {determineTimezone, determineLanguage} from '../utils/locale'
 
 import Amplify, { Auth, Storage, Logger } from 'aws-amplify'
 
-// Amplify.Logger.LOG_LEVEL = 'DEBUG';
+Amplify.Logger.LOG_LEVEL = 'DEBUG';
 const logger = new Logger('auth');
 
 Amplify.configure({
