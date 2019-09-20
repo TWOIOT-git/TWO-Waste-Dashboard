@@ -34,5 +34,11 @@
   "language": "Language",
   "location-info": "Location Info",
   "location-info-sub": "Allow 3rd party to use geo location information.",
-  "timezone": "Time zone"
+  "timezone": "Time zone",
+  "company-name": "Company",
+  "enter-company-name": "Enter company name",
+
+  "send-verification-code": "Send verification code",
+  "resend-verification-code": "Resend verification code",
+  "verification-code": "Verification Code"
 }

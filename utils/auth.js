@@ -83,6 +83,7 @@ async function signUp(email, password) {
       password: password,
       attributes: {
         email: email,
+        'custom:language': determineLanguage().value,
         'custom:client_id': uuid()
       },
     })
@@ -103,18 +104,20 @@ async function signUp(email, password) {
   }
 }
 
-async function confirmSignUp(username, password, code) {
+async function confirmSignUp(username, code) {
   try {
     let data = await Auth.confirmSignUp(username, code, {
       forceAliasCreation: true
     })
 
-    console.log('sign up confirmed: ', data)
-    signIn(username, password)
+    return {
+      successAuthCode: 'VerificationCodeSent'
+    }
   } catch (e) {
     console.log(e)
 
     return {
+      successAuthCode: null,
       errorAuthCode: e.code
     }
   }
@@ -126,7 +129,7 @@ async function resendSignUp(username) {
     console.log('code resent successfully: ', data);
 
     return {
-      authCode: 'CodeResentSuccessfully'
+      successAuthCode: 'CodeResentSuccessfully'
     }
   } catch (e) {
     console.log(e)
@@ -143,7 +146,7 @@ async function forgotPassword(username) {
     console.log(data);
 
     return {
-      authCode: 'CodeResentSuccessfully'
+      successAuthCode: 'CodeResentSuccessfully'
     }
   } catch (e) {
     console.log(e)
@@ -153,13 +156,53 @@ async function forgotPassword(username) {
     }
   }
 }
+async function verifyCurrentUserAttribute(attr) {
+  try {
+    let data = await Auth.verifyCurrentUserAttribute(attr)
+    console.log(data);
+
+    return {
+      successAuthCode: 'CodeResentSuccessfully'
+    }
+  } catch (e) {
+    console.log(e)
+
+    return {
+      errorAuthCode: e.code
+    }
+  }
+}
+async function verifyCurrentUserAttributeSubmit(attr, code) {
+  try {
+    let data = await Auth.verifyCurrentUserAttributeSubmit(attr, code)
+
+    console.log(data);
+
+    let user = await Auth.currentAuthenticatedUser({
+      bypassCache: true
+    })
+
+    return {
+      successAuthCode: true,
+      email_verified: user.attributes.email_verified,
+      phone_number_verified: user.attributes.phone_number_verified,
+    }
+  } catch (e) {
+    console.log(e)
+
+    return {
+      errorAuthCode: true
+    }
+  }
+}
+
 async function forgotPasswordSubmit(username, code, newPassword) {
   try {
     let data = await Auth.forgotPasswordSubmit(username, code, newPassword)
     console.log(data);
 
     return {
-      authCode: 'PasswordChangedSuccessfully'
+      successAuthCode: 'PasswordChangedSuccessfully'
     }
   } catch (e) {
     console.log(e)
@@ -203,12 +246,23 @@ function reloadUserContext() {
 }
 
 async function updateUserAttributes(attributes) {
-  console.log(`updateUserAttributes: ${attributes}`)
-  let user = await Auth.currentAuthenticatedUser()
-  let result = await Auth.updateUserAttributes(user, attributes)
-  console.log(result)
-  reloadUserContext()
-  return result
+  try {
+    let user = await Auth.currentAuthenticatedUser({
+      bypassCache: true
+    })
+    let result = await Auth.updateUserAttributes(user, attributes)
+
+    console.log(result)
+
+    reloadUserContext()
+
+  } catch (e) {
+    console.log(e)
+
+    return {
+      errorAuthCode: e.code
+    }
+  }
 }
 
 const ClientContext = React.createContext('')
@@ -290,6 +344,8 @@ export {
   getUserImage,
   removeUserImage,
   forgotPassword,
+  verifyCurrentUserAttribute,
+  verifyCurrentUserAttributeSubmit,
   forgotPasswordSubmit,
   updateUserAttributes,
   changePassword

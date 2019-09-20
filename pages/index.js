@@ -69,7 +69,16 @@ class Authentication extends React.Component {
       <section>
         <HeaderMenu />
         <Head title="Sign in | Lidbot" />
-
+        <If condition={this.state.errorAuthCode}>
+          <div className="alert error">
+            {this.props.t(this.state.errorAuthCode)}
+          </div>
+        </If>
+        <If condition={this.state.successAuthCode}>
+          <div className="alert info">
+            {this.props.t(this.state.successAuthCode)}
+          </div>
+        </If>
         <div>
           <div>
             <div>
@@ -167,7 +176,7 @@ class Authentication extends React.Component {
               text-decoration: none;
               font-size: 12px;
               letter-spacing: 0.02em;
-              margin-bottom: 50px;
+              margin: 30px 0 50px;
             }
             .alert {
               border-radius: 4px;

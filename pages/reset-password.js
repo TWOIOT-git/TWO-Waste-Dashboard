@@ -16,9 +16,9 @@ class ResetPassword extends React.Component {
     this.state = {
       code: props.code,
       email: props.email,
-      newPassword: '',
-      confirmPassword: '',
-      authCode: 'PasswordChangedSuccessfully'
+      password: '',
+      errorAuthCode: null,
+      successAuthCode: null,
     };
   }
 
@@ -31,12 +31,15 @@ class ResetPassword extends React.Component {
   async onSubmit(e) {
     e.preventDefault();
 
-    if(this.state.newPassword !== this.state.confirmPassword) {
-      this.setState({authCode: "PASSWORD_DO_NOT_MATCH"});
-    } else {
-      let state = await forgotPasswordSubmit(this.state.email, this.state.code, this.state.newPassword)
-      this.setState(state)
+    if(!this.state.password) {
+      this.setState({
+        errorAuthCode: "NoPassword",
+      })
+      return
     }
+
+    let state = await forgotPasswordSubmit(this.state.email, this.state.code, this.state.password)
+    this.setState(state)
   };
 
   render() {
@@ -46,45 +49,35 @@ class ResetPassword extends React.Component {
       <section>
         <HeaderMenu />
         <Head title={`${this.props.t('password-reset')} | Lidbot`} />
-        <div>
-          <div>
-            <If condition={this.state.authCode !== 'PasswordChangedSuccessfully'}>
+        <div className="main">
+          <div className="content">
+            <If condition={this.state.successAuthCode !== 'PasswordChangedSuccessfully'}>
               <h1>{this.props.t('password-reset')}</h1>
               <p>{this.props.t('new-password-prompt')}</p>
-
-              <div className="alert error">
-                {this.props.t(this.state.authCode)}
-              </div>
-
+              <If condition={this.state.errorAuthCode}>
+                <div className="alert error">
+                  {this.props.t(this.state.errorAuthCode)}
+                </div>
+              </If>
               <form onSubmit={e => this.onSubmit(e)}>
-                <label htmlFor="newPassword">
-                  {this.props.t('new-password')}
+                <label htmlFor="password">
                   <input
-                    name="newPassword"
-                    id="newPassword"
+                    name="password"
+                    id="password"
                     type="password"
                     autoFocus
                     size={40}
-                    value={this.state.newPassword}
+                    value={this.state.password}
                     onChange={e => onChange(e)}
+                    placeholder={this.props.t('password')}
                   />
                 </label>
-              <label htmlFor="confirmPassword">
-                {this.props.t('confirm-new-password')}
-                <input
-                  name="confirmPassword"
-                  id="confirmPassword"
-                  type="password"
-                  value={this.state.confirmPassword}
-                  onChange={e => onChange(e)}
-                />
-              </label>
               <button type="submit">{this.props.t('change-password')}</button>
             </form>
             </If>
-            <If condition={this.state.authCode === 'PasswordChangedSuccessfully'}>
-              <h1>{this.props.t('password-reset-success')}</h1>
-              <p>{this.props.t('password-reset-success-sub')}
+            <If condition={this.state.successAuthCode === 'PasswordChangedSuccessfully'}>
+              <h1 className="success">{this.props.t('h1')}</h1>
+              <p>{this.props.t('p')}
               <Link href='/'>
                 <a className="link-label">{this.props.t('sign-in')}.</a>
               </Link>
@@ -94,6 +87,23 @@ class ResetPassword extends React.Component {
         </div>
         <style jsx>
           {`
+          section {
+              margin-top: 70px;
+              
+              > div {
+                width: 640px;
+                background: #ffffff;
+                border-radius: 5px;
+                padding: 50px;
+              }
+              .main {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+              }
+            }
+            
             @keyframes Enter {
               from {
                 -webkit-transform: translateY(28px);
@@ -102,88 +112,8 @@ class ResetPassword extends React.Component {
                 -webkit-transform: none;
               }
             }
-            .sign-up {
-              text-align: center;
-              color: #757575;
-              text-decoration: none;
-              font-size: 12px;
-              letter-spacing: 0.02em;
-              margin-bottom: 10px;
-            }
-            a {
-              color: #333;
-              &:hover {
-                color: #00b284;
-              }
-            }
-            .alert {
-              border-radius: 4px;
-              padding: 10px;
-              margin-bottom: 20px;
-              font-size: 12px;
-              text-align: center;
-              font-weight: 100;
-              &:empty {
-                display: none;
-              }
-            }
-            .error {
-              background: #d64242;
-              color: #fff;
-            }
-
-            section {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              height: 100vh;
-              background-color: white;
-
-              @media (max-width: 876px) {
-                display: block;
-              }
-
-              > div {
-                width: 640px;
-                padding: 50px;
-
-                background: #ffffff;
-                box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
-                animation: Enter 0.5s forwards;
-
-                @media (max-width: 876px) {
-                  width: 100%;
-                  padding: 5%;
-                  height: unset;
-                  box-shadow: none;
-                  animation: none;
-                }
-
-                > div {
-                  &:nth-child(1) {
-                    h1 {
-                      font-family: Roboto;
-                      font-style: normal;
-                      font-weight: 900;
-                      font-size: 32px;
-                      line-height: normal;
-
-                      color: #000000;
-                    }
-
-                    p {
-                      font-family: Roboto;
-                      font-style: normal;
-                      font-weight: 300;
-                      font-size: 18px;
-                      line-height: 25px;
-
-                      color: #757575;
-                    }
-
-                    form {
+            form {
                       width: 100%;
-                      margin-top: 50px;
 
                       label {
                         width: 100%;
@@ -238,6 +168,7 @@ class ResetPassword extends React.Component {
                         cursor: pointer;
                         transition: 0.2s all ease;
                         outline: none;
+                        border-radius: 3px;
 
                         &:active,
                         &:hover,
@@ -250,10 +181,47 @@ class ResetPassword extends React.Component {
                         }
                       }
                     }
-                  }
+              h1 {
+                      font-family: Roboto;
+                      font-style: normal;
+                      font-weight: 900;
+                      font-size: 32px;
+                      line-height: normal;
+                      color: #000000;
+                      margin: 0;
+                      line-height: 1;
+                      
+                      &.success {
+                        color: #00b284;
+                      }
+                    }
+
+                    p {
+                      font-family: Roboto;
+                      font-style: normal;
+                      font-weight: 300;
+                      font-size: 18px;
+                      line-height: 25px;
+                      color: #757575;
+                    }
+            .sign-up {
+              text-align: center;
+              color: #757575;
+              text-decoration: none;
+              font-size: 12px;
+              letter-spacing: 0.02em;
+              margin-bottom: 10px;
+            }
+            .alert {
+                border-radius: 3px;
+                padding: 15px;
+                font-size: 14px;
+                font-weight: 400;
+                &.error {
+                  border: 1px solid #d64242;
+                  color: #d64242;
                 }
               }
-            }
           `}
         </style>
       </section>
@@ -261,4 +229,4 @@ class ResetPassword extends React.Component {
   }
 }
 
-export default withTranslation('public')(ResetPassword)
+export default withTranslation('reset-password')(ResetPassword)

@@ -1,45 +1,35 @@
 import React from "react";
 import HeaderMenu from "../components/HeaderMenu";
 import Head from "../components/Head";
-import { forgotPassword } from '../utils/auth'
-import { withTranslation } from '../i18n'
+import { confirmSignUp } from '../utils/auth'
+import { i18n, withTranslation } from '../i18n'
 import Link from "next/link"
 
 
-class Forgot extends React.Component {
+class Confirm extends React.Component {
 
-  static async getInitialProps ({ query: { email } }) {
-    return { email: email }
+  static async getInitialProps ({ query: { email, code, language } }) {
+    return { email: email, code: code, language: language }
   }
+
   constructor(props) {
     super(props);
 
     this.state = {
       email: props.email,
+      code: props.code,
+      language: props.language,
       errorAuthCode: null,
       successAuthCode: null,
     };
   }
 
-  onChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
-
-  async onSubmit(e) {
-    e.preventDefault();
-
-    if(!this.state.email) {
-      this.setState({
-        errorAuthCode: "NoEmail",
-      })
-      return
-    }
-
-    let state = await forgotPassword(this.state.email)
+  async componentDidMount() {
+    // console.log(this.state.language)
+    // i18n.changeLanguage(this.state.language)
+    let state = await confirmSignUp(this.state.email, this.state.code)
     this.setState(state)
-  };
+  }
 
   render() {
     const { onChange } = this;
@@ -47,41 +37,23 @@ class Forgot extends React.Component {
     return (
       <section>
         <HeaderMenu />
-        <Head title={`${this.props.t('password-reset')} | Lidbot`} />
+        <Head title={`${this.props.t('confirm-account')} | Lidbot`} />
         <div className="main">
           <div className="content">
-            <If condition={this.state.successAuthCode !== 'CodeResentSuccessfully'}>
-              <h1>{this.props.t('password-reset')}</h1>
-              <p>{this.props.t('password-reset-sub')}</p>
-
-              <If condition={this.state.errorAuthCode}>
-                <div className="alert error">
-                  {this.props.t(this.state.errorAuthCode)}
-                </div>
-              </If>
-
-              <form onSubmit={e => this.onSubmit(e)}>
-                  <label htmlFor="email">
-                    <input
-                      name="email"
-                      id="email"
-                      type="email"
-                      value={this.state.email}
-                      onChange={e => onChange(e)}
-                      placeholder="you@example.com"
-                    />
-                  </label>
-                <button type="submit">{this.props.t('get-reset-link')}</button>
-              </form>
+            <If condition={this.state.successAuthCode}>
+              <h1 className="success">{this.props.t('h1--success')}</h1>
+              <p>{this.props.t('p--success')}
+                <Link href='/'>
+                  <a className="link-label">{this.props.t('sign-in')}.</a>
+                </Link>
+              </p>
             </If>
-            <If condition={this.state.successAuthCode === 'CodeResentSuccessfully'}>
-              <If condition={this.state.successAuthCode}>
-                <div className="alert info">
-                  {this.props.t(this.state.successAuthCode)}
-                </div>
-              </If>
-              <h1>{this.props.t('email-sent')}</h1>
-              <p>{this.props.t('email-sent-sub')}</p>
+            <If condition={this.state.errorAuthCode}>
+              <div className="alert error">
+                {this.props.t('error')}
+              </div>
+              <h1>{this.props.t('h1--error')}</h1>
+              <p>{this.props.t('p--error')}</p>
             </If>
           </div>
         </div>
@@ -188,6 +160,11 @@ class Forgot extends React.Component {
                       font-size: 32px;
                       line-height: normal;
                       color: #000000;
+                      &.success {
+                        color: #00b284
+                      }
+                      &.error {
+                      }
                     }
 
                     p {
@@ -216,7 +193,7 @@ class Forgot extends React.Component {
                   color: #d64242;
                 }
                 &.info {
-                  border: 1px solid #00b284;
+                  border: 1px solid #75e900;
                   color: #00b284;
                 }
               }
@@ -227,4 +204,4 @@ class Forgot extends React.Component {
   }
 }
 
-export default withTranslation('public')(Forgot)
+export default withTranslation('confirm')(Confirm)

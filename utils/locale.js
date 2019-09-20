@@ -31,8 +31,12 @@ function getTimeZones() {
 }
 
 function determineLanguage(user) {
-  let userLanguage = user.attributes['custom:language']
-  let language = languages.find(o => o.value === userLanguage)
+  let language
+
+  if(user) {
+    let userLanguage = user.attributes['custom:language']
+    language = languages.find(o => o.value === userLanguage)
+  }
 
   if(!language) {
     language = languages.find(o => o.value === navigator.language)
@@ -40,6 +44,8 @@ function determineLanguage(user) {
       language = languages.find(o => o.value === 'en-US')
     }
   }
+
+  console.log(language)
 
   return language
 }

@@ -6,6 +6,7 @@ import SettingLayout from "../components/SettingLayout";
 import { withTranslation } from '../i18n'
 import { Logger, Storage } from 'aws-amplify';
 import uuid from 'uuid/v1'
+import ReactCodeInput from 'react-verification-code-input';
 
 const logger = new Logger('SettingsUserDetails');
 
@@ -15,6 +16,8 @@ import {
   ClientContext,
   getUserImage,
   removeUserImage,
+  verifyCurrentUserAttribute,
+  verifyCurrentUserAttributeSubmit,
   changePassword
 } from '../utils/auth'
 
@@ -36,14 +39,20 @@ class SettingsUserDetails extends Component {
       imagePreview: null,
       imageS3Key: null,
       currentPassword: '',
+      email_verified: null,
+      phone_number_verified: null,
       newPassword: '',
       client_name: '',
+      errorAuthCode: null,
+      successAuthCode: null,
     };
 
     this.readURL = this.readURL.bind(this);
     this.onChange = this.onChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
+    this.onSendVerificationCode = this.onSendVerificationCode.bind(this);
+    this.verificationCodeEntered = this.verificationCodeEntered.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +68,7 @@ class SettingsUserDetails extends Component {
       imageS3Key: imageS3Key,
       email: this.context.user.attributes['email'],
       client_id: this.context.user.attributes['custom:client_id'],
+      phone_number_verified: this.context.user.attributes['phone_number_verified'],
       client_name: (this.context.user.attributes['custom:client_name']) ? this.context.user.attributes['custom:client_name'] : '',
     })
 
@@ -118,6 +128,15 @@ class SettingsUserDetails extends Component {
       [e.target.name]: e.target.value
     });
   };
+
+  async onSendVerificationCode() {
+    let state = await verifyCurrentUserAttribute('phone_number')
+    this.setState(state)
+  }
+  async verificationCodeEntered(code) {
+    let state = await verifyCurrentUserAttributeSubmit('phone_number', code)
+    this.setState(state)
+  }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -196,7 +215,7 @@ class SettingsUserDetails extends Component {
                     />
                   </label>
                 </div>
-                <div>
+                <div className={`phone ${this.state.phone_number_verified ? 'verified' : 'not-verified'}`}>
                   <label htmlFor="phone_number">
                     {this.props.t('phone')}
                     <input
@@ -209,6 +228,21 @@ class SettingsUserDetails extends Component {
                       placeholder={this.props.t('enter-phone')}
                     />
                   </label>
+                  <If condition={!this.state.phone_number_verified}>
+                    <If condition={this.state.successAuthCode !== 'CodeResentSuccessfully'}>
+                      <span onClick={this.onSendVerificationCode}>{this.props.t('send-verification-code')}</span>
+                    </If>
+                    <If condition={this.state.successAuthCode === 'CodeResentSuccessfully'}>
+                      <label className="verification-code">
+                        <ReactCodeInput
+                          title={this.props.t('verification-code')}
+                          onComplete={e => this.verificationCodeEntered(e)}
+                          type="text"
+                        />
+                      </label>
+                      <span onClick={this.onSendVerificationCode}>{this.props.t('resend-verification-code')}</span>
+                    </If>
+                  </If>
                 </div>
                 <div>
                   <label htmlFor="client_name">
@@ -267,7 +301,6 @@ class SettingsUserDetails extends Component {
         </SettingLayout>
         <style jsx>
           {`
-          
             .Collapsible {
               background: #00b284;
               width: 100%;
@@ -291,16 +324,32 @@ class SettingsUserDetails extends Component {
               .--div-inputs {
                 margin-top: 40px;
                 margin-bottom: 40px;
+                
+                div.phone {
+                  &.not-verified {
+                  }
+                  &.verified {
+                  }
+                  span {
+                    display: block;
+                    margin-top: 15px;
+                    color: #da6464;
+                    cursor: pointer;
+                  }
+                }
+                
 
                 > div {
                   display: grid;
-                  grid-template-columns: 1fr 1fr;
-                  grid-template-rows: 1fr;
-                  grid-gap: 24px;
-
-                  @media (max-width: ${breakpoints.phone}) {
-                    grid-template-columns: 1fr;
-                    grid-gap: 0;
+                  grid-gap: 20px;
+                  grid-template-columns: 
+                    [container-start] minmax(0, 30em) 
+                    [container-end] minmax(1em, 1fr) 
+                    [viewport-end];
+        
+                  > div {
+                    grid-column: container;
+                    padding: 20px;
                   }
                 }
 
@@ -348,7 +397,7 @@ class SettingsUserDetails extends Component {
                   font-family: Roboto;
                   font-style: normal;
                   font-weight: normal;
-                  font-size: 12px;
+                  font-size: 16px;
                   line-height: normal;
                   border-bottom: 1px solid #00b284;
                   height: 40px;

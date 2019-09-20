@@ -34,8 +34,12 @@ app.prepare().then(() => {
     return app.render(req, res, '/forgot', { email: req.params.email })
   })
 
-  server.get('/reset-password/:email/:code', (req, res) => {
-    return app.render(req, res, '/reset-password', { email: req.params.email, code: req.params.code })
+  server.get('/reset-password/:email/:code/:language', (req, res) => {
+    return app.render(req, res, '/reset-password', { email: req.params.email, code: req.params.code, language: req.params.language })
+  })
+
+  server.get('/confirm/:email/:code/:language', (req, res) => {
+    return app.render(req, res, '/confirm', { email: req.params.email, code: req.params.code, language: req.params.language })
   })
 
   // redirect http => https on production only

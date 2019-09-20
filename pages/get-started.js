@@ -1,5 +1,4 @@
 import React from "react";
-import ReactCodeInput from 'react-verification-code-input';
 import Head from "../components/Head";
 import HeaderMenu from "../components/HeaderMenu";
 import { signUp, confirmSignUp, resendSignUp } from '../utils/auth'
@@ -58,7 +57,7 @@ class Authentication extends React.Component {
 
   async onConfirmSignUp(e) {
     console.log(e)
-    let state = await confirmSignUp(this.state.email, this.state.password, e)
+    let state = await confirmSignUp(this.state.email, e)
     this.setState(state)
   };
 
@@ -111,7 +110,8 @@ class Authentication extends React.Component {
             <h1>{this.props.t('title')}</h1>
             <p>{this.props.t('subtitle')}</p>
 
-            <form onSubmit={e => this.onSignUp(e)}>
+            <If condition={authState === 'SIGN_UP'}>
+              <form onSubmit={e => this.onSignUp(e)}>
                 <label htmlFor="email" className={disableEmailPassword ? 'disabled' : 'enabled'}>
                   {this.props.t('enter-email-password')}
                   <input
@@ -136,18 +136,6 @@ class Authentication extends React.Component {
                     placeholder={this.props.t('enter-password')}
                   />
                 </label>
-              <If condition={
-                authState === 'CONFIRM_CODE'
-              }>
-                <label className="verification-code">
-                  <ReactCodeInput
-                    title={this.props.t('verification-code')}
-                    onComplete={e => this.onConfirmSignUp(e)}
-                    type="text"
-                  />
-                </label>
-                <a className='resend-verification' onClick={this.resendSignUp}>{this.props.t('Resend Verification Code')}</a>
-              </If>
               <button type="submit">{this.props.t('sign-up-button')}</button>
               <div className="link-label">
                 {this.props.t('sign-up-local-notice')}
@@ -156,6 +144,11 @@ class Authentication extends React.Component {
                 <a href="https://lidbot.com/privacy" target="_blank">{this.props.t('privacy')}</a>
               </div>
             </form>
+            </If>
+            <If condition={authState === 'CONFIRM_CODE'}>
+              <h1>{this.props.t('sign-up-code-sent')}</h1>
+              <p>{this.props.t('sign-up-code-sent-sub')}</p>
+            </If>
           </div>
         </div>
         <style jsx>
@@ -177,9 +170,6 @@ class Authentication extends React.Component {
                 max-height:100%;
               }
             }
-            .verification-code {
-              margin-bottom: 5px;
-            }
             .resend-verification {
               font-size: 12px;
               color: #757575;
@@ -191,7 +181,7 @@ class Authentication extends React.Component {
               text-decoration: none;
               font-size: 12px;
               letter-spacing: 0.02em;
-              margin-bottom: 50px;
+              margin: 30px 0 50px;
               line-height: 1.5;
             }
 
@@ -213,7 +203,6 @@ class Authentication extends React.Component {
                 padding-top: 50px;
                 margin: 0;
                 top: 150px;
-
                 background: #ffffff;
                 box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
                 animation: Enter 0.5s forwards;
