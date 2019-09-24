@@ -2,10 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { withRouter } from "next/router";
-import breakpoints from "../utils/breakpoints";
-import { signOut } from '../utils/auth'
-import { withTranslation } from '../i18n'
+import { withTranslation } from '../../i18n'
 
+import './HeaderMenu.scss'
 
 const Item = ({
   children,
@@ -80,28 +79,6 @@ const HeaderMenu = ({
         {t('sign-in')}
       </Item>
     </div>
-    <style jsx>
-      {`
-        .HeaderMenu {
-          height: 70px;
-          width: 100%;
-          background: #ffffff;
-          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
-          position: fixed;
-          top: 0;
-          z-index: 10;
-          padding: 0 20px;
-          border-bottom: 1px solid #dadada;
-
-          > div {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            height: 100%;
-          }
-        }
-      `}
-    </style>
   </div>
 );
 

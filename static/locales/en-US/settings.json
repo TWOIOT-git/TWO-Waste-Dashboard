@@ -9,7 +9,9 @@
   "password": "Password",
   "enter-password": "Enter your password",
   "current-password": "Current password",
+  "enter-current-password": "Enter current password",
   "new-password": "New password",
+  "enter-new-password": "Enter new password",
   "first-name": "First Name",
   "enter-first-name": "Enter your first name",
   "last-name": "Last Name",
@@ -35,10 +37,20 @@
   "location-info": "Location Info",
   "location-info-sub": "Allow 3rd party to use geo location information.",
   "timezone": "Time zone",
-  "company-name": "Company",
-  "enter-company-name": "Enter company name",
 
   "send-verification-code": "Send verification code",
   "resend-verification-code": "Resend verification code",
-  "verification-code": "Enter verification code"
+  "verification-code": "Enter verification code",
+  "settings-saved": "Settings saved",
+  "verification-code-sent": "Verification code sent",
+  "phone-verified": "Your new phone number has been verified",
+  "email-verified": "Your new email address has been verified",
+  "image-updated": "Your image has been updated",
+  "image-removed": "Your image has been removed",
+  "CodeMismatchException": "Invalid verification code provided, please try again.",
+
+  "NoOldPassword": "Please enter your current password",
+  "NoNewPassword": "Please enter your new password",
+  "password-updated": "Your password has been changed.",
+  "NotAuthorizedException": "Your current password is incorrect"
 }

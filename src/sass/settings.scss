@@ -1,0 +1,21 @@
+section {
+  padding: 52px 89px;
+  background-color: white;
+}
+.main {
+  display: flex;
+  background: #ffffff;
+  box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
+  animation: Enter 0.5s forwards;
+  padding: 50px;
+
+  &--small {
+    width: 600px;
+  }
+}
+@media (max-width: 992px) {
+  .main {
+    flex-direction: column;
+    max-width: 500px;
+  }
+}

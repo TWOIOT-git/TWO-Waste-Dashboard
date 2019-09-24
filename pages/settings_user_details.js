@@ -1,15 +1,12 @@
 import React, { Component, useContext } from "react";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
-import breakpoints from "../utils/breakpoints";
-import SettingLayout from "../components/SettingLayout";
+import SettingLayout from "../components/SettingLayout/SettingLayout";
 import { withTranslation } from '../i18n'
 import { Logger, Storage } from 'aws-amplify';
 import uuid from 'uuid/v1'
 import ReactCodeInput from 'react-verification-code-input';
-
-const logger = new Logger('SettingsUserDetails');
-
+import { toast } from 'react-toastify';
 import {
   updateUserAttributes,
   withAuthSync,
@@ -20,6 +17,10 @@ import {
   verifyCurrentUserAttributeSubmit,
   changePassword
 } from '../utils/auth'
+import '../src/sass/settings.scss'
+import '../src/sass/settings_user_details.scss'
+
+const logger = new Logger('SettingsUserDetails');
 
 class SettingsUserDetails extends Component {
   static contextType = ClientContext;
@@ -50,6 +51,7 @@ class SettingsUserDetails extends Component {
     this.readURL = this.readURL.bind(this);
     this.onChange = this.onChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.removeImage = this.removeImage.bind(this);
     this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
     this.onSendVerificationCode = this.onSendVerificationCode.bind(this);
     this.verificationCodeEntered = this.verificationCodeEntered.bind(this);
@@ -68,6 +70,7 @@ class SettingsUserDetails extends Component {
       imageS3Key: imageS3Key,
       email: this.context.user.attributes['email'],
       client_id: this.context.user.attributes['custom:client_id'],
+      email_verified: this.context.user.attributes['email_verified'],
       phone_number_verified: this.context.user.attributes['phone_number_verified'],
       client_name: (this.context.user.attributes['custom:client_name']) ? this.context.user.attributes['custom:client_name'] : '',
     })
@@ -82,45 +85,48 @@ class SettingsUserDetails extends Component {
       })
   }
 
-  removeImage = event => {
+  async removeImage(event) {
     removeUserImage(this.state.imageS3Key)
-    updateUserAttributes({
+
+    let state = await updateUserAttributes({
       picture: ''
     })
 
     this.setState({
       imagePreview: null
     })
+
+    toast(this.props.t('image-removed'), {
+      className: 'notification success'
+    })
   }
 
-  readURL = event => {
+  async readURL(event) {
     const file = event.target.files[0];
 
-    this.setState({
-      imagePreview: URL.createObjectURL(file)
-    })
-
-    let imageS3Key = this.state.imageS3Key
-
-    Storage.put(`${uuid()}-${file.name}`, file, {
+    let result = await Storage.put(`${uuid()}-${file.name}`, file, {
       level: 'private',
       contentType: file.type
     })
-      .then (result => {
 
-        console.log('removing: ', imageS3Key)
-        removeUserImage(imageS3Key) // remove previos
+    if(result.key) {
+      let previousImage = this.state.imageS3Key
 
-        updateUserAttributes({
-          picture: result.key
-        })
-        this.setState({
-          imageS3Key: result.key
-        })
+      removeUserImage(previousImage)
+      let state = await updateUserAttributes({
+        picture: result.key
       })
-      .catch(err => {
-        logger.error(err)
-      });
+
+      this.setState({
+        successAuthCode: state.successAuthCode,
+        imageS3Key: result.key,
+        imagePreview: URL.createObjectURL(file)
+      })
+
+      toast(this.props.t('image-updated'), {
+        className: 'notification success'
+      })
+    }
   };
 
   onChange = e => {
@@ -132,37 +138,64 @@ class SettingsUserDetails extends Component {
   async onSendVerificationCode() {
     let state = await verifyCurrentUserAttribute('phone_number')
     this.setState(state)
+
+    toast(this.props.t('verification-code-sent'), {
+      className: 'notification success'
+    });
   }
   async verificationCodeEntered(code) {
     let state = await verifyCurrentUserAttributeSubmit('phone_number', code)
     this.setState(state)
+
+    if(state.successAuthCode) {
+      if(state.phone_number_verified) {
+        toast(this.props.t('phone-verified'), {
+          className: 'notification success'
+        })
+      }
+    } else {
+      toast(this.props.t("CodeMismatchException"), {
+        className: 'notification error'
+      })
+    }
   }
 
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
 
     let attributes = {}
     attributes.given_name = this.state.given_name
     attributes.family_name = this.state.family_name
     attributes.phone_number = this.state.phone_number
+    // attributes.phone_number_verified = false
     attributes['custom:client_name'] = this.state.client_name
 
-    updateUserAttributes(attributes)
+    this.setState(updateUserAttributes(attributes))
+
+    toast(this.props.t('settings-saved'), {
+      className: 'notification success'
+    });
   }
-  handleUpdatePassword(e) {
+  async handleUpdatePassword(e) {
     e.preventDefault();
 
-    changePassword(this.state.currentPassword, this.state.newPassword)
+    let state = await changePassword(this.state.currentPassword, this.state.newPassword)
+    this.setState(state)
+
+    if(state.successAuthCode) {
+      toast(this.props.t('password-updated'), {
+        className: 'notification success'
+      })
+    }
   }
 
   render() {
     return (
-      <LayoutMenuNavegation>
+        <LayoutMenuNavegation>
         <Head title={'Lidbot - ' + this.props.t('user-details')}/>
         <SettingLayout>
           <form onSubmit={this.handleSubmit}>
-            <div className="--div-image">
-              <div>
+            <div className="image--container">
                 <If condition={this.state.imagePreview}>
                   <img src={this.state.imagePreview} />
                 </If>
@@ -174,9 +207,8 @@ class SettingsUserDetails extends Component {
                 <If condition={this.state.imagePreview}>
                   <span onClick={this.removeImage}>Remove</span>
                 </If>
-              </div>
             </div>
-            <div className="--div-inputs">
+            <div className="div-inputs">
               <div>
                 <div>
                   <label htmlFor="given_name">
@@ -217,7 +249,7 @@ class SettingsUserDetails extends Component {
                 </div>
                 <div className={`phone ${this.state.phone_number_verified ? 'verified' : 'not-verified'}`}>
                   <label htmlFor="phone_number">
-                    {this.props.t('phone')}
+                    {this.props.t('phone')} {this.state.phone_number_verified ? '(verified)' : <span className="not-verified">(not verified!)</span>}
                     <input
                       name="phone_number"
                       id="phone_number"
@@ -230,7 +262,7 @@ class SettingsUserDetails extends Component {
                   </label>
                   <If condition={!this.state.phone_number_verified}>
                     <If condition={this.state.successAuthCode !== 'CodeResentSuccessfully'}>
-                      <span onClick={this.onSendVerificationCode}>{this.props.t('send-verification-code')}</span>
+                      <span className="link" onClick={this.onSendVerificationCode}>{this.props.t('send-verification-code')}</span>
                     </If>
                     <If condition={this.state.successAuthCode === 'CodeResentSuccessfully'}>
                       <label className="verification-code">
@@ -240,7 +272,7 @@ class SettingsUserDetails extends Component {
                           type="text"
                         />
                       </label>
-                      <span onClick={this.onSendVerificationCode}>{this.props.t('resend-verification-code')}</span>
+                      <span className="link" onClick={this.onSendVerificationCode}>{this.props.t('resend-verification-code')}</span>
                     </If>
                   </If>
                 </div>
@@ -256,7 +288,6 @@ class SettingsUserDetails extends Component {
                     />
                   </label>
                 </div>
-                <div />
                 <div>
                   <button type="submit">{this.props.t('save-changes')}</button>
                 </div>
@@ -264,7 +295,12 @@ class SettingsUserDetails extends Component {
             </div>
           </form>
           <form onSubmit={this.handleUpdatePassword}>
-            <div className="--div-inputs">
+            <If condition={this.state.errorAuthCode}>
+              <div className="notification error">
+                {this.props.t(this.state.errorAuthCode)}
+              </div>
+            </If>
+            <div className="div-inputs">
               <div>
                 <div>
                 <div>
@@ -275,7 +311,8 @@ class SettingsUserDetails extends Component {
                       id="currentPassword"
                       type="password"
                       value={this.state.currentPassword}
-                      onChange={e => onChange(e)}
+                      onChange={this.onChange}
+                      placeholder={this.props.t('enter-current-password')}
                     />
                   </label>
                 </div>
@@ -287,7 +324,8 @@ class SettingsUserDetails extends Component {
                       id="newPassword"
                       type="password"
                       value={this.state.newPassword}
-                      onChange={e => onChange(e)}
+                      onChange={this.onChange}
+                      placeholder={this.props.t('enter-new-password')}
                     />
                   </label>
                 </div>
@@ -299,190 +337,6 @@ class SettingsUserDetails extends Component {
             </div>
           </form>
         </SettingLayout>
-        <style jsx>
-          {`
-            .Collapsible {
-              background: #00b284;
-              width: 100%;
-              text-align: left;
-              padding: 10px;
-              color: #fff;
-              font-weight: 400;
-              text-decoration: none;
-              cursor: pointer;
-            }
-            .Collapsible__trigger {
-              border: solid 1px #f2f2f2;
-              padding: 10px;
-            }
-            
-            form {
-            .client-info {
-              color: #555;
-              margin-top: 30px;
-            }
-              .--div-inputs {
-                margin-top: 40px;
-                margin-bottom: 40px;
-                
-                div.phone {
-                  &.not-verified {
-                  }
-                  &.verified {
-                  }
-                  span {
-                    display: block;
-                    margin-top: 15px;
-                    color: #da6464;
-                    cursor: pointer;
-                  }
-                }
-                
-
-                > div {
-                  display: grid;
-                  grid-gap: 20px;
-                  grid-template-columns: 
-                    [container-start] minmax(0, 30em) 
-                    [container-end] minmax(1em, 1fr) 
-                    [viewport-end];
-        
-                  > div {
-                    grid-column: container;
-                    padding: 20px;
-                  }
-                }
-
-                button {
-                  background: #00b284;
-                  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
-                  border: none;
-                  color: white;
-                  text-transform: uppercase;
-                  width: 200px;
-                  height: 40px;
-                  cursor: pointer;
-                  transition: 0.2s all ease;
-                  outline: none;
-                  margin-top: 68px;
-
-                  &:active,
-                  &:hover,
-                  &:focus {
-                    background-color: #0af1b5;
-                  }
-
-                  @media (max-width: ${breakpoints.phone}) {
-                    margin-top: 40px;
-                    font-size: 1.25rem;
-                  }
-                }
-
-                label {
-                  width: 100%;
-                  font-family: Roboto;
-                  font-style: normal;
-                  font-weight: bold;
-                  font-size: 12px;
-                  line-height: normal;
-                  margin-top: 20px;
-                  display: block;
-                  color: #00b284;
-                }
-
-                input {
-                  width: 100%;
-                  border: none;
-                  padding: 20px 20px 20px 0;
-                  font-family: Roboto;
-                  font-style: normal;
-                  font-weight: normal;
-                  font-size: 16px;
-                  line-height: normal;
-                  border-bottom: 1px solid #00b284;
-                  height: 40px;
-                  color: #000000;
-                  outline: none;
-                  transition: 1s all ease;
-
-                  &:focus {
-                    border-bottom: 1px solid #0af1b5;
-                  }
-
-                  &::placeholder {
-                    font-family: Roboto;
-                    font-style: normal;
-                    font-weight: normal;
-                    font-size: 12px;
-                    line-height: normal;
-
-                    color: #000000;
-                  }
-                }
-              }
-
-              .--div-image {
-                font-family: Roboto;
-                margin-bottom: 40px;
-                > div {
-                  display: flex;
-                  align-items: center;
-                  > img {
-                    border: 1px solid #00b284;
-                    border-radius: 50%;
-                    width: 164px;
-                    height: 164px;
-                  }
-                  > .placeholder {
-                    border: 1px solid #00b284;
-                    border-radius: 50%;
-                    width: 164px;
-                    height: 164px;
-                    background: #f6f6f6;
-                  }
-
-                  > input {
-                    width: 0.1px;
-                    height: 0.1px;
-                    opacity: 0;
-                    overflow: hidden;
-                    position: absolute;
-                    z-index: -1;
-
-                    &:focus + label {
-                      outline: 2px solid #05654c;
-                    }
-                  }
-
-                  > label {
-                    font-size: 16px;
-                    font-weight: 400;
-                    display: inline-block;
-                    cursor: pointer;
-                    margin-left: 40px;
-                    border: 1px solid #757575;
-                    border-radius: 3px;
-                    padding: 10px 20px;
-                    
-                    &:hover {
-                      border: 1px solid #00b284;
-                      color: #00b284;
-                    }
-                  }
-                  > span {
-                    margin-left: 20px;
-                    color: #00b284;
-                    font-size: 14px;
-                    
-                    &:hover {
-                      text-decoration: underline;
-                    }
-                  }
-                }
-              }
-            }
-          `}
-        </style>
       </LayoutMenuNavegation>
     );
   }

@@ -1,0 +1,105 @@
+$theme-color: #00b284;
+$theme-color--hover: #0af1b5;
+
+.notification {
+  border-radius: 3px;
+  position: fixed;
+  font-size: 16px;
+  font-weight: 400;
+
+  &.error {
+    border: 1px solid #d64242;
+    color: #d64242;
+  }
+  &.success {
+    background: $theme-color;
+    width: 100%;
+    color: #fff;
+  }
+}
+.progress {
+  background: white;
+  height: 2px;
+}
+form {
+  .notification {
+    position: relative;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+  }
+  button {
+    background: #00b284;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+    border: none;
+    color: white;
+    width: 50%;
+    height: 40px;
+    cursor: pointer;
+    transition: 0.2s all ease;
+    outline: none;
+    margin-top: 20px;
+
+    &:active,
+    &:hover,
+    &:focus {
+      background-color: #0af1b5;
+    }
+  }
+  label {
+    width: 100%;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: normal;
+    margin-bottom: 25px;
+    display: block;
+    color: #00b284;
+  }
+  input {
+    width: 100%;
+    border: none;
+    padding: 20px 20px 20px 0;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: normal;
+    border-bottom: 1px solid #00b284;
+    height: 40px;
+    color: #000000;
+    outline: none;
+    transition: 1s all ease;
+
+    &:focus {
+      border-bottom: 1px solid #0af1b5;
+    }
+
+    &::placeholder {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: normal;
+
+      color: #000000;
+    }
+  }
+}
+h1 {
+  margin: 0 0 30px 0;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 36px;
+  line-height: normal;
+  color: #111;
+}
+p {
+  margin: 0 0 20px 0;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 25px;
+  color: #757575;
+}

@@ -2,11 +2,13 @@ import React from "react";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import SwitchItem from "../components/SwitchItem";
-import SettingLayout from "../components/SettingLayout";
+import SettingLayout from "../components/SettingLayout/SettingLayout";
 import { withAuthSync, reloadUserContext, ClientContext } from '../utils/auth'
 import { Auth, ServiceWorker } from 'aws-amplify';
 import { withTranslation } from '../i18n'
 const serviceWorker = new ServiceWorker();
+
+import '../src/sass/settings.scss'
 
 function urlB64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);

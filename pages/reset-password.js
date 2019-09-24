@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "../components/Head";
-import HeaderMenu from "../components/HeaderMenu";
+import HeaderMenu from "../components/HeaderMenu/HeaderMenu";
 import { forgotPasswordSubmit } from '../utils/auth'
 import { withTranslation } from '../i18n'
 import Link from "next/link"

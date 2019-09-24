@@ -1,10 +1,13 @@
 import React from "react";
 import Head from "../components/Head";
-import HeaderMenu from "../components/HeaderMenu";
+import HeaderMenu from "../components/HeaderMenu/HeaderMenu";
 import { signIn, completeNewPassword } from '../utils/auth'
 import { withTranslation } from '../i18n'
 import Link from "next/link"
 
+import '../src/sass/main.scss'
+import '../src/sass/main-public.scss'
+import '../src/sass/index.scss'
 
 class Authentication extends React.Component {
   getInitialProps = async () => ({
@@ -20,8 +23,8 @@ class Authentication extends React.Component {
       newPassword: "",
       passwordRepeat: "",
       authState: 'SIGN_IN',
-      authData: null,
-      authError: null,
+      successAuthCode: null,
+      errorAuthCode: null,
       user: null,
     };
   }
@@ -42,7 +45,7 @@ class Authentication extends React.Component {
       if(this.state.authState === 'NEW_PASSWORD_REQUIRED') {
         if(this.state.newPassword !== this.state.passwordRepeat) {
           console.log('PASSWORD_DO_NOT_MATCH')
-          this.setState({authError: "Passwords are not the same."});
+          this.setState({errorAuthCode: "Passwords are not the same."});
         } else {
           console.log(this.state.user);
           console.log('Calling completeNewPassword');
@@ -52,34 +55,24 @@ class Authentication extends React.Component {
           );
         }
       } else {
-        var state = await signIn(this.state.email, this.state.password)
+        let state = await signIn(this.state.email, this.state.password)
         this.setState(state)
       }
     } catch (err) {
       console.log('error signing up..', err)
-      this.setState({authError: err.message})
+      this.setState({errorAuthCode: err.message})
     }
   }
 
   render() {
-    const { email, password, newPassword, passwordRepeat, authError, authState } = this.state;
+    const { email, password, newPassword, passwordRepeat, errorAuthCode, authState } = this.state;
     const { onChange } = this;
 
     return (
       <section>
         <HeaderMenu />
         <Head title="Sign in | Lidbot" />
-        <If condition={this.state.errorAuthCode}>
-          <div className="alert error">
-            {this.props.t(this.state.errorAuthCode)}
-          </div>
-        </If>
-        <If condition={this.state.successAuthCode}>
-          <div className="alert info">
-            {this.props.t(this.state.successAuthCode)}
-          </div>
-        </If>
-        <div>
+        <div className="main">
           <div>
             <div>
               <img
@@ -100,23 +93,26 @@ class Authentication extends React.Component {
             <h1>{this.props.t('title')}</h1>
             <p>{this.props.t('subtitle')}</p>
 
-            <div className="alert error">
-              {this.props.t(authError)}
-            </div>
-
             <form onSubmit={e => this.onSubmit(e)}>
-              <If condition={
-                authState !== 'NEW_PASSWORD_REQUIRED'
-              }>
+              <If condition={this.state.errorAuthCode}>
+                <div className="notification error">
+                  {this.props.t(this.state.errorAuthCode)}
+                </div>
+              </If>
+              <If condition={this.state.successAuthCode}>
+                <div className="notification info">
+                  {this.props.t(this.state.successAuthCode)}
+                </div>
+              </If>
+              <If condition={authState !== 'NEW_PASSWORD_REQUIRED'}>
                 <label htmlFor="email">
-                  {this.props.t('enter-email-password')}
                   <input
                     name="email"
                     id="email"
                     type="email"
                     value={email}
                     onChange={e => onChange(e)}
-                    placeholder="you@example.com"
+                    placeholder={this.props.t('email-placeholder')}
                   />
                 </label>
                 <label htmlFor="password">
@@ -126,7 +122,7 @@ class Authentication extends React.Component {
                     type="password"
                     value={password}
                     onChange={e => onChange(e)}
-                    placeholder="Password"
+                    placeholder={this.props.t('password-placeholder')}
                   />
                 </label>
               </If>
@@ -155,209 +151,12 @@ class Authentication extends React.Component {
                 </label>
               </If>
               <button type="submit">{this.props.t('sign-in')}</button>
+              <Link href={`/forgot?email=${email}`} as={`/forgot/${email}`}>
+                <a className="link-label">{this.props.t('forgotten-password')}</a>
+              </Link>
             </form>
-            <Link href={`/forgot?email=${email}`} as={`/forgot/${email}`}>
-              <a className="link-label">{this.props.t('forgotten-password')}</a>
-            </Link>
           </div>
         </div>
-        <style jsx>
-          {`
-            @keyframes Enter {
-              from {
-                -webkit-transform: translateY(28px);
-              }
-              to {
-                -webkit-transform: none;
-              }
-            }
-            .link-label {
-              color: #757575;
-              text-decoration: none;
-              font-size: 12px;
-              letter-spacing: 0.02em;
-              margin: 30px 0 50px;
-            }
-            .alert {
-              border-radius: 4px;
-              padding: 10px;
-              margin-bottom: 20px;
-              font-size: 12px;
-              text-align: center;
-              font-weight: 100;
-              &:empty {
-                display: none;
-              }
-            }
-            .error {
-              background: #d64242;
-              color: #fff;
-            }
-
-            section {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              height: 100vh;
-              background-color: white;
-
-              @media (max-width: 876px) {
-                display: block;
-              }
-
-              > div {
-                width: 840px;
-                display: flex;
-                padding-top: 50px;
-                margin-top: 100px;
-
-                background: #ffffff;
-                box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
-                animation: Enter 0.5s forwards;
-
-                @media (max-width: 876px) {
-                  flex-direction: column;
-                  width: 100%;
-                  padding: 5%;
-                  height: unset;
-                  box-shadow: none;
-                  animation: none;
-                }
-
-                > div {
-                  width: 50%;
-
-                  @media (max-width: 876px) {
-                    width: 100%;
-                  }
-
-                  &:nth-child(1) {
-                    display: flex;
-                    justify-content: space-between;
-                    flex-direction: column;
-
-                    .logo {
-                      margin-left: 37px;
-
-                      @media (max-width: 876px) {
-                        margin-left: 0;
-                        margin-bottom: 10vh;
-                      }
-                    }
-
-                    .waste {
-                      @media (max-width: 876px) {
-                        display: none;
-                      }
-                    }
-                  }
-
-                  &:nth-child(2) {
-                    display: flex;
-                    justify-content: space-between;
-                    flex-direction: column;
-                    padding-right: 50px;
-
-                    @media (max-width: 876px) {
-                      padding-right: 0;
-                    }
-
-                    h1 {
-                      margin-top: 0;
-                      font-family: Roboto;
-                      font-style: normal;
-                      font-weight: 900;
-                      font-size: 32px;
-                      line-height: normal;
-
-                      color: #000000;
-                    }
-
-                    p {
-                      font-family: Roboto;
-                      font-style: normal;
-                      font-weight: 300;
-                      font-size: 18px;
-                      line-height: 25px;
-
-                      color: #757575;
-                    }
-
-                    form {
-                      width: 100%;
-
-                      label {
-                        width: 100%;
-                        font-family: Roboto;
-                        font-style: normal;
-                        font-weight: bold;
-                        font-size: 12px;
-                        line-height: normal;
-                        margin-top: 20px;
-                        display: block;
-                        color: #00b284;
-                      }
-
-                      input {
-                        width: 100%;
-                        border: none;
-                        padding: 20px 20px 20px 0;
-                        font-family: Roboto;
-                        font-style: normal;
-                        font-weight: normal;
-                        font-size: 12px;
-                        line-height: normal;
-                        border-bottom: 1px solid #00b284;
-                        height: 40px;
-                        color: #000000;
-                        outline: none;
-                        transition: 1s all ease;
-
-                        &:focus {
-                          border-bottom: 1px solid #0af1b5;
-                        }
-
-                        &::placeholder {
-                          font-family: Roboto;
-                          font-style: normal;
-                          font-weight: normal;
-                          font-size: 12px;
-                          line-height: normal;
-
-                          color: #000000;
-                        }
-                      }
-
-                      button {
-                        background: #00b284;
-                        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
-                        border: none;
-                        color: white;
-                        width: 100%;
-                        height: 50px;
-                        margin-top: 30px;
-                        margin-bottom: 30px;
-                        cursor: pointer;
-                        transition: 0.2s all ease;
-                        outline: none;
-
-                        &:active,
-                        &:hover,
-                        &:focus {
-                          background-color: #0af1b5;
-                        }
-
-                        @media (max-width: 876px) {
-                          margin-bottom: 0;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          `}
-        </style>
       </section>
     );
   }

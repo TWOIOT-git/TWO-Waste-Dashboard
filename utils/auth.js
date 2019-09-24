@@ -4,10 +4,13 @@ import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone'
 import uuid from 'uuid/v1'
-
+import { ToastContainer } from 'react-toastify'
 import {determineTimezone, determineLanguage} from '../utils/locale'
-
 import Amplify, { Auth, Storage, Logger } from 'aws-amplify'
+
+import 'react-toastify/dist/ReactToastify.min.css';
+import '../src/sass/main.scss'
+import '../src/sass/main-private.scss'
 
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 const logger = new Logger('auth');
@@ -41,13 +44,34 @@ function signOut(e) {
       console.log(err)
     })
 }
-function changePassword(oldPassword, newPassword) {
-  Auth.currentAuthenticatedUser()
-    .then(user => {
-      return Auth.changePassword(user, oldPassword, newPassword)
-    })
-    .then(data => console.log(data))
-    .catch(err => console.log(err))
+async function changePassword(oldPassword, newPassword) {
+  if(!oldPassword) {
+    return {
+      errorAuthCode: "NoOldPassword",
+    }
+  }
+
+  if(!newPassword) {
+    return {
+      errorAuthCode: "NoNewPassword",
+    }
+  }
+
+  try {
+    let user = await Auth.currentAuthenticatedUser()
+    let response = await Auth.changePassword(user, oldPassword, newPassword)
+
+    logger.debug('Auth.changePassword response: ', response)
+
+    return {
+      successAuthCode: true,
+      errorAuthCode: false
+    }
+  } catch (e) {
+    return {
+      errorAuthCode: e.code
+    }
+  }
 }
 async function completeNewPassword(user, password) {
   const loggedUser = await Auth.completeNewPassword(
@@ -58,6 +82,18 @@ async function completeNewPassword(user, password) {
   Router.push('/analytics')
 }
 async function signIn(email, password) {
+  if(!email) {
+    return {
+      errorAuthCode: "NoEmail",
+    }
+  }
+
+  if(!password) {
+    return {
+      errorAuthCode: "NoPassword",
+    }
+  }
+
   try {
     const user = await Auth.signIn(email, password)
 
@@ -77,6 +113,18 @@ async function signIn(email, password) {
 }
 
 async function signUp(email, password) {
+  if(!email) {
+    return {
+      errorAuthCode: "NoEmail",
+    }
+  }
+
+  if(!password) {
+    return {
+      errorAuthCode: "NoPassword",
+    }
+  }
+
   try {
     let user = await Auth.signUp({
       username: email,
@@ -141,6 +189,12 @@ async function resendSignUp(username) {
 }
 
 async function forgotPassword(username) {
+  if(!this.state.email) {
+    return {
+      errorAuthCode: "NoEmail",
+    }
+  }
+
   try {
     let data = await Auth.forgotPassword(username)
     console.log(data);
@@ -175,8 +229,6 @@ async function verifyCurrentUserAttribute(attr) {
 async function verifyCurrentUserAttributeSubmit(attr, code) {
   try {
     let data = await Auth.verifyCurrentUserAttributeSubmit(attr, code)
-
-    console.log(data);
 
     let user = await Auth.currentAuthenticatedUser({
       bypassCache: true
@@ -247,14 +299,16 @@ function reloadUserContext() {
 
 async function updateUserAttributes(attributes) {
   try {
-    let user = await Auth.currentAuthenticatedUser({
-      bypassCache: true
-    })
+    let user = await Auth.currentAuthenticatedUser()
     let result = await Auth.updateUserAttributes(user, attributes)
 
-    console.log(result)
+    await Auth.currentAuthenticatedUser( {
+      bypassCache: true
+    })
 
-    reloadUserContext()
+    return {
+      successAuthCode: 'SettingsSaved'
+    }
 
   } catch (e) {
     console.log(e)
@@ -322,6 +376,10 @@ function withAuthSync(WrappedComponent) {
               user: this.state.user
             }}
           >
+            <ToastContainer
+              autoClose={3000}
+              progressClassName={"progress"}
+            />
             <WrappedComponent
               customerId={this.state.user.attributes['custom:client_id']}
               {...this.props}
