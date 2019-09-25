@@ -5,7 +5,7 @@
   "notifications": "Notifications",
 
   "email": "Email",
-  "enter-email": "Email you email",
+  "enter-email": "Enter you email",
   "password": "Password",
   "enter-password": "Enter your password",
   "current-password": "Current password",
@@ -22,8 +22,6 @@
   "enter-company-name": "Enter company name",
   "save-changes": "Save Changes",
   "save-password": "Save Password",
-  "section-password": "Password",
-  "section-user-details": "Edit Profile",
 
   "push-notifications": "Push Notifications",
   "push-notifications-sub": "Allow browser to send ad-hoc notifications.",
@@ -47,6 +45,8 @@
   "email-verified": "Your new email address has been verified",
   "image-updated": "Your image has been updated",
   "image-removed": "Your image has been removed",
+  "upload-image": "Upload an image",
+  "remove": "Remove",
   "CodeMismatchException": "Invalid verification code provided, please try again.",
 
   "NoOldPassword": "Please enter your current password",

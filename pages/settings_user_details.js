@@ -203,9 +203,9 @@ class SettingsUserDetails extends Component {
                   <div className="placeholder"></div>
                 </If>
                 <input type="file" name="file" id="file" onChange={this.readURL} />
-                <label htmlFor="file">Upload an image</label>
+                <label htmlFor="file">{this.props.t('upload-image')}</label>
                 <If condition={this.state.imagePreview}>
-                  <span onClick={this.removeImage}>Remove</span>
+                  <span onClick={this.removeImage}>{this.props.t('remove')}</span>
                 </If>
             </div>
             <div className="div-inputs">

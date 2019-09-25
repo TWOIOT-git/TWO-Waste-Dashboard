@@ -60,4 +60,4 @@ SelectItem.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default withTranslation('common')(SelectItem)
+export default SelectItem

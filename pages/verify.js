@@ -1,16 +1,16 @@
 import React from "react";
 import Head from "../components/Head";
 import HeaderMenu from "../components/HeaderMenu/HeaderMenu";
-import { forgotPasswordSubmit } from '../utils/auth'
+import { completeNewPassword, signIn } from '../utils/auth'
 import { i18n, withTranslation } from '../i18n'
 import Link from "next/link"
 
 import '../src/sass/main.scss'
 import '../src/sass/main-public.scss'
 
-class ResetPassword extends React.Component {
-  static async getInitialProps ({ query: { email, code, language } }) {
-    return { email: email, code: code, language: language }
+class Verify extends React.Component {
+  static async getInitialProps ({ query: { email, password, language } }) {
+    return { email: email, password: password, language: language }
   }
 
   constructor(props) {
@@ -21,7 +21,6 @@ class ResetPassword extends React.Component {
     this.state = {
       code: props.code,
       email: props.email,
-      language: props.language,
       password: '',
       errorAuthCode: null,
       successAuthCode: null,
@@ -37,7 +36,9 @@ class ResetPassword extends React.Component {
   async onSubmit(e) {
     e.preventDefault();
 
-    let state = await forgotPasswordSubmit(this.state.email, this.state.code, this.state.password)
+    let result = await signIn(this.state.email, this.props.password)
+
+    let state = await completeNewPassword(result.user, this.state.password)
 
     this.setState(state)
   };
@@ -90,4 +91,4 @@ class ResetPassword extends React.Component {
   }
 }
 
-export default withTranslation('reset-password')(ResetPassword)
+export default withTranslation('reset-password')(Verify)

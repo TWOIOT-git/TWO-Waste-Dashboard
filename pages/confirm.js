@@ -5,6 +5,8 @@ import { confirmSignUp } from '../utils/auth'
 import { i18n, withTranslation } from '../i18n'
 import Link from "next/link"
 
+import '../src/sass/main.scss'
+import '../src/sass/main-public.scss'
 
 class Confirm extends React.Component {
 
@@ -15,18 +17,17 @@ class Confirm extends React.Component {
   constructor(props) {
     super(props);
 
+    i18n.changeLanguage(props.language)
+
     this.state = {
       email: props.email,
       code: props.code,
-      language: props.language,
       errorAuthCode: null,
       successAuthCode: null,
     };
   }
 
   async componentDidMount() {
-    // console.log(this.state.language)
-    // i18n.changeLanguage(this.state.language)
     let state = await confirmSignUp(this.state.email, this.state.code)
     this.setState(state)
   }

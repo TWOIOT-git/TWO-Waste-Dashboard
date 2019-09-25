@@ -14,7 +14,7 @@ class Forgot extends React.Component {
     super(props);
 
     this.state = {
-      email: props.email,
+      email: props.email ? props.email : '',
       errorAuthCode: null,
       successAuthCode: null,
     };

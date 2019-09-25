@@ -38,6 +38,10 @@ app.prepare().then(() => {
     return app.render(req, res, '/reset-password', { email: req.params.email, code: req.params.code, language: req.params.language })
   })
 
+  server.get('/verify/:email/:password/:language', (req, res) => {
+    return app.render(req, res, '/verify', { email: req.params.email, password: req.params.password, language: req.params.language })
+  })
+
   server.get('/confirm/:email/:code/:language', (req, res) => {
     return app.render(req, res, '/confirm', { email: req.params.email, code: req.params.code, language: req.params.language })
   })

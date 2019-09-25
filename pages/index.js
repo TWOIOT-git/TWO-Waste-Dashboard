@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "../components/Head";
 import HeaderMenu from "../components/HeaderMenu/HeaderMenu";
-import { signIn, completeNewPassword } from '../utils/auth'
+import { signIn } from '../utils/auth'
 import { withTranslation } from '../i18n'
 import Link from "next/link"
 
@@ -41,27 +41,8 @@ class Authentication extends React.Component {
   };
 
   async signIn() {
-    try {
-      if(this.state.authState === 'NEW_PASSWORD_REQUIRED') {
-        if(this.state.newPassword !== this.state.passwordRepeat) {
-          console.log('PASSWORD_DO_NOT_MATCH')
-          this.setState({errorAuthCode: "Passwords are not the same."});
-        } else {
-          console.log(this.state.user);
-          console.log('Calling completeNewPassword');
-          completeNewPassword(
-            this.state.user,
-            this.state.newPassword,
-          );
-        }
-      } else {
-        let state = await signIn(this.state.email, this.state.password)
-        this.setState(state)
-      }
-    } catch (err) {
-      console.log('error signing up..', err)
-      this.setState({errorAuthCode: err.message})
-    }
+      let state = await signIn(this.state.email, this.state.password)
+      this.setState(state)
   }
 
   render() {
@@ -99,57 +80,26 @@ class Authentication extends React.Component {
                   {this.props.t(this.state.errorAuthCode)}
                 </div>
               </If>
-              <If condition={this.state.successAuthCode}>
-                <div className="notification info">
-                  {this.props.t(this.state.successAuthCode)}
-                </div>
-              </If>
-              <If condition={authState !== 'NEW_PASSWORD_REQUIRED'}>
-                <label htmlFor="email">
-                  <input
-                    name="email"
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={e => onChange(e)}
-                    placeholder={this.props.t('email-placeholder')}
-                  />
-                </label>
-                <label htmlFor="password">
-                  <input
-                    name="password"
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={e => onChange(e)}
-                    placeholder={this.props.t('password-placeholder')}
-                  />
-                </label>
-              </If>
-              <If condition={authState === 'NEW_PASSWORD_REQUIRED'}>
-                <label htmlFor="newPassword">
-                  Password
-                  <input
-                    name="newPassword"
-                    id="newPassword"
-                    type="password"
-                    value={newPassword}
-                    onChange={e => onChange(e)}
-                    placeholder="New Password"
-                  />
-                </label>
-                <label htmlFor="passwordRepeat">
-                  Repeat Password
-                  <input
-                    name="passwordRepeat"
-                    id="passwordRepeat"
-                    type="password"
-                    value={passwordRepeat}
-                    onChange={e => onChange(e)}
-                    placeholder="Repeat Password"
-                  />
-                </label>
-              </If>
+              <label htmlFor="email">
+                <input
+                  name="email"
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={e => onChange(e)}
+                  placeholder={this.props.t('email-placeholder')}
+                />
+              </label>
+              <label htmlFor="password">
+                <input
+                  name="password"
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={e => onChange(e)}
+                  placeholder={this.props.t('password-placeholder')}
+                />
+              </label>
               <button type="submit">{this.props.t('sign-in')}</button>
               <Link href={`/forgot?email=${email}`} as={`/forgot/${email}`}>
                 <a className="link-label">{this.props.t('forgotten-password')}</a>

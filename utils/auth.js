@@ -74,12 +74,20 @@ async function changePassword(oldPassword, newPassword) {
   }
 }
 async function completeNewPassword(user, password) {
-  const loggedUser = await Auth.completeNewPassword(
-    user,
-    password,
-  )
-  console.log(loggedUser)
-  Router.push('/analytics')
+  try {
+    let result = await Auth.completeNewPassword(user, password)
+    logger.debug(result)
+
+    return {
+      successAuthCode: 'PasswordChangedSuccessfully'
+    }
+  } catch (e) {
+    logger.error(e)
+
+    return {
+      errorAuthCode: e.code
+    }
+  }
 }
 async function signIn(email, password) {
   if(!email) {
@@ -103,8 +111,8 @@ async function signIn(email, password) {
       Router.push('/analytics')
     }
 
-  } catch (err) {
-    console.log('Error while signing in: ', err)
+  } catch (e) {
+    logger.debug(e)
 
     return {
       errorAuthCode: e.code
@@ -172,6 +180,12 @@ async function confirmSignUp(username, code) {
 }
 
 async function resendSignUp(username) {
+  if(!username) {
+    return {
+      errorAuthCode: "NoEmail",
+    }
+  }
+
   try {
     let data = await Auth.resendSignUp(username)
     console.log('code resent successfully: ', data);
@@ -189,7 +203,7 @@ async function resendSignUp(username) {
 }
 
 async function forgotPassword(username) {
-  if(!this.state.email) {
+  if(!username) {
     return {
       errorAuthCode: "NoEmail",
     }
