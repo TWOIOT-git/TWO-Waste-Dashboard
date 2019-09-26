@@ -48,6 +48,7 @@
   "upload-image": "Upload an image",
   "remove": "Remove",
   "CodeMismatchException": "Invalid verification code provided, please try again.",
+  "InvalidParameterException": "User does not have a valid registered phone number.",
 
   "NoOldPassword": "Please enter your current password",
   "NoNewPassword": "Please enter your new password",

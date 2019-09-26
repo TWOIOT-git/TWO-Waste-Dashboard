@@ -1,9 +1,10 @@
 import React from "react";
-import HeaderMenu from "../components/HeaderMenu/HeaderMenu";
+import HeaderMenu from "../components/HeaderMenu";
 import Head from "../components/Head";
 import { forgotPassword } from '../utils/auth'
 import { withTranslation } from '../i18n'
 
+import './main.scss'
 
 class Forgot extends React.Component {
 
@@ -71,9 +72,28 @@ class Forgot extends React.Component {
             </If>
           </div>
         </div>
+        <style jsx>
+          {`
+            section {
+              height: 100vh;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: white;
+              padding-top: 70px;
+            }
+            .main {
+              display: flex;
+              box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
+              animation: Enter 0.5s forwards;
+              padding: 50px;
+              width: 600px;
+            }
+          `}
+        </style>
       </section>
     );
   }
 }
 
-export default withTranslation('public')(Forgot)
+export default withTranslation('forgot')(Forgot)

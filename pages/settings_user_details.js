@@ -1,9 +1,9 @@
 import React, { Component, useContext } from "react";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
-import SettingLayout from "../components/SettingLayout/SettingLayout";
+import SettingLayout from "../components/SettingLayout";
 import { withTranslation } from '../i18n'
-import { Logger, Storage } from 'aws-amplify';
+import { Auth, Logger, Storage } from 'aws-amplify';
 import uuid from 'uuid/v1'
 import ReactCodeInput from 'react-verification-code-input';
 import { toast } from 'react-toastify';
@@ -17,8 +17,8 @@ import {
   verifyCurrentUserAttributeSubmit,
   changePassword
 } from '../utils/auth'
-import '../src/sass/settings.scss'
-import '../src/sass/settings_user_details.scss'
+
+import './main.scss'
 
 const logger = new Logger('SettingsUserDetails');
 
@@ -139,9 +139,11 @@ class SettingsUserDetails extends Component {
     let state = await verifyCurrentUserAttribute('phone_number')
     this.setState(state)
 
-    toast(this.props.t('verification-code-sent'), {
-      className: 'notification success'
-    });
+    if(state.successAuthCode) {
+      toast(this.props.t('verification-code-sent'), {
+        className: 'notification success'
+      })
+    }
   }
   async verificationCodeEntered(code) {
     let state = await verifyCurrentUserAttributeSubmit('phone_number', code)
@@ -248,8 +250,16 @@ class SettingsUserDetails extends Component {
                   </label>
                 </div>
                 <div className={`phone ${this.state.phone_number_verified ? 'verified' : 'not-verified'}`}>
+                  <If condition={this.state.errorAuthCode}>
+                    <div className="notification error">
+                      {this.props.t(this.state.errorAuthCode)}
+                    </div>
+                  </If>
                   <label htmlFor="phone_number">
-                    {this.props.t('phone')} {this.state.phone_number_verified ? '(verified)' : <span className="not-verified">(not verified!)</span>}
+                    {this.props.t('phone')}
+                    <If condition={this.state.phone_number}>
+                      {this.state.phone_number_verified ? ' (verified)' : <span className="not-verified"> (not verified!)</span>}
+                    </If>
                     <input
                       name="phone_number"
                       id="phone_number"
@@ -260,7 +270,8 @@ class SettingsUserDetails extends Component {
                       placeholder={this.props.t('enter-phone')}
                     />
                   </label>
-                  <If condition={!this.state.phone_number_verified}>
+                  <If condition={this.state.phone_number}>
+                    <If condition={!this.state.phone_number_verified}>
                     <If condition={this.state.successAuthCode !== 'CodeResentSuccessfully'}>
                       <span className="link" onClick={this.onSendVerificationCode}>{this.props.t('send-verification-code')}</span>
                     </If>
@@ -274,6 +285,7 @@ class SettingsUserDetails extends Component {
                       </label>
                       <span className="link" onClick={this.onSendVerificationCode}>{this.props.t('resend-verification-code')}</span>
                     </If>
+                  </If>
                   </If>
                 </div>
                 <div>
@@ -337,6 +349,100 @@ class SettingsUserDetails extends Component {
             </div>
           </form>
         </SettingLayout>
+        <style jsx>
+          {`
+            .image--container {
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              font-family: Roboto;
+              margin-bottom: 50px;
+            
+                > img {
+                  border: 1px solid #00b284;
+                  border-radius: 50%;
+                  width: 164px;
+                  height: 164px;
+                }
+                > .placeholder {
+                  border: 1px solid #00b284;
+                  border-radius: 50%;
+                  width: 164px;
+                  height: 164px;
+                  background: #f6f6f6;
+                }
+                > input {
+                  width: 0.1px;
+                  height: 0.1px;
+                  opacity: 0;
+                  overflow: hidden;
+                  position: absolute;
+                  z-index: -1;
+            
+                  &:focus + label {
+                    outline: 2px solid #05654c;
+                  }
+                }
+                > label {
+                  font-size: 16px;
+                  font-weight: 400;
+                  cursor: pointer;
+                  margin: 0 0 0 40px;
+                  border: 1px solid #757575;
+                  border-radius: 3px;
+                  padding: 10px 20px;
+                  color: #545454;
+                  width: auto;
+            
+                  &:hover {
+                    border: 1px solid #00b284;
+                    color: #00b284;
+                  }
+                }
+                > span {
+                  margin-left: 20px;
+                  color: #00b284;
+                  font-size: 14px;
+            
+                  &:hover {
+                    text-decoration: underline;
+                  }
+                }
+            }
+            
+            
+            .div-inputs {
+              margin-top: 40px;
+              margin-bottom: 40px;
+            
+              div.phone {
+                .not-verified {
+                  color: #da6464;
+                }
+                &.verified {
+                }
+                .link {
+                  color: #da6464;
+                  display: block;
+                  margin-top: 15px;
+                  cursor: pointer;
+                }
+              }
+              > div {
+                display: grid;
+                grid-gap: 20px;
+                grid-template-columns:
+                  [container-start] minmax(0, 30em)
+                  [container-end] minmax(1em, 1fr)
+                  [viewport-end];
+            
+                > div {
+                  grid-column: container;
+                }
+              }
+            }
+          `}
+        </style>
       </LayoutMenuNavegation>
     );
   }

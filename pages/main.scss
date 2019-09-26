@@ -103,3 +103,23 @@ p {
   line-height: 25px;
   color: #757575;
 }
+.link-label {
+  color: #757575;
+  line-height: 1.35;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  margin-left: 30px;
+
+  a {
+    color: $theme-color;
+    transition: 0.2s all ease;
+
+    &:hover {
+      color: $theme-color--hover;
+    }
+  }
+  &--bottom {
+    margin: 25px 0 0 0;
+  }
+}

@@ -48,6 +48,7 @@
   "upload-image": "上傳圖片",
   "remove": "去掉",
   "CodeMismatchException": "提供的驗證碼無效，請重試。",
+  "InvalidParameterException": "用戶沒有有效的註冊電話號碼。",
 
   "NoOldPassword": "請輸入您的當前密碼",
   "NoNewPassword": "請輸入新密碼",

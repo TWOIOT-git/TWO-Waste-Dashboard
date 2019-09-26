@@ -1,12 +1,10 @@
 import React from "react";
 import Head from "../components/Head";
-import HeaderMenu from "../components/HeaderMenu/HeaderMenu";
+import HeaderMenu from "../components/HeaderMenu";
 import { signUp, confirmSignUp, resendSignUp } from '../utils/auth'
 import { withTranslation } from '../i18n'
 
-import '../src/sass/main.scss'
-import '../src/sass/main-public.scss'
-import '../src/sass/index.scss'
+import './main.scss'
 
 class Authentication extends React.Component {
   getInitialProps = async () => ({
@@ -68,7 +66,7 @@ class Authentication extends React.Component {
       <section>
         <HeaderMenu />
         <Head title="Get Started | Lidbot" />
-        <div className="main">
+        <div className="main main--sign-in">
           <div>
             <div>
               <img
@@ -139,9 +137,82 @@ class Authentication extends React.Component {
             </If>
           </div>
         </div>
+        <style jsx>
+          {`
+          html,
+            body {
+              height: 100%;
+            }
+            @keyframes Enter {
+              from {
+                -webkit-transform: translateY(28px);
+              }
+              to {
+                -webkit-transform: none;
+              }
+            }
+            section {
+              height: 100vh;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: white;
+              padding-top: 70px;
+            }
+            .main {
+              display: flex;
+              background: #ffffff;
+              box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
+              animation: Enter 0.5s forwards;
+              padding: 50px;
+            
+              &--small {
+                width: 600px;
+              }
+              &--sign-in {
+                width: 840px;
+                padding: 50px 50px 0 13px;
+            
+                > div {
+                  &:nth-child(1) {
+                    display: flex;
+                    justify-content: space-between;
+                    flex-direction: column;
+                  }
+            
+                  &:nth-child(2) {
+                    display: flex;
+                    justify-content: space-between;
+                    flex-direction: column;
+                    padding-bottom: 50px;
+                  }
+                }
+                .logo {
+                  margin-left: 37px;
+                }
+              }
+            }
+            @media (max-width: 992px) {
+              .main {
+                flex-direction: column;
+                max-width: 500px;
+                padding: 30px 20px;
+            
+                &--sign-in {
+                  .logo {
+                    margin: 0 0 35px 0;
+                  }
+                  .waste {
+                    display: none;
+                  }
+                }
+              }
+            }
+          `}
+        </style>
       </section>
     );
   }
 }
 
-export default withTranslation('public')(Authentication)
+export default withTranslation('get-started')(Authentication)

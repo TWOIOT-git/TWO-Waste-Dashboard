@@ -9,8 +9,6 @@ import {determineTimezone, determineLanguage} from '../utils/locale'
 import Amplify, { Auth, Storage, Logger } from 'aws-amplify'
 
 import 'react-toastify/dist/ReactToastify.min.css';
-import '../src/sass/main.scss'
-import '../src/sass/main-private.scss'
 
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 const logger = new Logger('auth');
@@ -230,6 +228,7 @@ async function verifyCurrentUserAttribute(attr) {
     console.log(data);
 
     return {
+      errorAuthCode: null,
       successAuthCode: 'CodeResentSuccessfully'
     }
   } catch (e) {

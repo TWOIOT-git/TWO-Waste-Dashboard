@@ -1,12 +1,11 @@
 import React from "react";
 import Head from "../components/Head";
-import HeaderMenu from "../components/HeaderMenu/HeaderMenu";
+import HeaderMenu from "../components/HeaderMenu";
 import { completeNewPassword, signIn } from '../utils/auth'
 import { i18n, withTranslation } from '../i18n'
 import Link from "next/link"
 
-import '../src/sass/main.scss'
-import '../src/sass/main-public.scss'
+import './main.scss'
 
 class Verify extends React.Component {
   static async getInitialProps ({ query: { email, password, language } }) {
@@ -86,6 +85,25 @@ class Verify extends React.Component {
             </If>
           </div>
         </div>
+        <style jsx>
+          {`
+            section {
+              height: 100vh;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: white;
+              padding-top: 70px;
+            }
+            .main {
+              display: flex;
+              box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
+              animation: Enter 0.5s forwards;
+              padding: 50px;
+              width: 600px;
+            }
+          `}
+        </style>
       </section>
     );
   }
