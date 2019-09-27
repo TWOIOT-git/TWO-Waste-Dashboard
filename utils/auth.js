@@ -280,7 +280,7 @@ async function forgotPasswordSubmit(username, code, newPassword) {
 
 async function getUserImage(key) {
   if(!key) {
-    throw 'key param not found'
+    return null
   }
 
   let result = await Storage.get(key, {
@@ -348,8 +348,6 @@ function withAuthSync(WrappedComponent) {
       this.state = {
         user: null,
         authState: 'loading',
-        authData: null,
-        authError: null
       }
     }
 

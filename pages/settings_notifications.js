@@ -3,12 +3,51 @@ import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import SwitchItem from "../components/SwitchItem";
 import SettingLayout from "../components/SettingLayout";
-import { withAuthSync, reloadUserContext, ClientContext } from '../utils/auth'
-import { Auth, ServiceWorker } from 'aws-amplify';
+import { updateUserAttributes, withAuthSync, reloadUserContext, ClientContext } from '../utils/auth'
+import { Logger, Auth, ServiceWorker } from 'aws-amplify';
 import { withTranslation } from '../i18n'
+import { toast } from 'react-toastify'
 const serviceWorker = new ServiceWorker();
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Slider from '@material-ui/core/Slider';
+import fetch from "isomorphic-fetch";
 
 import './main.scss'
+
+const logger = new Logger('SettingsNotifications');
+
+const PrettoSlider = withStyles({
+  root: {
+    color: '#00bf8d',
+  },
+  thumb: {
+  },
+  vertical: {
+    width: '20px'
+  },
+  rail: {
+    width: '10px'
+  }
+})(Slider);
+
+const marks = [
+  {
+    value: 0,
+    label: '0%',
+  },
+  {
+    value: 60,
+    label: '60%',
+  },
+  {
+    value: 80,
+    label: '80%',
+  },
+  {
+    value: 100,
+    label: '100%',
+  },
+];
 
 function urlB64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -28,9 +67,11 @@ function urlB64ToUint8Array(base64String) {
 class SettingsNotifications extends React.Component {
   static contextType = ClientContext;
 
-  getInitialProps = async () => ({
-    namespacesRequired: ['settings'],
-  })
+  static async getInitialProps({req}) {
+    return {
+      namespacesRequired: ['settings'],
+    }
+  }
 
   constructor(props) {
     super(props);
@@ -51,16 +92,25 @@ class SettingsNotifications extends React.Component {
       pushNotifications: pushNotifications,
       emailNotifications: false,
       mobileNotifications: false,
+      maxThreshold: 0,
+      customer: null
     };
 
     this.swRegistration = null;
     this.registerServiceWorker();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     let pushNotifications = this.context.user.attributes['custom:push_notifications']
     let emailNotifications = this.context.user.attributes['custom:email_notifications']
     let mobileNotifications = this.context.user.attributes['custom:regular_events']
+
+    const user = await Auth.currentAuthenticatedUser()
+    const url = process.env.DEVICE_API + "customers/" + user.attributes['custom:client_id']
+    const response = await fetch(url);
+    const json = await response.json();
+
+    const customer = json.results[0]
 
     this.setState(prevState => ({
       pushNotifications: {
@@ -69,6 +119,8 @@ class SettingsNotifications extends React.Component {
       },
       emailNotifications: (emailNotifications !== undefined) ? emailNotifications : false,
       mobileNotifications: (mobileNotifications !== undefined) ? mobileNotifications : false,
+      maxThreshold: customer.max_threshold,
+      customer: customer
     }))
   }
 
@@ -101,7 +153,7 @@ class SettingsNotifications extends React.Component {
     this.swRegistration.showNotification(title, options);
   }
 
-  subsribe() {
+  subscribe() {
     const applicationServerPublicKey = process.env.PUSH_NOTIFICATIONS_PUBLIC_KEY;
     console.log(`applicationServerPublicKey ${applicationServerPublicKey}`)
     const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
@@ -163,62 +215,127 @@ class SettingsNotifications extends React.Component {
       })
   }
 
-  handleClick(newState) {
+  async handleClick(newState) {
     if(newState.pushNotifications) {
 
       if(newState.pushNotifications.active === true) {
-        this.subsribe();
+        this.subscribe();
       } else {
         this.unsubscribeUser();
       }
 
     } else {
+      let attributes = {
+        'custom:email_notifications': (newState.emailNotifications !== undefined) ? newState.emailNotifications.toString() : this.state.emailNotifications.toString(),
+        'custom:mobile_notifications': (newState.mobileNotifications !== undefined) ? newState.mobileNotifications.toString() : this.state.mobileNotifications.toString(),
+      }
+
+      const state = await updateUserAttributes(attributes)
+
       this.setState(prevState => ({
         emailNotifications: (newState.emailNotifications !== undefined) ? newState.emailNotifications : this.state.emailNotifications,
         mobileNotifications: (newState.mobileNotifications !== undefined) ? newState.mobileNotifications : this.state.mobileNotifications,
       }))
 
-      Auth.updateUserAttributes(this.context.user, {
-        'custom:email_notifications': (newState.emailNotifications !== undefined) ? newState.emailNotifications.toString() : this.state.emailNotifications.toString(),
-        'custom:mobile_notifications': (newState.mobileNotifications !== undefined) ? newState.mobileNotifications.toString() : this.state.mobileNotifications.toString(),
+      toast(this.props.t('settings-saved'), {
+        className: 'notification success'
       })
-        .then(function (result) {
-          console.log(result)
-          reloadUserContext();
-        })
-        .catch(function (err) {
-          console.log(err)
-        });
     }
   }
 
-  render() {
-    const { pushNotifications, emailNotifications } = this.state;
+  handleThresholdChange = (event, newValue) => {
+    this.setState({
+      maxThreshold: newValue
+    })
+  }
+  onChangeCommitted = async (event, newValue) => {
+    logger.debug(event)
 
+    this.setState({
+      maxThreshold: newValue
+    })
+
+
+    const user = await Auth.currentAuthenticatedUser()
+    const url = process.env.DEVICE_API + "customers/" + user.attributes['custom:client_id']
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Access-Control-Request-Method': 'POST',
+        'Origin': 'http://localhost:3000',
+        'Content-Type': 'application/json'
+      },
+      body: {
+        customer_id: user.attributes['custom:client_id'],
+        min_threshold: this.state.customer.min_threshold,
+        max_threshold: newValue
+      }
+    })
+
+    const json = await response.json();
+    console.log(json.results[0].max_threshold)
+
+    toast(this.props.t('settings-saved'), {
+      className: 'notification success'
+    })
+  }
+
+  render() {
     return (
       <LayoutMenuNavegation>
         <Head title={'Lidbot - ' + this.props.t('notifications')}/>
         <SettingLayout>
-          <SwitchItem
-            title={this.props.t('push-notifications')}
-            description={pushNotifications.description}
-            active={pushNotifications.active}
-            disabled={pushNotifications.disabled}
-            onClick={(active) => this.handleClick({pushNotifications: {active}})}
-          />
-          <SwitchItem
-            title={this.props.t('email-notifications')}
-            description={this.props.t('email-notifications-sub')}
-            active={emailNotifications}
-            onClick={(active) => this.handleClick({emailNotifications: active})}
-          />
-          <SwitchItem
+          <div className="main">
+            <div className="switches">
+            <SwitchItem
+              title={this.props.t('push-notifications')}
+              description={this.state.pushNotifications.description}
+              active={this.state.pushNotifications.active}
+              disabled={this.state.pushNotifications.disabled}
+              onClick={(active) => this.handleClick({pushNotifications: {active}})}
+            />
+            <SwitchItem
+              title={this.props.t('email-notifications')}
+              description={this.props.t('email-notifications-sub')}
+              active={this.state.emailNotifications}
+              onClick={(active) => this.handleClick({emailNotifications: active})}
+            />
+            <SwitchItem
             title={this.props.t('mobile-notifications')}
             description={this.props.t('mobile-notifications-sub')}
             active={this.state.mobileNotifications}
             onClick={(active) => this.handleClick({ mobileNotifications: active })}
           />
+            </div>
+            <div className="slider">
+              <PrettoSlider
+                disabled={!(this.state.emailNotifications || this.state.mobileNotifications || this.state.pushNotifications.active)}
+                orientation="vertical"
+                valueLabelDisplay="on"
+                aria-label="pretto slider"
+                value={this.state.maxThreshold}
+                onChange={this.handleThresholdChange}
+                onChangeCommitted={this.onChangeCommitted}
+                marks={marks}
+              />
+            </div>
+          </div>
         </SettingLayout>
+        <style jsx>
+          {`
+            .main {
+              display: flex;
+            }
+            .switches {
+              flex: 0 1 50%;
+            }
+            .slider {
+              flex: 0 1 50%;
+              height: 300px;
+              padding-left: 50px;
+            }
+          `}
+        </style>
       </LayoutMenuNavegation>
     )
   };

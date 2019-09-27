@@ -53,5 +53,6 @@
   "NoOldPassword": "請輸入您的當前密碼",
   "NoNewPassword": "請輸入新密碼",
   "password-updated": "您的密碼已被更改。",
-  "NotAuthorizedException": "您當前的密碼不正確"
+  "NotAuthorizedException": "您當前的密碼不正確",
+  "threshold-range": "Threshold range"
 }

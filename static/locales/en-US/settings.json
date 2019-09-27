@@ -53,5 +53,6 @@
   "NoOldPassword": "Please enter your current password",
   "NoNewPassword": "Please enter your new password",
   "password-updated": "Your password has been changed.",
-  "NotAuthorizedException": "Your current password is incorrect"
+  "NotAuthorizedException": "Your current password is incorrect",
+  "threshold-range": "Threshold range"
 }

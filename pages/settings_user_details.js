@@ -176,7 +176,7 @@ class SettingsUserDetails extends Component {
 
     toast(this.props.t('settings-saved'), {
       className: 'notification success'
-    });
+    })
   }
   async handleUpdatePassword(e) {
     e.preventDefault();
