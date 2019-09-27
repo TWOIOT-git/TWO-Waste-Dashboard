@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 const serviceWorker = new ServiceWorker();
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
-import fetch from "isomorphic-fetch";
+import fetch from "isomorphic-unfetch";
 
 import './main.scss'
 
@@ -257,27 +257,29 @@ class SettingsNotifications extends React.Component {
 
 
     const user = await Auth.currentAuthenticatedUser()
-    const url = process.env.DEVICE_API + "customers/" + user.attributes['custom:client_id']
-    const response = await fetch(url, {
+    const response = await fetch(`${process.env.DEVICE_API}customers`, {
       method: 'POST',
       headers: {
         'Access-Control-Request-Method': 'POST',
         'Origin': 'http://localhost:3000',
-        'Content-Type': 'application/json'
+        'Content-Type': 'text/plain'
       },
-      body: {
+      body: JSON.stringify({
         customer_id: user.attributes['custom:client_id'],
         min_threshold: this.state.customer.min_threshold,
         max_threshold: newValue
-      }
+      })
     })
 
-    const json = await response.json();
-    console.log(json.results[0].max_threshold)
-
-    toast(this.props.t('settings-saved'), {
-      className: 'notification success'
-    })
+    if (response.ok) {
+      toast(this.props.t('settings-saved'), {
+        className: 'notification success'
+      })
+    } else {
+      toast(this.props.t('settings-saved-error'), {
+        className: 'notification error'
+      })
+    }
   }
 
   render() {

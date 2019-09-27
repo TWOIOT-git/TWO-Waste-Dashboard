@@ -40,6 +40,7 @@
   "resend-verification-code": "重新發送驗證碼",
   "verification-code": "輸入驗證碼",
   "settings-saved": "設置已保存",
+  "settings-saved-error": "發生錯誤",
   "verification-code-sent": "驗證碼已發送",
   "phone-verified": "您的新電話號碼已通過驗證",
   "email-verified": "您的新電子郵件地址已通過驗證",

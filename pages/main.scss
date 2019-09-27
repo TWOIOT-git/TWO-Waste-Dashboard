@@ -2,19 +2,19 @@ $theme-color: #00b284;
 $theme-color--hover: #0af1b5;
 
 .notification {
+  width: 100%;
   border-radius: 3px;
   position: fixed;
   font-size: 16px;
   font-weight: 400;
 
   &.error {
-    border: 1px solid #d64242;
-    color: #d64242;
+    color: #fff;
+    background: #d64242;
   }
   &.success {
-    background: $theme-color;
-    width: 100%;
     color: #fff;
+    background: $theme-color;
   }
 }
 .progress {
