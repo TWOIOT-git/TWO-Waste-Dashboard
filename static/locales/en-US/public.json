@@ -13,5 +13,5 @@
   "UserLambdaValidationException": "An error occurred",
   "NoEmail": "Please enter your email",
   "NoPassword": "Please enter your password",
-  "error": "An error occurred",
+  "error": "An error occurred"
 }

@@ -55,5 +55,9 @@
   "NoNewPassword": "請輸入新密碼",
   "password-updated": "您的密碼已被更改。",
   "NotAuthorizedException": "您當前的密碼不正確",
-  "threshold-range": "Threshold range"
+  "threshold-range": "Threshold range",
+
+  "team": {
+    "title": "My team"
+  }
 }

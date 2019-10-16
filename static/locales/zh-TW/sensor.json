@@ -1,9 +1,15 @@
 {
-"status": "狀態",
-"location": "位置",
-"fill-level": "填裝程度",
-"hour": "小時",
-"day": "天",
-"days": "天",
-"week": "星期"
+  "status": "狀態",
+  "location": "位置",
+  "fill-level": "填裝程度",
+  "hour": "小時",
+  "day": "天",
+  "days": "天",
+  "week": "星期",
+  "register-sensor": "Link an existing sensor to your account",
+  "no-sensors": "You currently have no sensors linked to your account",
+  "no-sensors-sub-1": "Please ",
+  "no-sensors-sub-link": "contact us",
+  "no-sensors-sub-2": " to make an order if you already have a sensor you can register it here:",
+  "no-events": "You currently have no events"
 }

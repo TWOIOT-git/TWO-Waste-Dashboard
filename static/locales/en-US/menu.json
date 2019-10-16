@@ -3,11 +3,9 @@
   "main-navigation": "Main Navigation",
   "admin": "Admin",
   "dashboard": "Dashboard",
-  "map-data": "Map Data",
   "sensors": "Sensors",
   "alerts": "Notifications",
   "locations": "Locations",
   "settings": "Settings",
-  "ota-updates": "OTA Updates",
   "log-out": "Log Out"
 }
