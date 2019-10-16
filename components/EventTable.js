@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 import { withTranslation } from '../i18n'
 import Link from "next/link";
 import moment from "moment";
+import Dropdown from 'react-bootstrap/Dropdown';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const EventTable = ({ items }) => {
+const EventTable = ({ items, onDelete }) => {
   return (
     <div className="EventTable">
       <div className="EventTableHeader">
@@ -12,23 +14,38 @@ const EventTable = ({ items }) => {
         <div>Type</div>
         <div>Message</div>
         <div>Happened</div>
+        <div>Actions</div>
       </div>
       {items.map(
         ({
            sensor_id,
+           event_id,
            type,
            message,
            report_created_on,
            t
         }) => (
-          <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
           <div key={`${sensor_id}-${report_created_on}-${type}`} className="EventTableItem">
             <div className="name">{sensor_id}</div>
             <div className="detail">{type}</div>
             <div className="detail">{message}</div>
             <div className="detail">{moment.unix(report_created_on).fromNow()}</div>
+            <div className="action">
+              <Dropdown>
+                <Dropdown.Toggle variant="" id="dropdown-basic">
+                  <svg height="20" width="30">
+                    <circle cx="4" cy="10" r="3" fill="rgb(0,191,141)" />
+                    <circle cx="14" cy="10" r="3" fill="rgb(0,191,141)" />
+                    <circle cx="24" cy="10" r="3" fill="rgb(0,191,141)" />
+                  </svg>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={(e) => onDelete(e, event_id)}>Delete</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           </div>
-          </Link>
         )
       )}
 
@@ -147,6 +164,9 @@ const EventTable = ({ items }) => {
               color: #333333;
             }
 
+            .action {
+              cursor: pointer;
+            }
             .detail {
               font-family: Roboto;
               font-style: normal;

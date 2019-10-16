@@ -28,15 +28,31 @@ class Sensors extends React.Component {
     };
   }
 
-  async componentDidMount() {
-      let data = await this.getSensors();
-      this.setState({
-        data: data,
-        loading: false
-      });
+  async deleteEvent(e, event_id) {
+    e.preventDefault()
+
+    let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/events/" + event_id
+    console.log('deleting user: ', url)
+    const response = await fetch(url, {
+      method: 'DELETE'
+    })
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+
+    const json = await response.json();
+
+    this.getEvents()
+
+    console.log(json)
   }
 
-  async getSensors() {
+
+  async componentDidMount() {
+      let data = await this.getEvents();
+  }
+
+  async getEvents() {
       try {
         let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/events";
         console.log('Fetching: ', url)
@@ -58,7 +74,11 @@ class Sensors extends React.Component {
         }) : [],
       })
         }
-        return data
+
+        this.setState({
+          data: data,
+          loading: false
+        })
 
       } catch (error) {
         console.log(error);
@@ -81,7 +101,7 @@ class Sensors extends React.Component {
             <If condition={this.state.loading === false}>
               <If condition={data.length === 0}>
                 <div className="no-sensor-container">
-                  <h1>{this.props.t('no-sensors')}</h1>
+                  <h1>{this.props.t('no-events')}</h1>
                 </div>
               </If>
               <If condition={layoutMode === "cards"}>
@@ -92,7 +112,10 @@ class Sensors extends React.Component {
                 ))}
               </If>
               <If condition={layoutMode === "table"}>
-                <EventTable items={data}/>
+                <EventTable
+                  items={data}
+                  onDelete={(e, event_id) => this.deleteEvent(e, event_id)}
+                />
               </If>
             </If>
             <If condition={this.state.loading === true}>

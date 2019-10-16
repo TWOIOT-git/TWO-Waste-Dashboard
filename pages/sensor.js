@@ -25,10 +25,17 @@ class Sensor extends Component {
       active: '24',
       loading: true,
     }
+
+    this.getSensor = this.getSensor.bind(this);
+    this.interval = null
   }
 
   componentDidMount() {
-    this.getSensor();
+    this.getSensor()
+    this.interval = setInterval(this.getSensor, 3000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   handleClick(time) {
@@ -42,6 +49,7 @@ class Sensor extends Component {
   }
 
   async getSensor() {
+    console.log('Cant stop me now!');
     try {
       let url = `${process.env.DEVICE_API}/sensors/${this.state.sensor_id}`
       const sensor_response = await fetch(url);
