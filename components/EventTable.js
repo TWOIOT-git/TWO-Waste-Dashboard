@@ -4,39 +4,29 @@ import { withTranslation } from '../i18n'
 import Link from "next/link";
 import moment from "moment";
 
-const SensorTable = ({ items }) => {
+const EventTable = ({ items }) => {
   return (
-    <div className="SensorTable">
-      <div className="SensorTableHeader">
-        <div>Status</div>
+    <div className="EventTable">
+      <div className="EventTableHeader">
         <div>Id</div>
         <div>Type</div>
-        <div>Location</div>
-        <div>Updated</div>
+        <div>Message</div>
+        <div>Happened</div>
       </div>
       {items.map(
         ({
            sensor_id,
-           fill_percentage,
-           bin_type,
-           bin_location,
-           updated_on,
+           type,
+           message,
+           report_created_on,
            t
         }) => (
           <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
-          <div key={sensor_id} className="SensorTableItem">
-            <div className="status">
-              <span
-                className={`circle ${status === "no-full" ? "green" : "red"}`}
-              />
-              <span style={{ color: fill_percentage > 50 ? "#da6464" : "#00bf8d" }}>
-                {fill_percentage}%
-              </span>
-            </div>
+          <div key={`${sensor_id}-${report_created_on}-${type}`} className="EventTableItem">
             <div className="name">{sensor_id}</div>
-            <div className="detail">{bin_type}</div>
-            <div className="detail">{bin_location}</div>
-            <div className="detail">{moment.unix(updated_on).fromNow()}</div>
+            <div className="detail">{type}</div>
+            <div className="detail">{message}</div>
+            <div className="detail">{moment.unix(report_created_on).fromNow()}</div>
           </div>
           </Link>
         )
@@ -64,11 +54,11 @@ const SensorTable = ({ items }) => {
             }
           }
 
-          .SensorTable {
+          .EventTable {
             flex: 1;
           }
 
-          .SensorTableHeader {
+          .EventTableHeader {
             width: 100%;
             padding: 16px;
             margin-bottom: 6px;
@@ -96,7 +86,7 @@ const SensorTable = ({ items }) => {
             }
           }
 
-          .SensorTableItem {
+          .EventTableItem {
             cursor: pointer;
             width: 100%;
             background: #ffffff;
@@ -185,15 +175,13 @@ const SensorTable = ({ items }) => {
   );
 };
 
-SensorTable.propTypes = {
+EventTable.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
       sensor_id: PropTypes.string.isRequired,
-      fill_percentage: PropTypes.number.isRequired,
-      updated_on: PropTypes.number.isRequired,
     }).isRequired
   ).isRequired,
   t: PropTypes.func.isRequired
 };
 
-export default withTranslation('sensor')(SensorTable)
+export default withTranslation('sensor')(EventTable)

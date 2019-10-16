@@ -1,92 +1,38 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend
-} from "recharts";
+import Link from "next/link";
+import moment from "moment";
 import { withTranslation } from '../i18n'
-import moment from "moment"
 
-const SensorItemCardExpanded = ({
-                                  sensor_id,
-                                  fill_percentage,
-                                  reports,
-                                  bin_type,
-                                  bin_location,
-                                  updated_on,
-                                  min_distance,
-                                  max_distance,
-                                  latitude,
-                                  longitude,
-                                  firmware_version,
-                                  battery,
-                                  t,
-                                  active,
-                                  onClick
+import {
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
+} from "recharts";
+
+const EventItemCard = ({
+                          sensor_id,
+                          type,
+                          message,
+                          report_created_on,
+                          t
 }) => {
   return (
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span className={`status ${fill_percentage < 50 ? "green" : "red"}`} />
           <h2>
-            <a>{sensor_id}</a>
+            <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
+              <a>{sensor_id}</a>
+            </Link>
           </h2>
-          <p>{bin_type}</p>
-          <p>{firmware_version}</p>
+          <p>{message}</p>
         </div>
       </div>
       <div className="SensorItemCardContent">
         <div>
           <div>
-            <p>{t('status')}:</p>
-            <h3>{Math.round(fill_percentage)}%</h3>
-            <h5>{moment.unix(updated_on).fromNow()}</h5>
-          </div>
-          <div>
-            <p>{t('location')}:</p>
-            <h4>{bin_location}</h4>
-            <p>{t('battery')}:</p>
-            <h4 className={`status ${battery > 20 ? "green" : "red"}`}>{battery}%</h4>
-            <h5>{longitude}</h5>
-            <h5>{latitude}</h5>
+            <h5>{moment.unix(report_created_on).fromNow()}</h5>
           </div>
         </div>
-      </div>
-      <div className="SensorItemCardFooter">
-        <div className="chart-header">
-          <h3>{t('fill-level')}</h3>
-          <div className="time-buttons">
-            <div onClick={() => onClick('6')} className={active === '6' ? 'active' : ''}>6 {t('hour')}</div>
-            <div onClick={() => onClick('12')} className={active === '12' ? 'active' : ''}>12 {t('hour')}</div>
-            <div onClick={() => onClick('24')} className={active === '24' ? 'active' : ''}>1 {t('day')}</div>
-            <div onClick={() => onClick('72')} className={active === '72' ? 'active' : ''}>3 {t('days')}</div>
-            <div onClick={() => onClick('168')} className={active === '168' ? 'active' : ''}>1 {t('week')}</div>
-          </div>
-        </div>
-        <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={reports}
-                   margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-          <XAxis
-            dataKey="t"
-            padding={{ left: 20, right: 20 }}
-          />
-          <YAxis/>
-          <CartesianGrid tickCount="3" vertical={false}/>
-          <Tooltip
-
-          />
-          <Line
-            type="monotone"
-            name="Fill"
-            unit="%"
-            dataKey="v"
-            animationDuration={500}
-            stroke="#00bf8d"
-            dot={false}
-            activeDot={{r: 5}}
-          />
-        </LineChart>
-        </ResponsiveContainer>
       </div>
       <style jsx>
         {`
@@ -116,43 +62,47 @@ const SensorItemCardExpanded = ({
             margin-bottom: 22px;
 
             .SensorItemCardFooter {
-              padding: 40px 30px;
-              
-              > .chart-header {
-                display: flex;
-                margin-bottom: 30px;
-                justify-content: space-between;
-                
-                h3 {
+              padding: 14px 30px;
+              display: flex;
+              justify-content: space-between;
+
+              .BarChart {
+                  width: 100%;
+                  height: 50%;
+                  margin: auto;
+                  display: block;
+                }
+
+              > div {
+                p {
                   margin: 0;
                 }
-                
-                .time-buttons {
-                  font-size: 13px;
-                  color: #003B2C;
-                  > div {
-                    display: inline-block;
-                    margin-left: 15px;
-                    
-                    &:hover {
-                      color: #00BF8D;
-                      text-decoration: underline;
-                      cursor: pointer;
-                    }
+
+                &:nth-child(1) {
+                  p {
+                    font-family: Roboto;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 12px;
+                    line-height: normal;
+
+                    color: #a0a0a0;
                   }
-                  .active {
-                    color: #00BF8D;
-                    text-decoration: underline;
+                }
+
+                &:nth-child(2) {
+                  p {
+                    font-family: Roboto;
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 12px;
+                    line-height: normal;
+                    text-align: right;
+
+                    color: #a0a0a0;
                   }
                 }
               }
-
-              .LineChart {
-                  width: 100%;
-                  height: 100%;
-                  margin: auto;
-                  display: block;
-               }
             }
 
             .SensorItemCardContent {
@@ -189,10 +139,10 @@ const SensorItemCardExpanded = ({
                     font-family: Roboto;
                     font-style: normal;
                     font-weight: bold;
-                    font-size: 52px;
+                    font-size: 42px;
                     line-height: normal;
 
-                    color: ${fill_percentage > 50 ? "#da6464" : "#00bf8d"};
+                    color: #00bf8d;
                   }
 
                   h4,
@@ -210,14 +160,6 @@ const SensorItemCardExpanded = ({
                     text-transform: uppercase;
 
                     color: #333333;
-                    
-                    &.green {
-                    color: #00bf8d;
-                  }
-
-                  &.red {
-                  color: #da6464;
-                  }
                   }
 
                   h5 {
@@ -251,14 +193,21 @@ const SensorItemCardExpanded = ({
                 padding: 20px 30px;
 
                 h2 {
-                  margin: 0 0 10px 0;
-                  color: #333333;
+                  margin: 0;
+
+                  a {
+                    color: #333333;
                     font-family: Roboto;
                     font-style: normal;
                     font-weight: bold;
-                    font-size: 26px;
+                    font-size: 20px;
                     line-height: normal;
                     text-decoration: none;
+
+                    &:hover {
+                      color: #00bf8d;
+                    }
+                  }
                 }
 
                 p {
@@ -297,12 +246,9 @@ const SensorItemCardExpanded = ({
   );
 };
 
-SensorItemCardExpanded.propTypes = {
+EventItemCard.propTypes = {
   sensor_id: PropTypes.string.isRequired,
-  reports: PropTypes.array.isRequired,
-  fill_percentage: PropTypes.number.isRequired,
-  updated_on: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
 };
 
-export default withTranslation('sensor')(SensorItemCardExpanded)
+export default withTranslation('sensor')(EventItemCard)

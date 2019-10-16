@@ -108,9 +108,7 @@ class SettingsNotifications extends React.Component {
     const user = await Auth.currentAuthenticatedUser()
     const url = process.env.DEVICE_API + "customers/" + user.attributes['custom:client_id']
     const response = await fetch(url);
-    const json = await response.json();
-
-    const customer = json.results[0]
+    const customer = await response.json();
 
     this.setState(prevState => ({
       pushNotifications: {
@@ -257,15 +255,9 @@ class SettingsNotifications extends React.Component {
 
 
     const user = await Auth.currentAuthenticatedUser()
-    const response = await fetch(`${process.env.DEVICE_API}customers`, {
+    const response = await fetch(`${process.env.DEVICE_API}customers/${user.attributes['custom:client_id']}`, {
       method: 'POST',
-      headers: {
-        'Access-Control-Request-Method': 'POST',
-        'Origin': 'http://localhost:3000',
-        'Content-Type': 'text/plain'
-      },
       body: JSON.stringify({
-        customer_id: user.attributes['custom:client_id'],
         min_threshold: this.state.customer.min_threshold,
         max_threshold: newValue
       })

@@ -20,11 +20,10 @@ class Sensor extends Component {
 
     this.state = {
       sensor_id: this.props.sensor_id,
-      to: now.valueOf(),
-      from: now.subtract(24, 'hours').valueOf(),
+      to: now.unix(),
+      from: now.subtract(24, 'hours').unix(),
       active: '24',
-      data: [
-      ]
+      loading: true,
     }
   }
 
@@ -36,15 +35,15 @@ class Sensor extends Component {
     let now = moment();
     this.setState({
       active: time,
-      to: now.valueOf(),
-      from: now.subtract(time, 'hours').valueOf(),
+      to: now.unix(),
+      from: now.subtract(time, 'hours').unix(),
     })
     this.getSensor();
   }
 
   async getSensor() {
     try {
-      let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors/" + this.state.sensor_id;
+      let url = `${process.env.DEVICE_API}/sensors/${this.state.sensor_id}`
       const sensor_response = await fetch(url);
       if (!sensor_response.ok) {
         throw Error(sensor_response.statusText);
@@ -57,23 +56,21 @@ class Sensor extends Component {
         throw Error(reports_response.statusText);
       }
 
+      const sensor = await sensor_response.json();
+      const reports = await reports_response.json();
 
-      const json = await sensor_response.json();
-      const reports_json = await reports_response.json();
-
-      let data = [];
-      for (let sensor of json.results) {
-        data.push({
+      console.log(reports)
+      this.setState({
           ...sensor,
-          reports: (reports_json.results) ? (reports_json.results).map(obj => {
+        loading: false,
+        reports: (reports.results) ? (reports.results).map(obj => {
             return {
               v: Math.round(obj.fill_percentage),
               t: moment(obj.created_on).format('HH:mm')
             }
           }) : [],
-        })
-      }
-      this.setState({ data });
+        }
+      )
 
     } catch (error) {
       console.log(error);
@@ -82,17 +79,18 @@ class Sensor extends Component {
 
 
   render() {
-    const { data, sensor_id, active } = this.state;
-
     return (
       <LayoutMenuNavegation>
-        <Head title={`lidbot - ${sensor_id}`} />
+        <Head title={`lidbot - ${this.state.sensor_id}`} />
         <div className="Container">
-          {data.map(item => (
-            <div key={item.sensor_id} className="ItemCol">
-              <SensorItemCardExpanded {...item} onClick={(time) => this.handleClick(time)} active={active}/>
+          <If condition={this.state.loading === false}>
+            <div key={this.state.sensor_id} className="ItemCol">
+              <SensorItemCardExpanded {...this.state} onClick={(time) => this.handleClick(time)} active={this.state.active}/>
             </div>
-          ))}
+          </If>
+          <If condition={this.state.loading === true}>
+            <h1>Loading...</h1>
+          </If>
           <style jsx>{`
             .Container {
               padding: 25px;

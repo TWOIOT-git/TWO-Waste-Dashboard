@@ -55,5 +55,9 @@
   "NoNewPassword": "Please enter your new password",
   "password-updated": "Your password has been changed.",
   "NotAuthorizedException": "Your current password is incorrect",
-  "threshold-range": "Threshold range"
+  "threshold-range": "Threshold range",
+
+  "team": {
+    "title": "My team"
+  }
 }

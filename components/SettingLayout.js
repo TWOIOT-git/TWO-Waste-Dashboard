@@ -44,6 +44,17 @@ const SettingLayout = ({ children, router: { pathname }, t }) => {
             </a>
           </Link>
         </div>
+        <div>
+          <Link href="my-team">
+            <a
+              className={`${
+                pathname === "/my-team" ? "--active" : ""
+              }`}
+            >
+              {t('team.title')}
+            </a>
+          </Link>
+        </div>
       </div>
       {children}
       <style jsx>
@@ -70,11 +81,11 @@ const SettingLayout = ({ children, router: { pathname }, t }) => {
             .sub-menu {
               margin-top: 43px;
               margin-bottom: 83px;
-              max-width: 400px;
-              width: 100%;
-              display: flex;
-              -webkit-box-pack: justify;
-              justify-content: space-between;
+              
+              div {
+                margin-right: 25px;
+                display: inline-block
+              }
             
               a {
                 text-decoration: none;

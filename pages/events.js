@@ -3,8 +3,8 @@ import moment from "moment";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import TopTools from "../components/TopTools";
-import SensorItemCard from "../components/SensorItemCard";
-import SensorTable from "../components/SensorTable";
+import EventItemCard from "../components/EventItemCard";
+import EventTable from "../components/EventTable";
 import fetch from "isomorphic-unfetch";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import breakpoints from "../utils/breakpoints";
@@ -21,7 +21,7 @@ class Sensors extends React.Component {
     super(props);
 
     this.state = {
-      layoutMode: "cards",
+      layoutMode: "table",
       loading: true,
       data: [
       ]
@@ -38,11 +38,13 @@ class Sensors extends React.Component {
 
   async getSensors() {
       try {
-        let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors";
+        let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/events";
+        console.log('Fetching: ', url)
         const response = await fetch(url);
         if (!response.ok) {
           throw Error(response.statusText);
         }
+
         const json = await response.json();
     let data = [];
         for (let sensor of json.results) {
@@ -80,23 +82,17 @@ class Sensors extends React.Component {
               <If condition={data.length === 0}>
                 <div className="no-sensor-container">
                   <h1>{this.props.t('no-sensors')}</h1>
-                  <p>
-                    {this.props.t('no-sensors-sub-1')}
-                    <a href="https://lidbot.com/contact" target="_blank">{this.props.t('no-sensors-sub-link')}</a>
-                    {this.props.t('no-sensors-sub-2')}
-                  </p>
-                  <div className="register-sensor">{this.props.t('register-sensor')}</div>
                 </div>
               </If>
               <If condition={layoutMode === "cards"}>
                 {data.map(item => (
-                  <div key={item.sensor_id} className="ItemCol">
-                    <SensorItemCard {...item} />
+                  <div key={`${item.sensor_id}-${item.report_created_on}-${item.type}`} className="ItemCol">
+                    <EventItemCard {...item} />
                   </div>
                 ))}
               </If>
               <If condition={layoutMode === "table"}>
-                <SensorTable items={data}/>
+                <EventTable items={data}/>
               </If>
             </If>
             <If condition={this.state.loading === true}>

@@ -207,7 +207,7 @@ const MenuNavegation = ({
           />
         </svg>
       </Item>
-      <Item pathname={pathname} text={t('alerts')} link="/alerts" numberNews={23}>
+      <Item pathname={pathname} text={t('alerts')} link="/events" numberNews={23}>
         <svg
           width="20"
           height="20"

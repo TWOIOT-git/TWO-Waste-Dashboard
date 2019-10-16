@@ -38,7 +38,7 @@ const SensorItemCard = ({
         <div>
           <div>
             <h3>{Math.round(fill_percentage)}%</h3>
-            <h5>{moment(updated_on).fromNow()}</h5>
+            <h5>{moment.unix(updated_on).fromNow()}</h5>
           </div>
           <div>
             <p>{t('location')}:</p>

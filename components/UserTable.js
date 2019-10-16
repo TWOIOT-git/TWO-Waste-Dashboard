@@ -1,44 +1,46 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withTranslation } from '../i18n'
-import Link from "next/link";
-import moment from "moment";
+import Dropdown from 'react-bootstrap/Dropdown';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const SensorTable = ({ items }) => {
+const UserTable = ({ items, onDelete }) => {
   return (
-    <div className="SensorTable">
-      <div className="SensorTableHeader">
-        <div>Status</div>
-        <div>Id</div>
-        <div>Type</div>
-        <div>Location</div>
-        <div>Updated</div>
+    <div className="UserTable">
+      <div className="UserTableHeader">
+        <div>Name</div>
+        <div>Email</div>
+        <div>Role</div>
+        <div>Actions</div>
       </div>
       {items.map(
         ({
-           sensor_id,
-           fill_percentage,
-           bin_type,
-           bin_location,
-           updated_on,
+           first_name,
+           last_name,
+           email,
+           user_role,
            t
         }) => (
-          <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
-          <div key={sensor_id} className="SensorTableItem">
-            <div className="status">
-              <span
-                className={`circle ${status === "no-full" ? "green" : "red"}`}
-              />
-              <span style={{ color: fill_percentage > 50 ? "#da6464" : "#00bf8d" }}>
-                {fill_percentage}%
-              </span>
+          <div key={email} className="UserTableItem">
+            <div className="name">{`${first_name} ${last_name}`}</div>
+            <div className="detail">{email}</div>
+            <div className="detail">{user_role}</div>
+            <div className="action">
+              <Dropdown>
+                <Dropdown.Toggle variant="" id="dropdown-basic">
+                  <svg height="20" width="30">
+                    <circle cx="4" cy="10" r="3" fill="rgb(0,191,141)" />
+                    <circle cx="14" cy="10" r="3" fill="rgb(0,191,141)" />
+                    <circle cx="24" cy="10" r="3" fill="rgb(0,191,141)" />
+                  </svg>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={(e) => onDelete(e, email)}>Delete</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
-            <div className="name">{sensor_id}</div>
-            <div className="detail">{bin_type}</div>
-            <div className="detail">{bin_location}</div>
-            <div className="detail">{moment.unix(updated_on).fromNow()}</div>
           </div>
-          </Link>
         )
       )}
 
@@ -64,11 +66,11 @@ const SensorTable = ({ items }) => {
             }
           }
 
-          .SensorTable {
+          .UserTable {
             flex: 1;
           }
 
-          .SensorTableHeader {
+          .UserTableHeader {
             width: 100%;
             padding: 16px;
             margin-bottom: 6px;
@@ -96,8 +98,7 @@ const SensorTable = ({ items }) => {
             }
           }
 
-          .SensorTableItem {
-            cursor: pointer;
+          .UserTableItem {
             width: 100%;
             background: #ffffff;
             box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
@@ -157,6 +158,9 @@ const SensorTable = ({ items }) => {
               color: #333333;
             }
 
+            .action {
+              cursor: pointer;
+            }
             .detail {
               font-family: Roboto;
               font-style: normal;
@@ -185,15 +189,15 @@ const SensorTable = ({ items }) => {
   );
 };
 
-SensorTable.propTypes = {
+UserTable.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      sensor_id: PropTypes.string.isRequired,
-      fill_percentage: PropTypes.number.isRequired,
-      updated_on: PropTypes.number.isRequired,
+      email: PropTypes.string.isRequired,
+      user_role: PropTypes.string.isRequired,
     }).isRequired
   ).isRequired,
   t: PropTypes.func.isRequired
+
 };
 
-export default withTranslation('sensor')(SensorTable)
+export default withTranslation('sensor')(UserTable)
