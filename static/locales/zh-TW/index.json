@@ -1,9 +1,9 @@
 {
-  "title": "WASTE ANALYTICS PLATFORM",
-  "subtitle": "Welcome back! Login to continue your smart waste management.",
-  "forgotten-password": "Forgot your password?",
-  "sign-in": "Sign in",
-  "enter-password": "Enter password",
+  "title": "廢棄物分析平台",
+  "subtitle": "歡迎回來！登錄以繼續您的智能廢物管理。",
+  "forgotten-password": "密碼忘記了嗎?",
+  "sign-in": "註冊",
+  "enter-password": "請輸入密碼",
   "email-placeholder": "you@example.com",
-  "password-placeholder": "Password"
+  "password-placeholder": "密碼"
 }

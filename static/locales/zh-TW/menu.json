@@ -1,11 +1,11 @@
 {
-  "greetings": "你好",
-  "main-navigation": "主要導航",
-  "admin": "管理",
+  "greetings": "您好",
+  "main-navigation": "主要導覽",
+  "admin": "管理員",
   "dashboard": "儀表板",
   "sensors": "傳感器",
-  "alerts": "警報",
-  "locations": "地點",
-  "settings": "設置",
+  "alerts": "通知事項",
+  "locations": "位置",
+  "settings": "設定",
   "log-out": "登出"
 }
