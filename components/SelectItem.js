@@ -27,7 +27,6 @@ const SelectItem = (
           .SelectItem {
             width: 100%;
             max-width: 700px;
-            margin-bottom: 40px;
             align-items: center;
             justify-content: space-between;
 
@@ -38,7 +37,7 @@ const SelectItem = (
               font-weight: 500;
               font-size: 16px;
               line-height: 19px;
-              color: #333333;
+              color: #00b284;
               padding-bottom: 8px;
 
               &.disabled {
