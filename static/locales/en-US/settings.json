@@ -58,6 +58,8 @@
   "threshold-range": "Threshold range",
 
   "team": {
-    "title": "My team"
+    "title": "My team",
+    "role": "Role",
+    "add-user": "Add user"
   }
 }
