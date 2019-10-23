@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Select from 'react-select';
-import { withTranslation } from '../i18n'
 
 const SelectItem = (
   { label,
@@ -41,7 +40,7 @@ const SelectItem = (
               line-height: 19px;
               color: #333333;
               padding-bottom: 8px;
-              
+
               &.disabled {
                 color: #aaa;
               }

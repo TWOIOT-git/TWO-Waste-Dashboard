@@ -5,7 +5,7 @@ import { completeNewPassword, signIn } from '../utils/auth'
 import { i18n, withTranslation } from '../i18n'
 import Link from "next/link"
 
-import './main.scss'
+
 
 class Verify extends React.Component {
   static async getInitialProps ({ query: { email, password, language } }) {

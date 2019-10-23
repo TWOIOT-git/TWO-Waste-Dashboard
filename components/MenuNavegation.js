@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 import { withRouter } from "next/router";
 import breakpoints from "../utils/breakpoints";
-import { signOut } from '../utils/auth'
-import { withTranslation } from '../i18n'
+import { signOut } from "../utils/auth";
+import { withTranslation } from "../i18n";
 
 const NESTED_SETTINGS_URLS = [
   "/settings_user_details",
@@ -120,20 +120,20 @@ const MenuNavegation = ({
   <div className={`MenuNavegation ${show ? "--show" : ""}`}>
     <div>
       <If condition={userImage}>
-        <img src={userImage}/>
+        <img src={userImage} />
       </If>
       <If condition={!userImage}>
         <div className="placeholder"></div>
       </If>
       <If condition={userName}>
         <h1>
-          {t('greetings')}, <strong>{userName}</strong>!
+          {t("greetings")}, <strong>{userName}</strong>!
         </h1>
       </If>
     </div>
     <div>
       {/*<h2>{t('main-navigation')}</h2>*/}
-      <Item pathname={pathname} text={t('dashboard')} link="/analytics">
+      <Item pathname={pathname} text={t("dashboard")} link="/analytics">
         <svg
           width="19"
           height="14"
@@ -161,7 +161,7 @@ const MenuNavegation = ({
       {/*    />*/}
       {/*  </svg>*/}
       {/*</Item>*/}
-      <Item pathname={pathname} text={t('sensors')} link="/sensors">
+      <Item pathname={pathname} text={t("sensors")} link="/sensors">
         <svg
           width="20"
           height="20"
@@ -207,7 +207,12 @@ const MenuNavegation = ({
           />
         </svg>
       </Item>
-      <Item pathname={pathname} text={t('alerts')} link="/events" numberNews={23}>
+      <Item
+        pathname={pathname}
+        text={t("alerts")}
+        link="/events"
+        numberNews={23}
+      >
         <svg
           width="20"
           height="20"
@@ -240,7 +245,7 @@ const MenuNavegation = ({
       {/*</Item>*/}
       <Item
         pathname={pathname}
-        text={t('settings')}
+        text={t("settings")}
         link="/settings_user_details"
         arrayNestedLinks={NESTED_SETTINGS_URLS}
       >
@@ -302,14 +307,14 @@ const MenuNavegation = ({
             fill="black"
           />
         </svg>
-        {t('log-out')}
+        {t("log-out")}
       </button>
     </div>
     <style jsx>
       {`
         .MenuNavegation {
           height: 100%;
-          width: 200px;
+          width: 210px;
           background: #ffffff;
           box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
           position: fixed;
@@ -329,7 +334,7 @@ const MenuNavegation = ({
               overflow-y: scroll;
             }
           }
-          
+
           button {
             display: block;
             font-family: Roboto;
@@ -340,11 +345,14 @@ const MenuNavegation = ({
             text-decoration: none;
             border: none;
             color: #333333;
-            
+            background-color: transparent;
+            height: 50px;
+            cursor: pointer;
+
             &:hover {
               color: #00b284;
             }
-            
+
             svg {
               padding-right: 10px;
             }
@@ -366,15 +374,17 @@ const MenuNavegation = ({
                 border-radius: 50%;
                 width: 80px;
                 height: 80px;
+                margin-bottom: 40px;
               }
+
               > .placeholder {
-                    border: 1px solid #00b284;
-                    border-radius: 50%;
-                    width: 80px;
-                    display: inline-block;
-                    height: 80px;
-                    background: #f6f6f6;
-                  }
+                border: 1px solid #00b284;
+                border-radius: 50%;
+                width: 80px;
+                display: inline-block;
+                height: 80px;
+                background: #f6f6f6;
+              }
 
               h1 {
                 font-family: Roboto;
@@ -416,7 +426,7 @@ MenuNavegation.propTypes = {
     pathname: PropTypes.string.isRequired
   }).isRequired,
   show: PropTypes.bool.isRequired,
-  t: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
 };
 
-export default withTranslation('menu')(withRouter(MenuNavegation))
+export default withTranslation("menu")(withRouter(MenuNavegation));

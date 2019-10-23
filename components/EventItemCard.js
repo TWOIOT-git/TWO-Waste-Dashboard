@@ -2,25 +2,18 @@ import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import moment from "moment";
-import { withTranslation } from '../i18n'
+import { withTranslation } from "../i18n";
 
-import {
-  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
-} from "recharts";
-
-const EventItemCard = ({
-                          sensor_id,
-                          type,
-                          message,
-                          report_created_on,
-                          t
-}) => {
+const EventItemCard = ({ sensor_id, message, report_created_on, t }) => {
   return (
     <article>
       <div className="SensorItemCardHeader">
         <div>
           <h2>
-            <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
+            <Link
+              href={{ pathname: "/sensor", query: { id: sensor_id } }}
+              as={`/sensor/${sensor_id}`}
+            >
               <a>{sensor_id}</a>
             </Link>
           </h2>
@@ -67,11 +60,11 @@ const EventItemCard = ({
               justify-content: space-between;
 
               .BarChart {
-                  width: 100%;
-                  height: 50%;
-                  margin: auto;
-                  display: block;
-                }
+                width: 100%;
+                height: 50%;
+                margin: auto;
+                display: block;
+              }
 
               > div {
                 p {
@@ -248,7 +241,7 @@ const EventItemCard = ({
 
 EventItemCard.propTypes = {
   sensor_id: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
 };
 
-export default withTranslation('sensor')(EventItemCard)
+export default withTranslation("sensor")(EventItemCard);

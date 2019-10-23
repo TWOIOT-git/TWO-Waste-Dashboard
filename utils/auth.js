@@ -1,14 +1,12 @@
 import { Component } from 'react'
 import Router from 'next/router'
-import { i18n, withTranslation } from '../i18n'
+import { i18n } from '../i18n'
 import moment from "moment"
 import 'moment-timezone'
 import uuid from 'uuid/v1'
 import { ToastContainer } from 'react-toastify'
 import {determineTimezone, determineLanguage} from '../utils/locale'
 import Amplify, { Auth, Storage, Logger } from 'aws-amplify'
-
-import 'react-toastify/dist/ReactToastify.min.css';
 
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 const logger = new Logger('auth');

@@ -4,8 +4,8 @@ import NextHead from "next/head";
 
 const TITLE = "lidbot";
 const DESCRIPTION = "lidbot Waste Dashboard";
-const OGURL = "https://razzle-client.herokuapp.com";
-const OGIMAGE = "https://razzle-client.herokuapp.com";
+const OGURL = "https://analytics.lidbot.com/";
+const OGIMAGE = "https://analytics.lidbot.com/static/images/login_waste.png";
 
 const Head = ({ title, description, ogImage, url }) => (
   <NextHead>

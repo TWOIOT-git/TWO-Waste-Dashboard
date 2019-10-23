@@ -1,23 +1,20 @@
 import React from "react";
 import HeaderMenu from "../components/HeaderMenu";
 import Head from "../components/Head";
-import { forgotPassword } from '../utils/auth'
-import { withTranslation } from '../i18n'
-
-import './main.scss'
+import { forgotPassword } from "../utils/auth";
+import { withTranslation } from "../i18n";
 
 class Forgot extends React.Component {
-
-  static async getInitialProps ({ query: { email } }) {
-    return { email: email }
+  static async getInitialProps({ query: { email } }) {
+    return { email: email };
   }
   constructor(props) {
     super(props);
 
     this.state = {
-      email: props.email ? props.email : '',
+      email: props.email ? props.email : "",
       errorAuthCode: null,
-      successAuthCode: null,
+      successAuthCode: null
     };
   }
 
@@ -30,9 +27,9 @@ class Forgot extends React.Component {
   async onSubmit(e) {
     e.preventDefault();
 
-    let state = await forgotPassword(this.state.email)
-    this.setState(state)
-  };
+    let state = await forgotPassword(this.state.email);
+    this.setState(state);
+  }
 
   render() {
     const { onChange } = this;
@@ -40,12 +37,16 @@ class Forgot extends React.Component {
     return (
       <section>
         <HeaderMenu />
-        <Head title={`${this.props.t('password-reset')} | Lidbot`} />
+        <Head title={`${this.props.t("password-reset")} | Lidbot`} />
         <div className="main main--small">
           <div className="content">
-            <If condition={this.state.successAuthCode !== 'CodeResentSuccessfully'}>
-              <h1>{this.props.t('password-reset')}</h1>
-              <p>{this.props.t('password-reset-sub')}</p>
+            <If
+              condition={
+                this.state.successAuthCode !== "CodeResentSuccessfully"
+              }
+            >
+              <h1>{this.props.t("password-reset")}</h1>
+              <p>{this.props.t("password-reset-sub")}</p>
 
               <form onSubmit={e => this.onSubmit(e)}>
                 <If condition={this.state.errorAuthCode}>
@@ -53,22 +54,26 @@ class Forgot extends React.Component {
                     {this.props.t(this.state.errorAuthCode)}
                   </div>
                 </If>
-                  <label htmlFor="email">
-                    <input
-                      name="email"
-                      id="email"
-                      type="email"
-                      value={this.state.email}
-                      onChange={e => onChange(e)}
-                      placeholder="you@example.com"
-                    />
-                  </label>
-                <button type="submit">{this.props.t('get-reset-link')}</button>
+                <label htmlFor="email">
+                  <input
+                    name="email"
+                    id="email"
+                    type="email"
+                    value={this.state.email}
+                    onChange={e => onChange(e)}
+                    placeholder="you@example.com"
+                  />
+                </label>
+                <button type="submit">{this.props.t("get-reset-link")}</button>
               </form>
             </If>
-            <If condition={this.state.successAuthCode === 'CodeResentSuccessfully'}>
-              <h1>{this.props.t('email-sent')}</h1>
-              <p>{this.props.t('email-sent-sub')}</p>
+            <If
+              condition={
+                this.state.successAuthCode === "CodeResentSuccessfully"
+              }
+            >
+              <h1>{this.props.t("email-sent")}</h1>
+              <p>{this.props.t("email-sent-sub")}</p>
             </If>
           </div>
         </div>
@@ -88,6 +93,13 @@ class Forgot extends React.Component {
               animation: Enter 0.5s forwards;
               padding: 50px;
               width: 600px;
+
+              @media (max-width: 992px) {
+                flex-direction: column;
+                max-width: 500px;
+                padding: 30px 20px;
+                margin: 15px;
+              }
             }
           `}
         </style>
@@ -96,4 +108,4 @@ class Forgot extends React.Component {
   }
 }
 
-export default withTranslation('forgot')(Forgot)
+export default withTranslation("forgot")(Forgot);

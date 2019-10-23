@@ -1,33 +1,41 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip
 } from "recharts";
-import { withTranslation } from '../i18n'
-import moment from "moment"
+import { withTranslation } from "../i18n";
+import moment from "moment";
 
 const SensorItemCardExpanded = ({
-                                  sensor_id,
-                                  fill_percentage,
-                                  reports,
-                                  bin_type,
-                                  bin_location,
-                                  updated_on,
-                                  min_distance,
-                                  max_distance,
-                                  latitude,
-                                  longitude,
-                                  firmware_version,
-                                  battery,
-                                  t,
-                                  active,
-                                  onClick
+  sensor_id,
+  fill_percentage,
+  reports,
+  bin_type,
+  bin_location,
+  updated_on,
+  min_distance,
+  max_distance,
+  latitude,
+  longitude,
+  firmware_version,
+  battery,
+  t,
+  active,
+  onClick
 }) => {
   return (
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span className={`status ${fill_percentage < 50 ? "green" : "red"}`} />
+          <span
+            className={`status ${fill_percentage < 50 ? "green" : "red"}`}
+          />
           <h2>
             <a>{sensor_id}</a>
           </h2>
@@ -38,15 +46,17 @@ const SensorItemCardExpanded = ({
       <div className="SensorItemCardContent">
         <div>
           <div>
-            <p>{t('status')}:</p>
+            <p>{t("status")}:</p>
             <h3>{Math.round(fill_percentage)}%</h3>
             <h5>{moment.unix(updated_on).fromNow()}</h5>
           </div>
           <div>
-            <p>{t('location')}:</p>
+            <p>{t("location")}:</p>
             <h4>{bin_location}</h4>
-            <p>{t('battery')}:</p>
-            <h4 className={`status ${battery > 20 ? "green" : "red"}`}>{battery}%</h4>
+            <p>{t("battery")}:</p>
+            <h4 className={`status ${battery > 20 ? "green" : "red"}`}>
+              {battery}%
+            </h4>
             <h5>{longitude}</h5>
             <h5>{latitude}</h5>
           </div>
@@ -54,38 +64,60 @@ const SensorItemCardExpanded = ({
       </div>
       <div className="SensorItemCardFooter">
         <div className="chart-header">
-          <h3>{t('fill-level')}</h3>
+          <h3>{t("fill-level")}</h3>
           <div className="time-buttons">
-            <div onClick={() => onClick('6')} className={active === '6' ? 'active' : ''}>6 {t('hour')}</div>
-            <div onClick={() => onClick('12')} className={active === '12' ? 'active' : ''}>12 {t('hour')}</div>
-            <div onClick={() => onClick('24')} className={active === '24' ? 'active' : ''}>1 {t('day')}</div>
-            <div onClick={() => onClick('72')} className={active === '72' ? 'active' : ''}>3 {t('days')}</div>
-            <div onClick={() => onClick('168')} className={active === '168' ? 'active' : ''}>1 {t('week')}</div>
+            <div
+              onClick={() => onClick("6")}
+              className={active === "6" ? "active" : ""}
+            >
+              6 {t("hour")}
+            </div>
+            <div
+              onClick={() => onClick("12")}
+              className={active === "12" ? "active" : ""}
+            >
+              12 {t("hour")}
+            </div>
+            <div
+              onClick={() => onClick("24")}
+              className={active === "24" ? "active" : ""}
+            >
+              1 {t("day")}
+            </div>
+            <div
+              onClick={() => onClick("72")}
+              className={active === "72" ? "active" : ""}
+            >
+              3 {t("days")}
+            </div>
+            <div
+              onClick={() => onClick("168")}
+              className={active === "168" ? "active" : ""}
+            >
+              1 {t("week")}
+            </div>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={reports}
-                   margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-          <XAxis
-            dataKey="t"
-            padding={{ left: 20, right: 20 }}
-          />
-          <YAxis/>
-          <CartesianGrid tickCount="3" vertical={false}/>
-          <Tooltip
-
-          />
-          <Line
-            type="monotone"
-            name="Fill"
-            unit="%"
-            dataKey="v"
-            animationDuration={500}
-            stroke="#00bf8d"
-            dot={false}
-            activeDot={{r: 5}}
-          />
-        </LineChart>
+          <LineChart
+            data={reports}
+            margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+          >
+            <XAxis dataKey="t" padding={{ left: 20, right: 20 }} />
+            <YAxis />
+            <CartesianGrid tickCount="3" vertical={false} />
+            <Tooltip />
+            <Line
+              type="monotone"
+              name="Fill"
+              unit="%"
+              dataKey="v"
+              animationDuration={500}
+              stroke="#00bf8d"
+              dot={false}
+              activeDot={{ r: 5 }}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
       <style jsx>
@@ -117,42 +149,42 @@ const SensorItemCardExpanded = ({
 
             .SensorItemCardFooter {
               padding: 40px 30px;
-              
+
               > .chart-header {
                 display: flex;
                 margin-bottom: 30px;
                 justify-content: space-between;
-                
+
                 h3 {
                   margin: 0;
                 }
-                
+
                 .time-buttons {
                   font-size: 13px;
-                  color: #003B2C;
+                  color: #003b2c;
                   > div {
                     display: inline-block;
                     margin-left: 15px;
-                    
+
                     &:hover {
-                      color: #00BF8D;
+                      color: #00bf8d;
                       text-decoration: underline;
                       cursor: pointer;
                     }
                   }
                   .active {
-                    color: #00BF8D;
+                    color: #00bf8d;
                     text-decoration: underline;
                   }
                 }
               }
 
               .LineChart {
-                  width: 100%;
-                  height: 100%;
-                  margin: auto;
-                  display: block;
-               }
+                width: 100%;
+                height: 100%;
+                margin: auto;
+                display: block;
+              }
             }
 
             .SensorItemCardContent {
@@ -210,14 +242,14 @@ const SensorItemCardExpanded = ({
                     text-transform: uppercase;
 
                     color: #333333;
-                    
-                    &.green {
-                    color: #00bf8d;
-                  }
 
-                  &.red {
-                  color: #da6464;
-                  }
+                    &.green {
+                      color: #00bf8d;
+                    }
+
+                    &.red {
+                      color: #da6464;
+                    }
                   }
 
                   h5 {
@@ -253,12 +285,12 @@ const SensorItemCardExpanded = ({
                 h2 {
                   margin: 0 0 10px 0;
                   color: #333333;
-                    font-family: Roboto;
-                    font-style: normal;
-                    font-weight: bold;
-                    font-size: 26px;
-                    line-height: normal;
-                    text-decoration: none;
+                  font-family: Roboto;
+                  font-style: normal;
+                  font-weight: bold;
+                  font-size: 26px;
+                  line-height: normal;
+                  text-decoration: none;
                 }
 
                 p {
@@ -302,7 +334,7 @@ SensorItemCardExpanded.propTypes = {
   reports: PropTypes.array.isRequired,
   fill_percentage: PropTypes.number.isRequired,
   updated_on: PropTypes.number.isRequired,
-  t: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
 };
 
-export default withTranslation('sensor')(SensorItemCardExpanded)
+export default withTranslation("sensor")(SensorItemCardExpanded);

@@ -91,7 +91,6 @@ class LidbotDocument extends Document {
           />
           <meta name="theme-color" content="#00CD98" />
           <style dangerouslySetInnerHTML={{ __html: FONTS }} />
-          <link href="/static/css/sanitize.css" rel="stylesheet" />
         </Head>
         <body>
           <Main />

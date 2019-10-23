@@ -1,16 +1,14 @@
 import React from "react";
 import Head from "../components/Head";
 import HeaderMenu from "../components/HeaderMenu";
-import { signIn } from '../utils/auth'
-import { withTranslation } from '../i18n'
-import Link from "next/link"
-
-import './main.scss'
+import { signIn } from "../utils/auth";
+import { withTranslation } from "../i18n";
+import Link from "next/link";
 
 class Authentication extends React.Component {
   getInitialProps = async () => ({
-    namespacesRequired: ['public'],
-  })
+    namespacesRequired: ["public"]
+  });
 
   constructor(props) {
     super(props);
@@ -20,10 +18,10 @@ class Authentication extends React.Component {
       password: "",
       newPassword: "",
       passwordRepeat: "",
-      authState: 'SIGN_IN',
+      authState: "SIGN_IN",
       successAuthCode: null,
       errorAuthCode: null,
-      user: null,
+      user: null
     };
   }
 
@@ -35,16 +33,23 @@ class Authentication extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    this.signIn()
+    this.signIn();
   };
 
   async signIn() {
-      let state = await signIn(this.state.email, this.state.password)
-      this.setState(state)
+    let state = await signIn(this.state.email, this.state.password);
+    this.setState(state);
   }
 
   render() {
-    const { email, password, newPassword, passwordRepeat, errorAuthCode, authState } = this.state;
+    const {
+      email,
+      password,
+      newPassword,
+      passwordRepeat,
+      errorAuthCode,
+      authState
+    } = this.state;
     const { onChange } = this;
 
     return (
@@ -69,8 +74,8 @@ class Authentication extends React.Component {
             </div>
           </div>
           <div>
-            <h1>{this.props.t('title')}</h1>
-            <p>{this.props.t('subtitle')}</p>
+            <h1>{this.props.t("title")}</h1>
+            <p>{this.props.t("subtitle")}</p>
 
             <form onSubmit={e => this.onSubmit(e)}>
               <If condition={this.state.errorAuthCode}>
@@ -85,7 +90,7 @@ class Authentication extends React.Component {
                   type="email"
                   value={email}
                   onChange={e => onChange(e)}
-                  placeholder={this.props.t('email-placeholder')}
+                  placeholder={this.props.t("email-placeholder")}
                 />
               </label>
               <label htmlFor="password">
@@ -95,21 +100,30 @@ class Authentication extends React.Component {
                   type="password"
                   value={password}
                   onChange={e => onChange(e)}
-                  placeholder={this.props.t('password-placeholder')}
+                  placeholder={this.props.t("password-placeholder")}
                 />
               </label>
-              <button type="submit">{this.props.t('sign-in')}</button>
+              <button type="submit">{this.props.t("sign-in")}</button>
               <Link href={`/forgot?email=${email}`} as={`/forgot/${email}`}>
-                <a className="link-label">{this.props.t('forgotten-password')}</a>
+                <a className="link-label forgot">
+                  {this.props.t("forgotten-password")}
+                </a>
               </Link>
             </form>
           </div>
         </div>
         <style jsx>
           {`
-          html,
+            html,
             body {
               height: 100%;
+            }
+            @media (max-width: 420px) {
+              .forgot {
+                display: block;
+                margin: 0;
+                padding-top: 25px;
+              }
             }
             @keyframes Enter {
               from {
@@ -133,17 +147,17 @@ class Authentication extends React.Component {
               box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
               animation: Enter 0.5s forwards;
               padding: 50px;
-            
+
               width: 840px;
               padding: 50px 50px 0 13px;
-          
+
               > div {
                 &:nth-child(1) {
                   display: flex;
                   justify-content: space-between;
                   flex-direction: column;
                 }
-          
+
                 &:nth-child(2) {
                   display: flex;
                   justify-content: space-between;
@@ -160,7 +174,8 @@ class Authentication extends React.Component {
                 flex-direction: column;
                 max-width: 500px;
                 padding: 30px 20px;
-            
+                margin: 15px;
+
                 &--sign-in {
                   .logo {
                     margin: 0 0 35px 0;
@@ -178,4 +193,4 @@ class Authentication extends React.Component {
   }
 }
 
-export default withTranslation('index')(Authentication)
+export default withTranslation("index")(Authentication);

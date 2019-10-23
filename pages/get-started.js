@@ -4,7 +4,7 @@ import HeaderMenu from "../components/HeaderMenu";
 import { signUp, confirmSignUp, resendSignUp } from '../utils/auth'
 import { withTranslation } from '../i18n'
 
-import './main.scss'
+
 
 class Authentication extends React.Component {
   getInitialProps = async () => ({
@@ -165,21 +165,21 @@ class Authentication extends React.Component {
               box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
               animation: Enter 0.5s forwards;
               padding: 50px;
-            
+
               &--small {
                 width: 600px;
               }
               &--sign-in {
                 width: 840px;
                 padding: 50px 50px 0 13px;
-            
+
                 > div {
                   &:nth-child(1) {
                     display: flex;
                     justify-content: space-between;
                     flex-direction: column;
                   }
-            
+
                   &:nth-child(2) {
                     display: flex;
                     justify-content: space-between;
@@ -197,7 +197,8 @@ class Authentication extends React.Component {
                 flex-direction: column;
                 max-width: 500px;
                 padding: 30px 20px;
-            
+                margin: 15px;
+
                 &--sign-in {
                   .logo {
                     margin: 0 0 35px 0;

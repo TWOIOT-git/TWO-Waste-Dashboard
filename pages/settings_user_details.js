@@ -18,7 +18,7 @@ import {
   changePassword
 } from '../utils/auth'
 
-import './main.scss'
+
 
 const logger = new Logger('SettingsUserDetails');
 
@@ -357,7 +357,7 @@ class SettingsUserDetails extends Component {
               justify-content: flex-start;
               font-family: Roboto;
               margin-bottom: 50px;
-            
+
                 > img {
                   border: 1px solid #00b284;
                   border-radius: 50%;
@@ -378,7 +378,7 @@ class SettingsUserDetails extends Component {
                   overflow: hidden;
                   position: absolute;
                   z-index: -1;
-            
+
                   &:focus + label {
                     outline: 2px solid #05654c;
                   }
@@ -393,7 +393,7 @@ class SettingsUserDetails extends Component {
                   padding: 10px 20px;
                   color: #545454;
                   width: auto;
-            
+
                   &:hover {
                     border: 1px solid #00b284;
                     color: #00b284;
@@ -403,18 +403,18 @@ class SettingsUserDetails extends Component {
                   margin-left: 20px;
                   color: #00b284;
                   font-size: 14px;
-            
+
                   &:hover {
                     text-decoration: underline;
                   }
                 }
             }
-            
-            
+
+
             .div-inputs {
               margin-top: 40px;
               margin-bottom: 40px;
-            
+
               div.phone {
                 .not-verified {
                   color: #da6464;
@@ -435,7 +435,7 @@ class SettingsUserDetails extends Component {
                   [container-start] minmax(0, 30em)
                   [container-end] minmax(1em, 1fr)
                   [viewport-end];
-            
+
                 > div {
                   grid-column: container;
                 }

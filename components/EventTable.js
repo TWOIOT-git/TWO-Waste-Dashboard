@@ -4,7 +4,6 @@ import { withTranslation } from '../i18n'
 import Link from "next/link";
 import moment from "moment";
 import Dropdown from 'react-bootstrap/Dropdown';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const EventTable = ({ items, onDelete }) => {
   return (

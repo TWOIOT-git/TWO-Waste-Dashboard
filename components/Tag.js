@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const Tag = ({ name }) => {
   return (
     <div>
-      <button type='button'>
+      <button type="button">
         <svg
           width="13"
           height="13"

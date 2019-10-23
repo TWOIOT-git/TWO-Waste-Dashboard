@@ -7,7 +7,7 @@ import { withAuthSync, updateUserAttributes, ClientContext } from '../utils/auth
 import { i18n, withTranslation } from '../i18n'
 import fetch from "isomorphic-unfetch";
 
-import './main.scss'
+
 
 class Team extends React.Component {
   static contextType = ClientContext;

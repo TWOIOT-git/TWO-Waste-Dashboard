@@ -5,6 +5,7 @@ import SensorItemCardExpanded from "../components/SensorItemCardExpanded";
 import moment from "moment";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import { withTranslation } from '../i18n'
+import ActivityIndicator from "../components/ActivityIndicator";
 
 class Sensor extends Component {
   static contextType = ClientContext;
@@ -97,7 +98,7 @@ class Sensor extends Component {
             </div>
           </If>
           <If condition={this.state.loading === true}>
-            <h1>Loading...</h1>
+            <ActivityIndicator/>
           </If>
           <style jsx>{`
             .Container {

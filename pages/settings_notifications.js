@@ -12,8 +12,6 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import fetch from "isomorphic-unfetch";
 
-import './main.scss'
-
 const logger = new Logger('SettingsNotifications');
 
 const PrettoSlider = withStyles({

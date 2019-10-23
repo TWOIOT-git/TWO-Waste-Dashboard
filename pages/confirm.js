@@ -5,8 +5,6 @@ import { confirmSignUp } from '../utils/auth'
 import { i18n, withTranslation } from '../i18n'
 import Link from "next/link"
 
-import './main.scss'
-
 class Confirm extends React.Component {
 
   static async getInitialProps ({ query: { email, code, language } }) {

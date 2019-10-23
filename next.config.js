@@ -2,14 +2,11 @@ require('dotenv').config()
 
 const webpack = require('webpack')
 
-const withSass = require("@zeit/next-sass");
-const withCSS = require('@zeit/next-css')
-
-module.exports = withCSS(withSass({
+module.exports = {
   webpack: (config) => {
     config.plugins.push(
       new webpack.EnvironmentPlugin(process.env)
     )
     return config
   }
-}))
+}

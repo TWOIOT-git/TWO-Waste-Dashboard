@@ -2,14 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { withRouter } from "next/router";
-import { withTranslation } from '../i18n'
+import { withTranslation } from "../i18n";
 
-const Item = ({
-  children,
-                link,
-                className
-}) => {
-
+const Item = ({ children, link, className }) => {
   return (
     <Link href={link}>
       <a className={className}>
@@ -32,13 +27,13 @@ const Item = ({
               &:hover {
                 color: #00b284;
               }
-              
+
               &.button {
                 color: #333333;
                 font-weight: bold;
                 border: 1px solid #666;
                 border-radius: 3px;
-                
+
                 &:hover {
                   color: #00b284;
                   border: 1px solid #00b284;
@@ -55,7 +50,7 @@ const Item = ({
 Item.propTypes = {
   children: PropTypes.node.isRequired,
   link: PropTypes.string.isRequired,
-  pathname: PropTypes.string.isRequired,
+  pathname: PropTypes.string.isRequired
 };
 
 const tryAddActiveColor = (pathname, href) => {
@@ -64,17 +59,14 @@ const tryAddActiveColor = (pathname, href) => {
   }
   return pathname === href ? "#00B284" : "#333333";
 };
-const HeaderMenu = ({
-                      router: {pathname},
-                      t
-                    }) => (
+const HeaderMenu = ({ router: { pathname }, t }) => (
   <div className="HeaderMenu">
     <div>
       <Item pathname={pathname} link="/get-started">
-        {t('sign-up')}
+        {t("sign-up")}
       </Item>
       <Item pathname={pathname} className="button" link="/">
-        {t('sign-in')}
+        {t("sign-in")}
       </Item>
     </div>
     <style jsx>
@@ -89,7 +81,7 @@ const HeaderMenu = ({
           z-index: 10;
           padding: 0 20px;
           border-bottom: 1px solid #dadada;
-        
+
           > div {
             display: flex;
             justify-content: flex-end;
@@ -102,7 +94,6 @@ const HeaderMenu = ({
   </div>
 );
 
-HeaderMenu.propTypes = {
-};
+HeaderMenu.propTypes = {};
 
-export default withTranslation('top-header')(withRouter(HeaderMenu))
+export default withTranslation("top-header")(withRouter(HeaderMenu));

@@ -1,71 +1,85 @@
-import moment from "moment"
-import 'moment-timezone';
-import _ from 'underscore'
+import moment from "moment";
+import "moment-timezone";
 
 const languages = [
-  { value: 'de-DE', label: 'Deutsch'},
-  { value: 'es-ES', label: 'Español'},
-  { value: 'en-US', label: 'English'},
-  { value: 'zh-TW', label: '中文'},
-]
+  { value: "de-DE", label: "Deutsch" },
+  { value: "es-ES", label: "Español" },
+  { value: "en-US", label: "English" },
+  { value: "zh-TW", label: "中文" }
+];
 
-const timezones = getTimeZones()
+const timezones = getTimeZones();
 
 function getTimeZones() {
   const timeZones = moment.tz.names();
   const offsetTmz = [];
 
   for (const i in timeZones) {
-    const tz = moment.tz(timeZones[i]).format('Z').replace(':00', '').replace(':30', '.5');
-    let x = (tz === 0) ? 0 : parseInt(tz).toFixed(2);
+    const tz = moment
+      .tz(timeZones[i])
+      .format("Z")
+      .replace(":00", "")
+      .replace(":30", ".5");
+    let x = tz === 0 ? 0 : parseInt(tz).toFixed(2);
 
     const timeZone = {
-      label: `(GMT${moment.tz(timeZones[i]).format('Z')})${timeZones[i]}`,
+      label: `(GMT${moment.tz(timeZones[i]).format("Z")}) ${timeZones[i]}`,
       value: `${timeZones[i]}`,
-      time: `${x}`,
+      time: `${x}`
     };
     offsetTmz.push(timeZone);
   }
 
-  return _.sortBy(offsetTmz, [function (el) { return -(el.time); }]);
+  return offsetTmz.sort(function(a, b) {
+    if (a.firstname < b.firstname) {
+      return -1;
+    }
+    if (a.firstname > b.firstname) {
+      return 1;
+    }
+    return 0;
+  });
+
+  // Stop using underscore, big bundler size
+  // Alternatively u can use stackoverflow
+  // https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
+  // return _.sortBy(offsetTmz, [
+  //   function(el) {
+  //     return -el.time;
+  //   }
+  // ]);
 }
 
 function determineLanguage(user) {
-  let language
+  let language;
 
-  if(user) {
-    let userLanguage = user.attributes['custom:language']
-    language = languages.find(o => o.value === userLanguage)
+  if (user) {
+    let userLanguage = user.attributes["custom:language"];
+    language = languages.find(o => o.value === userLanguage);
   }
 
-  if(!language) {
-    language = languages.find(o => o.value === navigator.language)
-    if(!language) {
-      language = languages.find(o => o.value === 'en-US')
+  if (!language) {
+    language = languages.find(o => o.value === navigator.language);
+    if (!language) {
+      language = languages.find(o => o.value === "en-US");
     }
   }
 
-  console.log(language)
+  console.log(language);
 
-  return language
+  return language;
 }
-
 
 function determineTimezone(user) {
-  let userTimezone = user.attributes['custom:timezone']
+  let userTimezone = user.attributes["custom:timezone"];
 
-  let timezone = timezones.find(o => o.value === userTimezone)
-  if(!timezone) {
-    let browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    timezone = timezones.find(o => o.value === browserTimezone)
+  let timezone = timezones.find(o => o.value === userTimezone);
+  if (!timezone) {
+    let browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    timezone = timezones.find(o => o.value === browserTimezone);
   }
 
-  return timezone
+  return timezone;
 }
 
-export {
-  determineTimezone,
-  determineLanguage,
-  timezones,
-  languages
-}
+export { determineTimezone, determineLanguage, timezones, languages };

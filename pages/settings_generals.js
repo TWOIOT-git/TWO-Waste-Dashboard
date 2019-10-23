@@ -1,7 +1,6 @@
 import React from "react";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
-import SwitchItem from "../components/SwitchItem";
 import SettingLayout from "../components/SettingLayout";
 import SelectItem from "../components/SelectItem";
 import { withAuthSync, updateUserAttributes, ClientContext } from '../utils/auth'
@@ -9,8 +8,6 @@ import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone';
 import {determineTimezone, determineLanguage, timezones, languages} from '../utils/locale'
-
-import './main.scss'
 
 class SettingsGenerals extends React.Component {
   static contextType = ClientContext;

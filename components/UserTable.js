@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withTranslation } from '../i18n'
 import Dropdown from 'react-bootstrap/Dropdown';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UserTable = ({ items, onDelete }) => {
   return (

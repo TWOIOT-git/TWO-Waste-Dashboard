@@ -2,31 +2,32 @@ import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import moment from "moment";
-import { withTranslation } from '../i18n'
+import { withTranslation } from "../i18n";
 
-import {
-  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
-} from "recharts";
+import { ResponsiveContainer, BarChart, Bar, XAxis, Tooltip } from "recharts";
 
 const SensorItemCard = ({
-                          sensor_id,
-                          fill_percentage,
-                          reports,
-                          bin_type,
-                          bin_location,
-                          updated_on,
-                          min_distance,
-                          max_distance,
-                          firmware_version,
-                          t
+  sensor_id,
+  fill_percentage,
+  reports,
+  bin_type,
+  bin_location,
+  updated_on,
+  firmware_version,
+  t
 }) => {
   return (
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span className={`status ${fill_percentage < 50 ? "green" : "red"}`} />
+          <span
+            className={`status ${fill_percentage < 50 ? "green" : "red"}`}
+          />
           <h2>
-            <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
+            <Link
+              href={{ pathname: "/sensor", query: { id: sensor_id } }}
+              as={`/sensor/${sensor_id}`}
+            >
               <a>{sensor_id}</a>
             </Link>
           </h2>
@@ -41,28 +42,17 @@ const SensorItemCard = ({
             <h5>{moment.unix(updated_on).fromNow()}</h5>
           </div>
           <div>
-            <p>{t('location')}:</p>
+            <p>{t("location")}:</p>
             <h4>{bin_location}</h4>
           </div>
         </div>
       </div>
       <div className="SensorItemCardFooter">
         <ResponsiveContainer width="100%" height={40}>
-          <BarChart
-              data={reports}
-              width={250} height={40}
-          >
+          <BarChart data={reports} width={250} height={40}>
             <Tooltip />
-            <XAxis
-              dataKey="t"
-              hide={true}
-            />
-            <Bar
-              dataKey='v'
-              fill='#00bf8d'
-              name="Fill"
-              unit="%"
-            />
+            <XAxis dataKey="t" hide={true} />
+            <Bar dataKey="v" fill="#00bf8d" name="Fill" unit="%" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -99,11 +89,11 @@ const SensorItemCard = ({
               justify-content: space-between;
 
               .BarChart {
-                  width: 100%;
-                  height: 50%;
-                  margin: auto;
-                  display: block;
-                }
+                width: 100%;
+                height: 50%;
+                margin: auto;
+                display: block;
+              }
 
               > div {
                 p {
@@ -283,7 +273,7 @@ SensorItemCard.propTypes = {
   reports: PropTypes.array.isRequired,
   fill_percentage: PropTypes.number.isRequired,
   updated_on: PropTypes.number.isRequired,
-  t: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
 };
 
-export default withTranslation('sensor')(SensorItemCard)
+export default withTranslation("sensor")(SensorItemCard);
