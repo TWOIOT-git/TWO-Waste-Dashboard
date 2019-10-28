@@ -5,6 +5,8 @@ import {
 } from "recharts";
 import { withTranslation } from '../i18n'
 import moment from "moment"
+import Dropdown from 'react-bootstrap/Dropdown'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const SensorItemCardExpanded = ({
                                   sensor_id,
@@ -21,13 +23,32 @@ const SensorItemCardExpanded = ({
                                   battery,
                                   t,
                                   active,
-                                  onClick
+                                  onClick,
+  onDelete,
 }) => {
   return (
     <article>
       <div className="SensorItemCardHeader">
         <div>
           <span className={`status ${fill_percentage < 50 ? "green" : "red"}`} />
+          <div className="actions">
+            <Dropdown>
+              <Dropdown.Toggle
+                variant=""
+                id="dropdown-basic"
+              >
+                <svg height="20" width="30">
+                  <circle cx="4" cy="10" r="3" fill="rgb(0,191,141)" />
+                  <circle cx="14" cy="10" r="3" fill="rgb(0,191,141)" />
+                  <circle cx="24" cy="10" r="3" fill="rgb(0,191,141)" />
+                </svg>
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={(e) => onDelete(e)}>Delete</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
           <h2>
             <a>{sensor_id}</a>
           </h2>
@@ -247,6 +268,9 @@ const SensorItemCardExpanded = ({
             .SensorItemCardHeader {
               border-bottom: 2px solid rgba(216, 216, 216, 0.2);
 
+              .actions {
+                float: right;
+              }
               > div {
                 padding: 20px 30px;
 

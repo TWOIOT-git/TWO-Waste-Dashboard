@@ -1,12 +1,12 @@
-import React from "react";
-import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
-import Head from "../components/Head";
-import SettingLayout from "../components/SettingLayout";
+import React from "react"
+import LayoutMenuNavegation from "../components/LayoutMenuNavegation"
+import Head from "../components/Head"
+import SettingLayout from "../components/SettingLayout"
 import UserTable from "../components/UserTable"
-import { withAuthSync, updateUserAttributes, ClientContext } from '../utils/auth'
+import { withAuthSync, ClientContext } from '../utils/auth'
 import { i18n, withTranslation } from '../i18n'
-import fetch from "isomorphic-unfetch";
-import SelectItem from "../components/SelectItem";
+import fetch from "isomorphic-unfetch"
+import SelectItem from "../components/SelectItem"
 import './main.scss'
 
 const roles = [
@@ -17,21 +17,21 @@ const roles = [
 
 
 class Team extends React.Component {
-  static contextType = ClientContext;
+  static contextType = ClientContext
 
   getInitialProps = async () => ({
     namespacesRequired: ['settings'],
   })
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       loading: true,
       users: [
       ],
-      first_name: '',
-      last_name: '',
+      given_name: '',
+      family_name: '',
       email: '',
       user_role: {}
     }
@@ -55,22 +55,27 @@ class Team extends React.Component {
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
-    });
+    })
   }
 
   async getUsers() {
-    let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/users/limit/10";
+    let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/users/limit/50"
     console.log('fetching users: ', url)
-    const response = await fetch(url);
+    const response = await fetch(url)
     if (!response.ok) {
-      throw Error(response.statusText);
+      throw Error(response.statusText)
     }
 
-    const json = await response.json();
-    let users = [];
+    const json = await response.json()
+    let users = []
     for (let user of json.results) {
       users.push({
-        ...user
+        given_name: user.Attributes.find(x => x.Name === 'given_name').Value,
+        family_name: user.Attributes.find(x => x.Name === 'family_name').Value,
+        email: user.Attributes.find(x => x.Name === 'email').Value,
+        user_role: user.Attributes.find(x => x.Name === 'custom:user_role').Value,
+        enabled: user.Enabled,
+        user_status: user.UserStatus
       })
     }
 
@@ -91,10 +96,10 @@ class Team extends React.Component {
       method: 'DELETE'
     })
     if (!response.ok) {
-      throw Error(response.statusText);
+      throw Error(response.statusText)
     }
 
-    const json = await response.json();
+    const json = await response.json()
 
     this.getUsers()
 
@@ -109,8 +114,11 @@ class Team extends React.Component {
     let options = {
       method: 'POST',
       body: JSON.stringify({
-        first_name: this.state.first_name,
-        last_name: this.state.last_name,
+        given_name: this.state.given_name,
+        family_name: this.state.family_name,
+        picture: this.state.picture,
+        language: this.props.user_attributes['custom:language'],
+        email: this.state.email,
         user_role: this.state.user_role.value,
       })
     }
@@ -119,16 +127,16 @@ class Team extends React.Component {
     const response = await fetch(url, options)
 
     if (!response.ok) {
-      throw Error(response.statusText);
+      throw Error(response.statusText)
     }
 
-    const json = await response.json();
+    const json = await response.json()
 
     this.setState(prevState => ({
       ...prevState,
-      first_name: '',
-      last_name: '',
-      user_role: '',
+      given_name: '',
+      family_name: '',
+      user_role: {},
       email: ''
     }))
 
@@ -154,54 +162,56 @@ class Team extends React.Component {
               onDelete={(e, email) => this.deleteUser(e, email)}
             />
           </div>
-          <form onSubmit={this.addUser}>
-            <div className="div-inputs">
-              <div>
-                <label htmlFor="first_name">
-                  {this.props.t('first-name')}
-                  <input
-                    name="first_name"
-                    id="first_name"
-                    value={this.state.first_name}
-                    onChange={this.onChange}
+          <If condition={this.props.user_attributes['custom:user_role'] === 'SUPER_ADMIN'}>
+            <form onSubmit={this.addUser}>
+              <div className="div-inputs">
+                <div>
+                  <label htmlFor="given_name">
+                    {this.props.t('first-name')}
+                    <input
+                      name="given_name"
+                      id="given_name"
+                      value={this.state.given_name}
+                      onChange={this.onChange}
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label htmlFor="family_name">
+                    {this.props.t('last-name')}
+                    <input
+                      name="family_name"
+                      id="family_name"
+                      value={this.state.family_name}
+                      onChange={this.onChange}
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label htmlFor="email">
+                    {this.props.t('email')}
+                    <input
+                      name="email"
+                      id="email"
+                      value={this.state.email}
+                      onChange={this.onChange}
+                    />
+                  </label>
+                </div>
+                <div>
+                  <SelectItem
+                    label={this.props.t('team.role')}
+                    value={this.state.user_role}
+                    onChange={this.roleChange}
+                    options={roles}
                   />
-                </label>
+                </div>
               </div>
-              <div>
-                <label htmlFor="last_name">
-                  {this.props.t('last-name')}
-                  <input
-                    name="last_name"
-                    id="last_name"
-                    value={this.state.last_name}
-                    onChange={this.onChange}
-                  />
-                </label>
+              <div className="button">
+                <button type="submit">{this.props.t('team.add-user')}</button>
               </div>
-              <div>
-                <label htmlFor="email">
-                  {this.props.t('email')}
-                  <input
-                    name="email"
-                    id="email"
-                    value={this.state.email}
-                    onChange={this.onChange}
-                  />
-                </label>
-              </div>
-              <div>
-                <SelectItem
-                  label={this.props.t('team.role')}
-                  value={this.state.user_role}
-                  onChange={this.roleChange}
-                  options={roles}
-                />
-              </div>
-            </div>
-            <div className="button">
-              <button type="submit">{this.props.t('add-user')}</button>
-            </div>
-          </form>
+            </form>
+          </If>
         </SettingLayout>
         <style jsx>
           {
@@ -238,6 +248,6 @@ class Team extends React.Component {
       </LayoutMenuNavegation>
     )
   }
-};
+}
 
 export default withTranslation('settings')(withAuthSync(Team))

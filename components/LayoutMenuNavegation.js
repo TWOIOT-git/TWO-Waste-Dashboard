@@ -41,6 +41,7 @@ class LayoutMenuNavegation extends React.Component {
         <MenuNavegation
           userImage={this.state.imagePreview}
           userName={this.context.user.attributes['given_name']}
+          client_id={this.context.user.attributes['custom:client_id']}
           show={show}
         />
         <button className="burger" type="button" onClick={toggleShow}>

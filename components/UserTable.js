@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withTranslation } from '../i18n'
-import Dropdown from 'react-bootstrap/Dropdown';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Dropdown from 'react-bootstrap/Dropdown'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { getUserImage } from '../utils/auth'
 
 const UserTable = ({ items, onDelete }) => {
   return (
@@ -11,23 +12,33 @@ const UserTable = ({ items, onDelete }) => {
         <div>Name</div>
         <div>Email</div>
         <div>Role</div>
+        <div>Status</div>
+        <div>Enabled</div>
         <div>Actions</div>
       </div>
       {items.map(
         ({
-           first_name,
-           last_name,
+           given_name,
+           family_name,
+           picture,
            email,
+           enabled,
+           user_status,
            user_role,
            t
         }) => (
           <div key={email} className="UserTableItem">
-            <div className="name">{`${first_name} ${last_name}`}</div>
+            <div className="name">{`${given_name} ${family_name}`}</div>
             <div className="detail">{email}</div>
             <div className="detail">{user_role}</div>
+            <div className="detail">{user_status}</div>
+            <div className="detail">{enabled ? 'enabled' : 'disabled'}</div>
             <div className="action">
               <Dropdown>
-                <Dropdown.Toggle variant="" id="dropdown-basic">
+                <Dropdown.Toggle
+                  variant=""
+                  id="dropdown-basic"
+                >
                   <svg height="20" width="30">
                     <circle cx="4" cy="10" r="3" fill="rgb(0,191,141)" />
                     <circle cx="14" cy="10" r="3" fill="rgb(0,191,141)" />
@@ -37,6 +48,7 @@ const UserTable = ({ items, onDelete }) => {
 
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={(e) => onDelete(e, email)}>Delete</Dropdown.Item>
+                  <Dropdown.Item onClick={(e) => onDelete(e, email)}>Disable</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>

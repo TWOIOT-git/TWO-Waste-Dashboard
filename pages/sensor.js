@@ -1,3 +1,4 @@
+import Router from 'next/router'
 import React, { Component } from "react";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
@@ -48,6 +49,26 @@ class Sensor extends Component {
     this.getSensor();
   }
 
+  async deleteSensor(e) {
+    e.preventDefault()
+
+    let url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id
+    console.log('deleting sensor: ', url)
+    const response = await fetch(url, {
+      method: 'DELETE'
+    })
+    if (!response.ok) {
+      throw Error(response.statusText)
+    }
+
+    const json = await response.json()
+
+    console.log(json)
+
+    Router.push('/sensors')
+  }
+
+
   async getSensor() {
     console.log('Cant stop me now!');
     try {
@@ -93,7 +114,11 @@ class Sensor extends Component {
         <div className="Container">
           <If condition={this.state.loading === false}>
             <div key={this.state.sensor_id} className="ItemCol">
-              <SensorItemCardExpanded {...this.state} onClick={(time) => this.handleClick(time)} active={this.state.active}/>
+              <SensorItemCardExpanded
+                {...this.state}
+                onClick={(time) => this.handleClick(time)}
+                onDelete={(e) => this.deleteSensor(e)}
+                active={this.state.active}/>
             </div>
           </If>
           <If condition={this.state.loading === true}>

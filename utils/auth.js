@@ -26,7 +26,7 @@ Amplify.configure({
       region: process.env.AWS_USER_FILES_S3_BUCKET_REGION,
     }
   }
-});
+})
 
 function signOut(e) {
   e.preventDefault()
@@ -348,6 +348,7 @@ function withAuthSync(WrappedComponent) {
       this.state = {
         user: null,
         authState: 'loading',
+
       }
     }
 
@@ -393,6 +394,7 @@ function withAuthSync(WrappedComponent) {
             />
             <WrappedComponent
               customerId={this.state.user.attributes['custom:client_id']}
+              user_attributes={this.state.user.attributes}
               {...this.props}
             />
           </ClientContext.Provider>
