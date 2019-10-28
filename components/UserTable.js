@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import { withTranslation } from '../i18n'
 import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { getUserImage } from '../utils/auth'
 
 const UserTable = ({ items, onDelete }) => {
   return (
     <div className="UserTable">
       <div className="UserTableHeader">
+        <div></div>
         <div>Name</div>
         <div>Email</div>
         <div>Role</div>
@@ -20,7 +20,7 @@ const UserTable = ({ items, onDelete }) => {
         ({
            given_name,
            family_name,
-           picture,
+           src,
            email,
            enabled,
            user_status,
@@ -28,6 +28,12 @@ const UserTable = ({ items, onDelete }) => {
            t
         }) => (
           <div key={email} className="UserTableItem">
+            <If condition={src}>
+              <img src={src} />
+            </If>
+            <If condition={!src}>
+              <div className="placeholder"></div>
+            </If>
             <div className="name">{`${given_name} ${family_name}`}</div>
             <div className="detail">{email}</div>
             <div className="detail">{user_role}</div>
@@ -117,6 +123,7 @@ const UserTable = ({ items, onDelete }) => {
             padding: 16px;
             margin-bottom: 6px;
             display: flex;
+            align-items: center;
 
             > div:not(:first-child) {
               flex: 1;
@@ -129,6 +136,23 @@ const UserTable = ({ items, onDelete }) => {
             > div:first-child {
               flex: 0.75;
             }
+            
+            > img {
+                  border: 1px solid #00b284;
+                  border-radius: 50%;
+                  width: 50px;
+                  height: 50px;
+                  margin-right: 15px;
+                }
+                > .placeholder {
+                  border: 1px solid #00b284;
+                  border-radius: 50%;
+                  margin-right: 15px;
+                  max-width: 50px;
+                  width: 50px;
+                  height: 50px;
+                  background: #f6f6f6;
+                }
 
             .status {
               > .circle {

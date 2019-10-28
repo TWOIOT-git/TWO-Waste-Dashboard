@@ -8,6 +8,7 @@ import { i18n, withTranslation } from '../i18n'
 import fetch from "isomorphic-unfetch"
 import SelectItem from "../components/SelectItem"
 import './main.scss'
+import { getUserImage } from '../utils/auth'
 
 const roles = [
   { value: 'SUPER_ADMIN', label: 'Super admin'},
@@ -69,11 +70,23 @@ class Team extends React.Component {
     const json = await response.json()
     let users = []
     for (let user of json.results) {
+      let picture = user.Attributes.find(x => x.Name === 'picture')
+      let src
+
+      if(picture) {
+        let key = picture.Value
+
+        if(key) {
+          src = await getUserImage(key)
+        }
+      }
+
       users.push({
         given_name: user.Attributes.find(x => x.Name === 'given_name').Value,
         family_name: user.Attributes.find(x => x.Name === 'family_name').Value,
         email: user.Attributes.find(x => x.Name === 'email').Value,
         user_role: user.Attributes.find(x => x.Name === 'custom:user_role').Value,
+        src: src,
         enabled: user.Enabled,
         user_status: user.UserStatus
       })
@@ -162,7 +175,7 @@ class Team extends React.Component {
               onDelete={(e, email) => this.deleteUser(e, email)}
             />
           </div>
-          <If condition={this.props.user_attributes['custom:user_role'] === 'SUPER_ADMIN'}>
+          <If condition={this.props.user_attributes['custom:user_role'] === 'SUPER_ADMIN' || this.props.user_attributes['custom:user_role'] === 'ADMIN'}>
             <form onSubmit={this.addUser}>
               <div className="div-inputs">
                 <div>
