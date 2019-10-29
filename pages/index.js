@@ -9,7 +9,7 @@ import './main.scss'
 
 class Authentication extends React.Component {
   getInitialProps = async () => ({
-    namespacesRequired: ['public'],
+    namespacesRequired: ['index'],
   })
 
   constructor(props) {

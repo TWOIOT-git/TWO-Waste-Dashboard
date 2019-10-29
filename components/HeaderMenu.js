@@ -70,9 +70,9 @@ const HeaderMenu = ({
                     }) => (
   <div className="HeaderMenu">
     <div>
-      <Item pathname={pathname} link="/get-started">
-        {t('sign-up')}
-      </Item>
+      {/*<Item pathname={pathname} link="/get-started">*/}
+      {/*  {t('sign-up')}*/}
+      {/*</Item>*/}
       <Item pathname={pathname} className="button" link="/">
         {t('sign-in')}
       </Item>

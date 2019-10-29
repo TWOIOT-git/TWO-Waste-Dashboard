@@ -4,13 +4,17 @@ import { withTranslation } from '../i18n'
 import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const UserTable = ({ items, onDelete }) => {
+const UserTable = ({
+                     items,
+                     onDelete,
+                     onDisable,
+                     onEnable
+}) => {
   return (
     <div className="UserTable">
       <div className="UserTableHeader">
         <div></div>
         <div>Name</div>
-        <div>Email</div>
         <div>Role</div>
         <div>Status</div>
         <div>Enabled</div>
@@ -34,8 +38,10 @@ const UserTable = ({ items, onDelete }) => {
             <If condition={!src}>
               <div className="placeholder"></div>
             </If>
-            <div className="name">{`${given_name} ${family_name}`}</div>
-            <div className="detail">{email}</div>
+            <div className="name">
+              <div>{`${given_name} ${family_name}`}</div>
+              <div>{email}</div>
+            </div>
             <div className="detail">{user_role}</div>
             <div className="detail">{user_status}</div>
             <div className="detail">{enabled ? 'enabled' : 'disabled'}</div>
@@ -53,8 +59,16 @@ const UserTable = ({ items, onDelete }) => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
+                  <Dropdown.Item
+                    onClick={(e) => onDisable(e, email)}
+                    disabled={!enabled}
+                  >Disable</Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={(e) => onEnable(e, email)}
+                    disabled={enabled}
+                  >Enable</Dropdown.Item>
+                  <div className="dropdown-divider"></div>
                   <Dropdown.Item onClick={(e) => onDelete(e, email)}>Delete</Dropdown.Item>
-                  <Dropdown.Item onClick={(e) => onDelete(e, email)}>Disable</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>

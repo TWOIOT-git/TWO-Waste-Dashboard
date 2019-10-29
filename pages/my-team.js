@@ -9,6 +9,7 @@ import fetch from "isomorphic-unfetch"
 import SelectItem from "../components/SelectItem"
 import './main.scss'
 import { getUserImage } from '../utils/auth'
+import { toast } from 'react-toastify';
 
 const roles = [
   { value: 'SUPER_ADMIN', label: 'Super admin'},
@@ -99,6 +100,52 @@ class Team extends React.Component {
 
     return users
   }
+  async disableUser(e, email) {
+    e.preventDefault()
+
+    let url = `${process.env.DEVICE_API}/users/${email}/disable`
+    console.log('disabling user: ', url)
+    const response = await fetch(url, {
+      method: 'POST'
+    })
+    if (!response.ok) {
+      throw Error(response.statusText)
+    }
+
+    const json = await response.json()
+
+    this.getUsers()
+
+    toast(this.props.t('user-disabled'), {
+      className: 'notification success'
+    })
+
+
+    console.log(json)
+  }
+  async enableUser(e, email) {
+    e.preventDefault()
+
+    let url = `${process.env.DEVICE_API}/users/${email}/enable`
+    console.log('enabling user: ', url)
+    const response = await fetch(url, {
+      method: 'POST'
+    })
+    if (!response.ok) {
+      throw Error(response.statusText)
+    }
+
+    const json = await response.json()
+
+    this.getUsers()
+
+    toast(this.props.t('user-enabled'), {
+      className: 'notification success'
+    })
+
+    console.log(json)
+  }
+
 
   async deleteUser(e, email) {
     e.preventDefault()
@@ -115,6 +162,10 @@ class Team extends React.Component {
     const json = await response.json()
 
     this.getUsers()
+
+    toast(this.props.t('user-deleted'), {
+      className: 'notification success'
+    })
 
     console.log(json)
   }
@@ -173,6 +224,8 @@ class Team extends React.Component {
             <UserTable
               items={this.state.users}
               onDelete={(e, email) => this.deleteUser(e, email)}
+              onDisable={(e, email) => this.disableUser(e, email)}
+              onEnable={(e, email) => this.enableUser(e, email)}
             />
           </div>
           <If condition={this.props.user_attributes['custom:user_role'] === 'SUPER_ADMIN' || this.props.user_attributes['custom:user_role'] === 'ADMIN'}>

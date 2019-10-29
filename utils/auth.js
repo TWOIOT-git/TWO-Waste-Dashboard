@@ -283,9 +283,9 @@ async function getUserImage(key) {
     return null
   }
 
-  let result = await Storage.get(key, {
-    level: 'private'
-  })
+  let result = await Storage.get(key)
+
+  console.log('getUserImage: ', result)
 
   logger.debug('getUserImage: ', result)
 
@@ -293,7 +293,7 @@ async function getUserImage(key) {
 }
 function removeUserImage(key) {
   if(key) {
-    Storage.remove(key, {level: 'private'})
+    Storage.remove(key)
       .then(result => console.log(result))
       .catch(err => console.log(err));
   }

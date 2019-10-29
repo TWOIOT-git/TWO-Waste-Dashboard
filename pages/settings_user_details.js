@@ -105,7 +105,6 @@ class SettingsUserDetails extends Component {
     const file = event.target.files[0];
 
     let result = await Storage.put(`${uuid()}-${file.name}`, file, {
-      level: 'private',
       contentType: file.type
     })
 

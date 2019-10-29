@@ -61,5 +61,8 @@
     "title": "My team",
     "role": "Role",
     "add-user": "Add user"
-  }
+  },
+  "user-disabled": "User disabled",
+  "user-enabled": "User enabled",
+  "user-deleted": "User deleted"
 }
