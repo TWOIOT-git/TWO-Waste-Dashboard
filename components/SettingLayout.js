@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 import { withRouter } from "next/router";
 import { withTranslation } from '../i18n'
-
+import capabilities from '../utils/capabilities'
 const SettingLayout = ({ children, router: { pathname }, t }) => {
   return (
     <section>
@@ -55,6 +55,19 @@ const SettingLayout = ({ children, router: { pathname }, t }) => {
             </a>
           </Link>
         </div>
+        {/*<If condition={capabilities.can_change_bin_full_threshold(this.props.user_attributes['custom:user_role'])}>*/}
+          <div>
+            <Link href="account-management">
+              <a
+                className={`${
+                  pathname === "/account-management" ? "--active" : ""
+                }`}
+              >
+                {t('team.account-management')}
+              </a>
+            </Link>
+          </div>
+        {/*</If>*/}
       </div>
       {children}
       <style jsx>

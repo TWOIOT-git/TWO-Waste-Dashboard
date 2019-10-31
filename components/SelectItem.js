@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Select from 'react-select';
-import { withTranslation } from '../i18n'
 
 const SelectItem = (
   { label,

@@ -30,6 +30,10 @@
   "email-notifications-sub": "每週分析更新和通知",
   "mobile-notifications": "手機通知",
   "mobile-notifications-sub": "根據我們的定價頁面收費。",
+  "bin-fill-level-notifications": "Bin fill level notifications",
+  "bin-fill-level-notifications-sub": "Receive fill level notifications.",
+  "delta-notifications": "Bin fill level change notifications",
+  "delta-notifications-sub": "Receive fill level change notifications.",
 
   "language": "語言",
   "location-info": "位置信息",
@@ -56,13 +60,16 @@
   "password-updated": "您的密碼已被更改。",
   "NotAuthorizedException": "您當前的密碼不正確",
   "threshold-range": "Threshold range",
+  "cancel": "取消",
 
   "team": {
     "title": "My team",
+    "account-management": "Account Management",
     "role": "Role",
     "add-user": "Add user"
   },
   "user-disabled": "User disabled",
   "user-enabled": "User enabled",
-  "user-deleted": "User deleted"
+  "user-deleted": "User deleted",
+  "user-added": "An invitation has been sent"
 }

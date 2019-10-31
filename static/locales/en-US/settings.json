@@ -30,6 +30,10 @@
   "email-notifications-sub": "Weekly analytics updates and notifications",
   "mobile-notifications": "Mobile Notifications",
   "mobile-notifications-sub": "Charged based on our pricing page.",
+  "bin-fill-level-notifications": "Bin fill level notifications",
+  "bin-fill-level-notifications-sub": "Receive fill level notifications.",
+  "delta-notifications": "Bin fill level change notifications",
+  "delta-notifications-sub": "Receive fill level change notifications.",
 
   "language": "Language",
   "location-info": "Location Info",
@@ -56,13 +60,16 @@
   "password-updated": "Your password has been changed.",
   "NotAuthorizedException": "Your current password is incorrect",
   "threshold-range": "Threshold range",
+  "cancel": "Cancel",
 
   "team": {
     "title": "My team",
+    "account-management": "Account Management",
     "role": "Role",
     "add-user": "Add user"
   },
   "user-disabled": "User disabled",
   "user-enabled": "User enabled",
-  "user-deleted": "User deleted"
+  "user-deleted": "User deleted",
+  "user-added": "An invitation has been sent"
 }

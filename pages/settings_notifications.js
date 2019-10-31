@@ -16,38 +16,6 @@ import './main.scss'
 
 const logger = new Logger('SettingsNotifications');
 
-const PrettoSlider = withStyles({
-  root: {
-    color: '#00bf8d',
-  },
-  thumb: {
-  },
-  vertical: {
-    width: '20px'
-  },
-  rail: {
-    width: '10px'
-  }
-})(Slider);
-
-const marks = [
-  {
-    value: 0,
-    label: '0%',
-  },
-  {
-    value: 60,
-    label: '60%',
-  },
-  {
-    value: 80,
-    label: '80%',
-  },
-  {
-    value: 100,
-    label: '100%',
-  },
-];
 
 function urlB64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -92,7 +60,6 @@ class SettingsNotifications extends React.Component {
       pushNotifications: pushNotifications,
       emailNotifications: false,
       mobileNotifications: false,
-      maxThreshold: 0,
       customer: null
     };
 
@@ -103,7 +70,7 @@ class SettingsNotifications extends React.Component {
   async componentDidMount() {
     let pushNotifications = this.context.user.attributes['custom:push_notifications']
     let emailNotifications = this.context.user.attributes['custom:email_notifications']
-    let mobileNotifications = this.context.user.attributes['custom:regular_events']
+    let mobileNotifications = this.context.user.attributes['custom:mobile_notifications']
 
     const user = await Auth.currentAuthenticatedUser()
     const url = process.env.DEVICE_API + "customers/" + user.attributes['custom:client_id']
@@ -117,7 +84,6 @@ class SettingsNotifications extends React.Component {
       },
       emailNotifications: (emailNotifications !== undefined) ? emailNotifications : false,
       mobileNotifications: (mobileNotifications !== undefined) ? mobileNotifications : false,
-      maxThreshold: customer.max_threshold,
       customer: customer
     }))
   }
@@ -241,38 +207,7 @@ class SettingsNotifications extends React.Component {
     }
   }
 
-  handleThresholdChange = (event, newValue) => {
-    this.setState({
-      maxThreshold: newValue
-    })
-  }
-  onChangeCommitted = async (event, newValue) => {
-    logger.debug(event)
 
-    this.setState({
-      maxThreshold: newValue
-    })
-
-
-    const user = await Auth.currentAuthenticatedUser()
-    const response = await fetch(`${process.env.DEVICE_API}customers/${user.attributes['custom:client_id']}`, {
-      method: 'POST',
-      body: JSON.stringify({
-        min_threshold: this.state.customer.min_threshold,
-        max_threshold: newValue
-      })
-    })
-
-    if (response.ok) {
-      toast(this.props.t('settings-saved'), {
-        className: 'notification success'
-      })
-    } else {
-      toast(this.props.t('settings-saved-error'), {
-        className: 'notification error'
-      })
-    }
-  }
 
   render() {
     return (
@@ -295,38 +230,54 @@ class SettingsNotifications extends React.Component {
               onClick={(active) => this.handleClick({emailNotifications: active})}
             />
             <SwitchItem
-            title={this.props.t('mobile-notifications')}
-            description={this.props.t('mobile-notifications-sub')}
-            active={this.state.mobileNotifications}
-            onClick={(active) => this.handleClick({ mobileNotifications: active })}
-          />
-            </div>
-            <div className="slider">
-              <PrettoSlider
-                disabled={!(this.state.emailNotifications || this.state.mobileNotifications || this.state.pushNotifications.active)}
-                orientation="vertical"
-                valueLabelDisplay="on"
-                aria-label="pretto slider"
-                value={this.state.maxThreshold}
-                onChange={this.handleThresholdChange}
-                onChangeCommitted={this.onChangeCommitted}
-                marks={marks}
-              />
+              title={this.props.t('mobile-notifications')}
+              description={this.props.t('mobile-notifications-sub')}
+              active={this.state.mobileNotifications}
+              onClick={(active) => this.handleClick({ mobileNotifications: active })}
+            />
             </div>
           </div>
         </SettingLayout>
         <style jsx>
           {`
             .main {
-              display: flex;
             }
             .switches {
-              flex: 0 1 50%;
+              margin-bottom: 50px;
             }
             .slider {
-              flex: 0 1 50%;
-              height: 300px;
-              padding-left: 50px;
+              font-family: Roboto;
+              margin-bottom: 50px;
+              
+              .slider-header {
+                margin-bottom: 70px;
+              }
+              .slider-label {
+                display: block;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 14px;
+                color: #333333;
+                margin-bottom: 50px;
+              }
+              .settings-header {
+                display: block;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 16px;
+                color: #333333;
+                margin-bottom: 15px;
+              }
+              .settings-sub {
+                margin-bottom: 5px;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 16px;
+                color: #000000;
+                opacity: 0.5;
+                display: block;
+              }
             }
           `}
         </style>

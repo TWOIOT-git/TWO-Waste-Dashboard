@@ -10,6 +10,9 @@ import SelectItem from "../components/SelectItem"
 import './main.scss'
 import { getUserImage } from '../utils/auth'
 import { toast } from 'react-toastify';
+import Modal from 'react-bootstrap/Modal'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import capabilities from '../utils/capabilities'
 
 const roles = [
   { value: 'SUPER_ADMIN', label: 'Super admin'},
@@ -35,12 +38,14 @@ class Team extends React.Component {
       given_name: '',
       family_name: '',
       email: '',
-      user_role: {}
+      user_role: {},
+      showAddUserModal: false
     }
 
     this.onChange = this.onChange.bind(this)
     this.addUser = this.addUser.bind(this)
     this.roleChange = this.roleChange.bind(this)
+    this.setShow = this.setShow.bind(this)
   }
 
   componentDidMount() {
@@ -201,10 +206,15 @@ class Team extends React.Component {
       given_name: '',
       family_name: '',
       user_role: {},
-      email: ''
+      email: '',
+      showAddUserModal: false
     }))
 
     this.getUsers()
+
+    toast(this.props.t('user-added'), {
+      className: 'notification success'
+    })
 
     console.log(json)
   }
@@ -214,13 +224,19 @@ class Team extends React.Component {
       user_role: selectedOption
     })
   }
+  setShow = show => {
+    console.log('calling setShow: ', show)
+    this.setState({
+      showAddUserModal: show
+    })
+  }
 
   render() {
     return (
       <LayoutMenuNavegation>
         <Head title={`${this.props.t('team.title')} | Lidbot`}/>
         <SettingLayout>
-          <div>
+          <div className="user-table">
             <UserTable
               items={this.state.users}
               onDelete={(e, email) => this.deleteUser(e, email)}
@@ -228,63 +244,83 @@ class Team extends React.Component {
               onEnable={(e, email) => this.enableUser(e, email)}
             />
           </div>
-          <If condition={this.props.user_attributes['custom:user_role'] === 'SUPER_ADMIN' || this.props.user_attributes['custom:user_role'] === 'ADMIN'}>
-            <form onSubmit={this.addUser}>
-              <div className="div-inputs">
-                <div>
-                  <label htmlFor="given_name">
-                    {this.props.t('first-name')}
-                    <input
-                      name="given_name"
-                      id="given_name"
-                      value={this.state.given_name}
-                      onChange={this.onChange}
-                    />
-                  </label>
-                </div>
-                <div>
-                  <label htmlFor="family_name">
-                    {this.props.t('last-name')}
-                    <input
-                      name="family_name"
-                      id="family_name"
-                      value={this.state.family_name}
-                      onChange={this.onChange}
-                    />
-                  </label>
-                </div>
-                <div>
-                  <label htmlFor="email">
-                    {this.props.t('email')}
-                    <input
-                      name="email"
-                      id="email"
-                      value={this.state.email}
-                      onChange={this.onChange}
-                    />
-                  </label>
-                </div>
-                <div>
-                  <SelectItem
-                    label={this.props.t('team.role')}
-                    value={this.state.user_role}
-                    onChange={this.roleChange}
-                    options={roles}
-                  />
-                </div>
-              </div>
-              <div className="button">
-                <button type="submit">{this.props.t('team.add-user')}</button>
-              </div>
-            </form>
+          <If condition={capabilities.can_add_user(this.props.user_attributes['custom:user_role'])}>
+            <div className="button-section">
+              <div className="add-user-button" onClick={() => this.setShow(true)}>Add user</div>
+            </div>
           </If>
+          <Modal
+            show={this.state.showAddUserModal}
+            onHide={() => this.setShow(false)}
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Add new user</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <form action="">
+                <div className="div-inputs">
+                    <div>
+                      <label htmlFor="given_name">
+                        {this.props.t('first-name')}
+                        <input
+                          name="given_name"
+                          id="given_name"
+                          value={this.state.given_name}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label htmlFor="family_name">
+                        {this.props.t('last-name')}
+                        <input
+                          name="family_name"
+                          id="family_name"
+                          value={this.state.family_name}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label htmlFor="email">
+                        {this.props.t('email')}
+                        <input
+                          name="email"
+                          id="email"
+                          value={this.state.email}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <SelectItem
+                        label={this.props.t('team.role')}
+                        value={this.state.user_role}
+                        onChange={this.roleChange}
+                        options={roles}
+                      />
+                    </div>
+                  </div>
+              </form>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <div className="add-user-button" onClick={() => this.setShow(false)}>{this.props.t('cancel')}</div>
+              <div className="add-user-button" onClick={(e) => this.addUser(e)}>{this.props.t('team.add-user')}</div>
+            </Modal.Footer>
+          </Modal>
         </SettingLayout>
         <style jsx>
           {
             `
+              .user-table {
+                margin-bottom: 40px;
+              }
               form {
                 label {
-                  margin: 0
+                  margin-bottom: 20px
                 }
               }
               .SelectItem {
@@ -293,20 +329,29 @@ class Team extends React.Component {
               .div-inputs {
                 margin-top: 30px;
                 margin-bottom: 30px;
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-end;
                 
                 > div {
                   flex: 0 1 20%;
                 }
               }
-              .button {
-                text-align: right;
+              .button-section {
+                position: relative;
+                margin-bottom: 30px;
                 
-                button {
-                  width: 200px;
+                .add-user-button {
+                  position: absolute;
+                  right: 0;
                 }
+              }
+              .add-user-button {
+                font-size: 16px;
+                font-weight: 400;
+                cursor: pointer;
+                border: 1px solid #757575;
+                text-align: center;
+                border-radius: 3px;
+                padding: 10px 20px;
+                color: #545454;
               }
             `
           }
