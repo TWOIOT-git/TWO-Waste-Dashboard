@@ -95,7 +95,7 @@ class Sensor extends Component {
         reports: (reports.results) ? (reports.results).map(obj => {
             return {
               v: Math.round(obj.fill_percentage),
-              t: moment(obj.created_on).format('HH:mm')
+              t: moment.unix(obj.created_on).format('HH:mm')
             }
           }) : [],
         }
