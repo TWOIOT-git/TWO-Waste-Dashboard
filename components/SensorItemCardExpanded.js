@@ -21,10 +21,13 @@ const SensorItemCardExpanded = ({
                                   longitude,
                                   firmware_version,
                                   battery,
+                                  signal_strength,
+                                  temperature,
                                   t,
                                   active,
                                   onClick,
   onDelete,
+                                  onDeleteAllReports,
 }) => {
   return (
     <article>
@@ -45,7 +48,8 @@ const SensorItemCardExpanded = ({
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={(e) => onDelete(e)}>Delete</Dropdown.Item>
+                <Dropdown.Item onClick={(e) => onDelete(e)}>Delete Sensor</Dropdown.Item>
+                <Dropdown.Item onClick={(e) => onDeleteAllReports(e, sensor_id)}>Delete All Reports</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
@@ -68,8 +72,10 @@ const SensorItemCardExpanded = ({
             <h4>{bin_location}</h4>
             <p>{t('battery')}:</p>
             <h4 className={`status ${battery > 20 ? "green" : "red"}`}>{battery}%</h4>
-            <h5>{longitude}</h5>
-            <h5>{latitude}</h5>
+            <p>{t('temperature')}:</p>
+            <h4>{temperature}°C</h4>
+            <p>{t('signal_strength')}:</p>
+            <h4>{signal_strength}%</h4>
           </div>
         </div>
       </div>
@@ -138,23 +144,23 @@ const SensorItemCardExpanded = ({
 
             .SensorItemCardFooter {
               padding: 40px 30px;
-              
+
               > .chart-header {
                 display: flex;
                 margin-bottom: 30px;
                 justify-content: space-between;
-                
+
                 h3 {
                   margin: 0;
                 }
-                
+
                 .time-buttons {
                   font-size: 13px;
                   color: #003B2C;
                   > div {
                     display: inline-block;
                     margin-left: 15px;
-                    
+
                     &:hover {
                       color: #00BF8D;
                       text-decoration: underline;
@@ -231,7 +237,7 @@ const SensorItemCardExpanded = ({
                     text-transform: uppercase;
 
                     color: #333333;
-                    
+
                     &.green {
                     color: #00bf8d;
                   }
