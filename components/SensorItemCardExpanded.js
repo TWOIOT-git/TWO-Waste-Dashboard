@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 const SensorItemCardExpanded = ({
                                   sensor_id,
+                                  customer_id,
                                   fill_percentage,
                                   reports,
                                   bin_type,
@@ -19,6 +20,10 @@ const SensorItemCardExpanded = ({
                                   max_distance,
                                   latitude,
                                   longitude,
+                                  volume,
+                                  nickname,
+                                  schedule,
+                                  next_report,
                                   firmware_version,
                                   battery,
                                   signal_strength,
@@ -26,7 +31,9 @@ const SensorItemCardExpanded = ({
                                   t,
                                   active,
                                   onClick,
-  onDelete,
+                                  onDelete,
+                                  onEdit,
+                                  onDeleteAllEvents,
                                   onDeleteAllReports,
 }) => {
   return (
@@ -49,15 +56,29 @@ const SensorItemCardExpanded = ({
 
               <Dropdown.Menu>
                 <Dropdown.Item onClick={(e) => onDelete(e)}>Delete Sensor</Dropdown.Item>
-                <Dropdown.Item onClick={(e) => onDeleteAllReports(e, sensor_id)}>Delete All Reports</Dropdown.Item>
+                <Dropdown.Item onClick={(e) => onDeleteAllReports(e, sensor_id)}>{t('delete-reports')}</Dropdown.Item>
+                <Dropdown.Item onClick={(e) => onDeleteAllEvents(e, customer_id, sensor_id)}>{t('delete-events')}</Dropdown.Item>
+                <Dropdown.Item onClick={(e) => onEdit(e)}>{t('edit-sensor')}</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
           <h2>
-            <a>{sensor_id}</a>
+            <If condition={nickname}>
+              {sensor_id} ({nickname})
+            </If>
+            <If condition={!nickname}>
+              {sensor_id}
+            </If>
           </h2>
-          <p>{bin_type}</p>
-          <p>{firmware_version}</p>
+          <p>Type: {bin_type}</p>
+          <p>Volume: {volume} m3</p>
+          <p>Runs every: {(schedule / 3600).toFixed(2)} hour(s)</p>
+          <If condition={moment.unix(next_report).isBefore(moment())}>
+            <p className="red">Next report: {moment.unix(next_report).fromNow()}</p>
+          </If>
+          <If condition={!moment.unix(next_report).isBefore(moment())}>
+            <p className="green">Next report: {moment.unix(next_report).fromNow()}</p>
+          </If>
         </div>
       </div>
       <div className="SensorItemCardContent">
@@ -88,6 +109,9 @@ const SensorItemCardExpanded = ({
             <div onClick={() => onClick('24')} className={active === '24' ? 'active' : ''}>1 {t('day')}</div>
             <div onClick={() => onClick('72')} className={active === '72' ? 'active' : ''}>3 {t('days')}</div>
             <div onClick={() => onClick('168')} className={active === '168' ? 'active' : ''}>1 {t('week')}</div>
+            <div onClick={() => onClick('336')} className={active === '336' ? 'active' : ''}>{t('2-week')}</div>
+            <div onClick={() => onClick('672')} className={active === '672' ? 'active' : ''}>{t('4-week')}</div>
+            <div onClick={() => onClick('672')} className={active === '2160' ? 'active' : ''}>{t('3-months')}</div>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={400}>
@@ -299,6 +323,10 @@ const SensorItemCardExpanded = ({
                   line-height: normal;
                   margin: 0;
                   color: #00bf8d;
+
+                  &.red {
+                    color: #da6464;
+                  }
                 }
 
                 span {

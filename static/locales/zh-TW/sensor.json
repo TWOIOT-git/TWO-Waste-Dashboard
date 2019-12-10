@@ -11,5 +11,6 @@
   "no-sensors-sub-1": "Please ",
   "no-sensors-sub-link": "contact us",
   "no-sensors-sub-2": " to make an order if you already have a sensor you can register it here:",
-  "no-events": "You currently have no events"
+  "no-events": "You currently have no events",
+  "no-reports": "You currently have no reports"
 }

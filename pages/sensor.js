@@ -8,6 +8,9 @@ import moment from "moment";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import { withTranslation } from '../i18n'
 import EventTable from "../components/EventTable";
+import { toast } from 'react-toastify';
+import Modal from 'react-bootstrap/Modal'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 class Sensor extends Component {
   static contextType = ClientContext;
@@ -27,15 +30,26 @@ class Sensor extends Component {
       from: now.subtract(24, 'hours').unix(),
       active: '24',
       loading: true,
+      showEditSensorModal: false,
+      volume: 0,
+      schedule: 3600 * 12,
+      nickname: '',
+      refresh: 10000
     }
 
     this.getSensor = this.getSensor.bind(this);
     this.interval = null
   }
 
+  onChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
   componentDidMount() {
     this.getSensor()
-    this.interval = setInterval(this.getSensor, 10000);
+    this.interval = setInterval(this.getSensor, this.state.refresh);
   }
   componentWillUnmount() {
     clearInterval(this.interval)
@@ -105,18 +119,17 @@ class Sensor extends Component {
         reports: (reports.results) ? (reports.results).map(report => {
             return {
               ...report,
-              when: moment.unix(report.created_on).format('YYYY-M-D HH:mm'),
+              when: report.created_on,
               v: Math.round(report.fill_percentage),
+              temperature: report.t,
               t: moment.unix(report.created_on).format('HH:mm')
             }
           }) : [],
         events: (events.results) ? (events.results).map(event => {
           return {
             ...event,
-            report_created_on: event.report.created_on,
             sensor_id: event.report.sensor_id,
             event_id: event.event_id,
-            type: event.type,
             message: event.message,
           }
         }) : []
@@ -142,6 +155,10 @@ class Sensor extends Component {
 
     const json = await response.json();
 
+    toast(this.props.t('reports-deleted'), {
+      className: 'notification success'
+    })
+
     this.getSensor()
 
     console.log(json)
@@ -162,11 +179,113 @@ class Sensor extends Component {
 
     const json = await response.json();
 
+    toast(this.props.t('report-deleted'), {
+      className: 'notification success'
+    })
+
     this.getSensor()
 
     console.log(json)
   }
 
+  async deleteEvent(e, customer_id, event_id) {
+    e.preventDefault()
+
+    let url = `${process.env.DEVICE_API}customers/${customer_id}/events/${event_id}`
+    console.log(url)
+    const response = await fetch(url, {
+      method: 'DELETE'
+    })
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+
+    const json = await response.json();
+
+    toast(this.props.t('event-deleted'), {
+      className: 'notification success'
+    })
+
+    this.getSensor()
+
+    console.log(json)
+  }
+
+  async onDebugInfo(e, customer_id, event_id) {
+    e.preventDefault()
+
+    this.state.events.map(event => {
+      if(event.event_id === event_id) {
+        console.log(event)
+      }
+    })
+  }
+
+  async deleteEvents(e, customer_id, sensor_id) {
+    e.preventDefault()
+
+    let url = `${process.env.DEVICE_API}customers/${customer_id}/sensors/${sensor_id}/events`
+    console.log(url)
+    const response = await fetch(url, {
+      method: 'DELETE'
+    })
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+
+    const json = await response.json();
+
+    toast(this.props.t('events-deleted'), {
+      className: 'notification success'
+    })
+
+    this.getSensor()
+
+    console.log(json)
+  }
+
+  setShowEditSensorModal = (e, show) => {
+    if(e) {
+      e.preventDefault()
+    }
+    this.setState({
+      showEditSensorModal: show
+    })
+  }
+
+  updateSensor = async(e) => {
+    e.preventDefault()
+
+    let url = `${process.env.DEVICE_API}sensors/${this.state.sensor_id}`
+    let options = {
+      method: 'POST',
+      body: JSON.stringify({
+        volume: this.state.volume,
+        nickname: this.state.nickname,
+        schedule: this.state.schedule,
+      })
+    }
+    const response = await fetch(url, options)
+
+    if (!response.ok) {
+      throw Error(response.statusText)
+    }
+
+    const json = await response.json()
+
+    this.setShowEditSensorModal(null, false)
+
+    toast(this.props.t('sensor-updated'), {
+      className: 'notification success'
+    })
+
+    clearInterval(this.interval)
+
+    this.getSensor()
+    this.interval = setInterval(this.getSensor, this.state.refresh);
+
+    console.log(json)
+  }
 
   render() {
     return (
@@ -180,8 +299,75 @@ class Sensor extends Component {
                 onClick={(time) => this.handleClick(time)}
                 onDelete={(e) => this.deleteSensor(e)}
                 onDeleteAllReports={(e, sensor_id) => this.deleteAllReports(e, sensor_id)}
+                onDeleteAllEvents={(e, customer_id, sensor_id) => this.deleteEvents(e, customer_id, sensor_id)}
+                onEdit={(e) => this.setShowEditSensorModal(e, true)}
                 active={this.state.active}/>
             </div>
+            <Modal
+              show={this.state.showEditSensorModal}
+              onHide={() => this.setShowEditSensorModal(null, false)}
+              centered
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>{this.props.t('edit-sensor')}</Modal.Title>
+              </Modal.Header>
+
+              <Modal.Body>
+                <form action="">
+                  <div className="div-inputs">
+                    <div>
+                      <label htmlFor="nickname">
+                        {this.props.t('nickname')}
+                        <input
+                          name="nickname"
+                          id="nickname"
+                          value={this.state.nickname}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label htmlFor="volume">
+                        {this.props.t('volume')}
+                        <input
+                          name="volume"
+                          id="volume"
+                          value={this.state.volume}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label htmlFor="schedule">
+                        {this.props.t('schedule')}
+                        <input
+                          name="schedule"
+                          id="schedule"
+                          value={this.state.schedule}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label htmlFor="refresh">
+                        {this.props.t('refresh')}
+                        <input
+                          name="refresh"
+                          id="refresh"
+                          value={this.state.refresh}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </form>
+              </Modal.Body>
+
+              <Modal.Footer>
+                <div className="add-user-button" onClick={() => this.setShowEditSensorModal(null, false)}>{this.props.t('cancel')}</div>
+                <div className="add-user-button" onClick={(e) => this.updateSensor(e)}>{this.props.t('save')}</div>
+              </Modal.Footer>
+            </Modal>
             <div className="widget">
               <h2>Latest reports</h2>
               <ReportTable
@@ -193,7 +379,8 @@ class Sensor extends Component {
               <h2>Latest events</h2>
               <EventTable
                 items={this.state.events}
-                onDelete={(e, sensor_id, created_on) => this.deleteReport(e, sensor_id, created_on)}
+                onDelete={(e, customer_id, event_id) => this.deleteEvent(e, customer_id, event_id)}
+                onDebugInfo={(e, customer_id, event_id) => this.onDebugInfo(e, customer_id, event_id)}
               />
             </div>
           </If>
@@ -214,7 +401,7 @@ class Sensor extends Component {
                 font-style: normal;
                 font-weight: bold;
                 font-size: 26px;
-                line-height: normal;
+                line-volume: normal;
               }
             }
           `}</style>

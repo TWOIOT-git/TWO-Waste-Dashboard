@@ -6,30 +6,38 @@ import moment from "moment";
 import Dropdown from 'react-bootstrap/Dropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const EventTable = ({ items, onDelete }) => {
+const EventTable = ({
+                      items,
+                      onDelete,
+                      onDebugInfo,
+                      t
+}) => {
   return (
     <div className="EventTable">
+      <If condition={items.length !== 0}>
       <div className="EventTableHeader">
-        <div>Id</div>
-        <div>Type</div>
-        <div>Message</div>
-        <div>Happened</div>
-        <div>Actions</div>
+        {/*<div>{t('subscriptions')}</div>*/}
+        {/*<div>{t('trigger')}</div>*/}
+        <div>{t('created-on')}</div>
+        <div>{t('type')}</div>
+        {/*<div>{t('message')}</div>*/}
+        <div>{t('actions')}</div>
       </div>
-      {items.map(
+      {
+        items.map(
         ({
-           sensor_id,
+           customer_id,
            event_id,
            type,
            message,
-           report_created_on,
-           t
+           created_on
         }) => (
-          <div key={`${sensor_id}-${report_created_on}-${type}`} className="EventTableItem">
-            <div className="name">{sensor_id}</div>
-            <div className="detail">{type}</div>
-            <div className="detail">{message}</div>
-            <div className="detail">{moment.unix(report_created_on).fromNow()}</div>
+          <div key={event_id} className="EventTableItem">
+            {/*<div className="detail">Andrzej</div>*/}
+            {/*<div className="detail">Report</div>*/}
+            <div className="detail">{moment.unix(created_on).fromNow()}</div>
+            <div className="detail">{t(type)}</div>
+            {/*<div className="detail">{message}</div>*/}
             <div className="action">
               <Dropdown>
                 <Dropdown.Toggle variant="" id="dropdown-basic">
@@ -41,13 +49,19 @@ const EventTable = ({ items, onDelete }) => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={(e) => onDelete(e, event_id)}>Delete</Dropdown.Item>
+                  <Dropdown.Item onClick={(e) => onDelete(e, customer_id, event_id)}>{t('delete')}</Dropdown.Item>
+                  <Dropdown.Item onClick={(e) => onDebugInfo(e, customer_id, event_id)}>{t('debug')}</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
           </div>
         )
-      )}
+      )
+      }
+      </If>
+      <If condition={items.length === 0}>
+        <div className="no-events">{t('no-events')}</div>
+      </If>
 
       <style jsx>
         {`
@@ -75,6 +89,9 @@ const EventTable = ({ items, onDelete }) => {
             flex: 1;
           }
 
+          .no-events {
+            text-align: center;
+          }
           .EventTableHeader {
             width: 100%;
             padding: 16px;
@@ -104,7 +121,6 @@ const EventTable = ({ items, onDelete }) => {
           }
 
           .EventTableItem {
-            cursor: pointer;
             width: 100%;
             background: #ffffff;
             box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);

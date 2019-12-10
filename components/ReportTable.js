@@ -3,21 +3,23 @@ import PropTypes from "prop-types";
 import { withTranslation } from '../i18n'
 import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import moment from "moment";
 
 const ReportTable = ({
                      items,
                      onDelete,
-  t
+                       t
 }) => {
   return (
     <div className="ReportTable">
+      <If condition={items.length !== 0}>
       <div className="ReportTableHeader">
-        <div>{t('created_on')}</div>
-        <div>{t('fill_percentage')}</div>
-        <div>{t('distance')}</div>
-        <div>{t('temperature')}</div>
-        <div>{t('battery')}</div>
-        <div>{t('signal')}</div>
+        <div>{t('created-on')}</div>
+        <div>{t('fill-level')} (%)</div>
+        <div>{t('distance')} (mm)</div>
+        <div>{t('temperature')} (°C)</div>
+        <div>{t('battery')} (%)</div>
+        <div>{t('signal')} (%)</div>
         <div>{t('actions')}</div>
       </div>
       {items.map(
@@ -27,15 +29,15 @@ const ReportTable = ({
            sensor_id,
            v,
            l,
-           t,
+           temperature,
            b,
            s
         }) => (
           <div key={`${sensor_id}-${created_on}`} className="ReportTableItem">
-            <div className="detail">{when}</div>
+            <div className="detail">{moment.unix(created_on).fromNow()}</div>
             <div className="detail">{v}</div>
             <div className="detail">{l}</div>
-            <div className="detail">{t}</div>
+            <div className="detail">{temperature}</div>
             <div className="detail">{b}</div>
             <div className="detail">{s}</div>
             <div className="action">
@@ -49,13 +51,17 @@ const ReportTable = ({
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={(e) => onDelete(e, sensor_id, created_on)}>Delete</Dropdown.Item>
+                  <Dropdown.Item onClick={(e) => onDelete(e, sensor_id, created_on)}>{t('delete')}</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
           </div>
         )
       )}
+      </If>
+      <If condition={items.length === 0}>
+        <div className="empty">{t('no-reports')}</div>
+      </If>
 
       <style jsx>
         {`
@@ -79,6 +85,9 @@ const ReportTable = ({
             }
           }
 
+          .empty {
+            text-align: center;
+          }
           .ReportTable {
             flex: 1;
           }
@@ -131,7 +140,7 @@ const ReportTable = ({
             > div:first-child {
               flex: 0.75;
             }
-            
+
             > img {
                   border: 1px solid #00b284;
                   border-radius: 50%;
@@ -223,8 +232,7 @@ const ReportTable = ({
 ReportTable.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      email: PropTypes.string.isRequired,
-      user_role: PropTypes.string.isRequired,
+      temperature: PropTypes.number.isRequired,
     }).isRequired
   ).isRequired,
   t: PropTypes.func.isRequired
