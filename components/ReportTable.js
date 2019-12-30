@@ -232,7 +232,6 @@ const ReportTable = ({
 ReportTable.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      temperature: PropTypes.number.isRequired,
     }).isRequired
   ).isRequired,
   t: PropTypes.func.isRequired

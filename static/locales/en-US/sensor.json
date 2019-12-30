@@ -34,5 +34,13 @@
   "Notifications_BinChanged": "Bin changed",
   "Notifications_BinEmpty": "Bin is empty",
   "LOW_BATTERY_LEVEL": "Low battery level",
-  "edit-sensor": "Edit"
+  "edit-sensor": "Edit",
+  "nickname": "Nickname",
+  "min_distance": "Distance when fill level is 100%",
+  "max_distance": "Distance when fill level is 0%",
+  "volume": "Bin capacity",
+  "schedule": "Wake up every x seconds",
+  "refresh": "Auto refresh UI every x seconds",
+  "save": "Save",
+  "cancel": "Cancel"
 }

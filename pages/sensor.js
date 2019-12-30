@@ -32,9 +32,17 @@ class Sensor extends Component {
       loading: true,
       showEditSensorModal: false,
       volume: 0,
+      min_distance: 0,
+      max_distance:0,
       schedule: 3600 * 12,
       nickname: '',
-      refresh: 10000
+      refresh: 10000,
+      edit_volume: 0,
+      edit_min_distance: 0,
+      edit_max_distance:0,
+      edit_schedule: 3600 * 12,
+      edit_nickname: '',
+      edit_refresh: 10000
     }
 
     this.getSensor = this.getSensor.bind(this);
@@ -69,7 +77,6 @@ class Sensor extends Component {
     e.preventDefault()
 
     let url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id
-    console.log('deleting sensor: ', url)
     const response = await fetch(url, {
       method: 'DELETE'
     })
@@ -78,8 +85,6 @@ class Sensor extends Component {
     }
 
     const json = await response.json()
-
-    console.log(json)
 
     Router.push('/sensors')
   }
@@ -94,14 +99,12 @@ class Sensor extends Component {
       }
 
       let reports_url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id + "/reports/from/" + this.state.from + "/to/" + this.state.to;
-      console.log(reports_url);
       const reports_response = await fetch(reports_url);
       if (!reports_response.ok) {
         throw Error(reports_response.statusText);
       }
 
       let events_url = `${process.env.DEVICE_API}/customers/${this.context.user.attributes['custom:client_id']}/sensors/${this.state.sensor_id}/events`
-      console.log(events_url);
       const events_response = await fetch(events_url);
       if (!events_response.ok) {
         throw Error(reports_response.statusText);
@@ -110,8 +113,6 @@ class Sensor extends Component {
       const sensor = await sensor_response.json();
       const reports = await reports_response.json();
       const events = await events_response.json();
-
-      console.log(events)
 
       this.setState({
           ...sensor,
@@ -145,7 +146,6 @@ class Sensor extends Component {
     e.preventDefault()
 
     let url = process.env.DEVICE_API + "sensors/" + sensor_id + "/reports/"
-    console.log('deleting report: ', url)
     const response = await fetch(url, {
       method: 'DELETE'
     })
@@ -161,7 +161,6 @@ class Sensor extends Component {
 
     this.getSensor()
 
-    console.log(json)
   }
 
 
@@ -169,7 +168,6 @@ class Sensor extends Component {
     e.preventDefault()
 
     let url = process.env.DEVICE_API + "sensors/" + sensor_id + "/reports/" + created_on
-    console.log('deleting report: ', url)
     const response = await fetch(url, {
       method: 'DELETE'
     })
@@ -185,14 +183,12 @@ class Sensor extends Component {
 
     this.getSensor()
 
-    console.log(json)
   }
 
   async deleteEvent(e, customer_id, event_id) {
     e.preventDefault()
 
     let url = `${process.env.DEVICE_API}customers/${customer_id}/events/${event_id}`
-    console.log(url)
     const response = await fetch(url, {
       method: 'DELETE'
     })
@@ -207,8 +203,6 @@ class Sensor extends Component {
     })
 
     this.getSensor()
-
-    console.log(json)
   }
 
   async onDebugInfo(e, customer_id, event_id) {
@@ -248,8 +242,15 @@ class Sensor extends Component {
     if(e) {
       e.preventDefault()
     }
+
     this.setState({
-      showEditSensorModal: show
+      showEditSensorModal: show,
+      edit_volume: this.state.volume,
+      edit_nickname: this.state.nickname,
+      edit_schedule: this.state.schedule,
+      edit_min_distance: this.state.min_distance,
+      edit_max_distance: this.state.max_distance,
+      edit_refresh: this.state.refresh,
     })
   }
 
@@ -260,11 +261,23 @@ class Sensor extends Component {
     let options = {
       method: 'POST',
       body: JSON.stringify({
-        volume: this.state.volume,
-        nickname: this.state.nickname,
-        schedule: this.state.schedule,
+        volume: this.state.edit_volume,
+        nickname: this.state.edit_nickname,
+        schedule: this.state.edit_schedule,
+        min_distance: this.state.edit_min_distance,
+        max_distance: this.state.edit_max_distance,
       })
     }
+
+    this.setState({
+      volume: this.state.edit_volume,
+      nickname: this.state.edit_nickname,
+      schedule: this.state.edit_schedule,
+      min_distance: this.state.edit_min_distance,
+      max_distance: this.state.edit_max_distance,
+      refresh: this.state.edit_refresh,
+    })
+
     const response = await fetch(url, options)
 
     if (!response.ok) {
@@ -283,8 +296,6 @@ class Sensor extends Component {
 
     this.getSensor()
     this.interval = setInterval(this.getSensor, this.state.refresh);
-
-    console.log(json)
   }
 
   render() {
@@ -319,9 +330,31 @@ class Sensor extends Component {
                       <label htmlFor="nickname">
                         {this.props.t('nickname')}
                         <input
-                          name="nickname"
-                          id="nickname"
-                          value={this.state.nickname}
+                          name="edit_nickname"
+                          id="edit_nickname"
+                          value={this.state.edit_nickname}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label htmlFor="min_distance">
+                        {this.props.t('min_distance')}
+                        <input
+                          name="edit_min_distance"
+                          id="edit_min_distance"
+                          value={this.state.edit_min_distance}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label htmlFor="max_distance">
+                        {this.props.t('max_distance')}
+                        <input
+                          name="edit_max_distance"
+                          id="edit_max_distance"
+                          value={this.state.edit_max_distance}
                           onChange={this.onChange}
                         />
                       </label>
@@ -330,9 +363,9 @@ class Sensor extends Component {
                       <label htmlFor="volume">
                         {this.props.t('volume')}
                         <input
-                          name="volume"
-                          id="volume"
-                          value={this.state.volume}
+                          name="edit_volume"
+                          id="edit_volume"
+                          value={this.state.edit_volume}
                           onChange={this.onChange}
                         />
                       </label>
@@ -341,9 +374,9 @@ class Sensor extends Component {
                       <label htmlFor="schedule">
                         {this.props.t('schedule')}
                         <input
-                          name="schedule"
-                          id="schedule"
-                          value={this.state.schedule}
+                          name="edit_schedule"
+                          id="edit_schedule"
+                          value={this.state.edit_schedule}
                           onChange={this.onChange}
                         />
                       </label>
@@ -352,9 +385,9 @@ class Sensor extends Component {
                       <label htmlFor="refresh">
                         {this.props.t('refresh')}
                         <input
-                          name="refresh"
-                          id="refresh"
-                          value={this.state.refresh}
+                          name="edit_refresh"
+                          id="edit_refresh"
+                          value={this.state.edit_refresh}
                           onChange={this.onChange}
                         />
                       </label>
