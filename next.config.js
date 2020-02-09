@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const webpack = require('webpack')
 
 const withSass = require("@zeit/next-sass");
@@ -11,5 +9,8 @@ module.exports = withCSS(withSass({
       new webpack.EnvironmentPlugin(process.env)
     )
     return config
+  },
+  env: {
+    identityPoolId: process.env.identityPoolId
   }
 }))

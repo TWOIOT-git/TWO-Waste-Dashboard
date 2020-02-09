@@ -13,6 +13,9 @@ import 'react-toastify/dist/ReactToastify.min.css';
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 const logger = new Logger('auth');
 
+logger.debug('process.env.identityPoolId: ', process.env.identityPoolId)
+logger.debug('process.env.userPoolId: ', process.env.userPoolId)
+
 Amplify.configure({
   Auth: {
     identityPoolId: process.env.identityPoolId,
