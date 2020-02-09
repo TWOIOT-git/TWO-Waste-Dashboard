@@ -17,6 +17,7 @@ const SensorItemCard = ({
                           updated_on,
                           min_distance,
                           max_distance,
+                          nickname,
                           firmware_version,
                           t
 }) => {
@@ -27,7 +28,7 @@ const SensorItemCard = ({
           <span className={`status ${fill_percentage < 50 ? "green" : "red"}`} />
           <h2>
             <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
-              <a>{sensor_id}</a>
+              <a>{nickname}</a>
             </Link>
           </h2>
           <p>{bin_type}</p>
