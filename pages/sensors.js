@@ -5,10 +5,10 @@ import Head from "../components/Head";
 import TopTools from "../components/TopTools";
 import SensorItemCard from "../components/SensorItemCard";
 import SensorTable from "../components/SensorTable";
-import fetch from "isomorphic-unfetch";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import breakpoints from "../utils/breakpoints";
 import { withTranslation } from '../i18n'
+import {API} from 'aws-amplify'
 
 class Sensors extends React.Component {
   static contextType = ClientContext;
@@ -23,9 +23,8 @@ class Sensors extends React.Component {
     this.state = {
       layoutMode: "cards",
       loading: true,
-      data: [
-      ]
-    };
+      data: []
+    }
   }
 
   async componentDidMount() {
@@ -37,15 +36,11 @@ class Sensors extends React.Component {
   }
 
   async getSensors() {
-      try {
-        let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/sensors";
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        const json = await response.json();
-    let data = [];
-        for (let sensor of json.results) {
+    let response = await API.get('lidbotAPI', '/sensors', null)
+
+    let data = []
+
+    for (let sensor of response) {
       data.push({
         ...sensor,
         reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {
@@ -55,12 +50,9 @@ class Sensors extends React.Component {
           }
         }) : [],
       })
-        }
-        return data
+    }
 
-      } catch (error) {
-        console.log(error);
-  }
+    return data
   }
 
   render() {
@@ -104,7 +96,7 @@ class Sensors extends React.Component {
             </If>
           </div>
           <style jsx>{`
-        
+
           .register-sensor {
             padding: 25px;
             cursor: pointer;

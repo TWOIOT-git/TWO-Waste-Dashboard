@@ -7,7 +7,7 @@
     "node": "10.15.1"
   },
   "scripts": {
-    "dev": "node server.js",
+    "dev": "userPoolId=ap-northeast-1_wtGNw1gmx stage=test node server.js",
     "start": "NODE_ENV=production node server.js",
     "build": "next build",
     "lint": "npm run lint:eslint",

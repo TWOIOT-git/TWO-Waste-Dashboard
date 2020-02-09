@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withTranslation } from '../i18n'
+import capabilities from '../utils/capabilities'
 import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -8,12 +9,13 @@ const UserTable = ({
                      items,
                      onDelete,
                      onDisable,
-                     onEnable
+                     onEnable,
+                     t
 }) => {
   return (
     <div className="UserTable">
       <div className="UserTableHeader">
-        <div></div>
+        <div>Picture</div>
         <div>Name</div>
         <div>Role</div>
         <div>Status</div>
@@ -28,24 +30,23 @@ const UserTable = ({
            email,
            enabled,
            user_status,
-           user_role,
-           t
+           user_role
         }) => (
           <div key={email} className="UserTableItem">
             <If condition={src}>
-              <img src={src} />
+              <div className="detail placeholder-wrap"><img src={src} /></div>
             </If>
             <If condition={!src}>
-              <div className="placeholder"></div>
+              <div className="detail placeholder-wrap"><div className="placeholder"></div></div>
             </If>
-            <div className="name">
+            <div className="detail">
               <div>{`${given_name} ${family_name}`}</div>
               <div>{email}</div>
             </div>
-            <div className="detail">{user_role}</div>
-            <div className="detail">{user_status}</div>
-            <div className="detail">{enabled ? 'enabled' : 'disabled'}</div>
-            <div className="action">
+            <div className="detail">{t(user_role)}</div>
+            <div className="detail">{t(user_status)}</div>
+            <div className="detail">{enabled ? t('enabled') : t('disabled')}</div>
+            <div className="detail action">
               <Dropdown>
                 <Dropdown.Toggle
                   variant=""
@@ -58,18 +59,20 @@ const UserTable = ({
                   </svg>
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    onClick={(e) => onDisable(e, email)}
-                    disabled={!enabled}
-                  >Disable</Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={(e) => onEnable(e, email)}
-                    disabled={enabled}
-                  >Enable</Dropdown.Item>
-                  <div className="dropdown-divider"></div>
-                  <Dropdown.Item onClick={(e) => onDelete(e, email)}>Delete</Dropdown.Item>
-                </Dropdown.Menu>
+                {/*<If condition={capabilities.can_delete_user()}>*/}
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      onClick={(e) => onDisable(e, email)}
+                      disabled={!enabled}
+                    >Disable</Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={(e) => onEnable(e, email)}
+                      disabled={enabled}
+                    >Enable</Dropdown.Item>
+                    <div className="dropdown-divider"></div>
+                    <Dropdown.Item onClick={(e) => onDelete(e, email)}>Delete</Dropdown.Item>
+                  </Dropdown.Menu>
+                {/*</If>*/}
               </Dropdown>
             </div>
           </div>
@@ -109,6 +112,7 @@ const UserTable = ({
             display: flex;
 
             > div {
+              padding: 0 15px;
               font-style: normal;
               font-weight: normal;
               font-size: 16px;
@@ -117,16 +121,8 @@ const UserTable = ({
               color: #969696;
             }
 
-            > div:not(:first-child) {
+            > div {
               flex: 1;
-            }
-
-            > div:last-child {
-              flex: 0.75
-            }
-
-            > div:first-child {
-              flex: 0.75;
             }
           }
 
@@ -139,19 +135,12 @@ const UserTable = ({
             display: flex;
             align-items: center;
 
-            > div:not(:first-child) {
+            > div {
               flex: 1;
             }
+              > .placeholder-wrap {
 
-            > div:last-child {
-              flex: 0.75
-            }
-
-            > div:first-child {
-              flex: 0.75;
-            }
-            
-            > img {
+                > img {
                   border: 1px solid #00b284;
                   border-radius: 50%;
                   width: 50px;
@@ -167,6 +156,7 @@ const UserTable = ({
                   height: 50px;
                   background: #f6f6f6;
                 }
+              }
 
             .status {
               > .circle {
@@ -212,6 +202,7 @@ const UserTable = ({
               cursor: pointer;
             }
             .detail {
+              padding: 0 15px;
               font-family: Roboto;
               font-style: normal;
               font-weight: normal;
@@ -250,4 +241,4 @@ UserTable.propTypes = {
 
 };
 
-export default withTranslation('sensor')(UserTable)
+export default withTranslation('settings')(UserTable)

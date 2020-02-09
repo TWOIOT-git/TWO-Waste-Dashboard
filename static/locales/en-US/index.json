@@ -3,6 +3,7 @@
   "subtitle": "Welcome back! Login to continue your smart waste management.",
   "forgotten-password": "Forgot your password?",
   "sign-in": "Sign in",
+  "signing-in": "Signing in...",
   "enter-password": "Enter password",
   "email-placeholder": "you@example.com",
   "password-placeholder": "Password"

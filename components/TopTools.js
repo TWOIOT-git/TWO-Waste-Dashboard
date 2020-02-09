@@ -38,20 +38,20 @@ class TopTools extends React.Component {
     return (
       <div className="TopToolsWrapper">
         <div className="TopTools">
-          <div>
-            <label htmlFor="search">
-              <img src="/static/icons/search.png" alt="Search in lidbot" />
-              <input placeholder="Search for..." id="search" name="search" />
-              <If condition={openFilters}>
-                <div className="filterAbsolute">
-                  <Filters />
-                </div>
-              </If>
-            </label>
-            {/*<button type="button" onClick={toggleFilters}>*/}
-            {/*  <img src="/static/icons/filter.png" alt="search in lidbot" />*/}
-            {/*</button>*/}
-          </div>
+          {/*<div>*/}
+          {/*  <label htmlFor="search">*/}
+          {/*    <img src="/static/icons/search.png" alt="Search in lidbot" />*/}
+          {/*    <input placeholder="Search for..." id="search" name="search" />*/}
+          {/*    <If condition={openFilters}>*/}
+          {/*      <div className="filterAbsolute">*/}
+          {/*        <Filters />*/}
+          {/*      </div>*/}
+          {/*    </If>*/}
+          {/*  </label>*/}
+          {/*  /!*<button type="button" onClick={toggleFilters}>*!/*/}
+          {/*  /!*  <img src="/static/icons/filter.png" alt="search in lidbot" />*!/*/}
+          {/*  /!*</button>*!/*/}
+          {/*</div>*/}
           <If condition={layoutMode}>
             <button
               className="layoutButton"

@@ -15,16 +15,29 @@ const logger = new Logger('auth');
 
 Amplify.configure({
   Auth: {
-    identityPoolId: process.env.AWS_COGNITO_IDENTITY_POOL_ID,
-    region: process.env.AWS_PROJECT_REGION,
-    userPoolId: process.env.AWS_USER_POOLS_ID,
-    userPoolWebClientId: process.env.AWS_USER_POOLS_WEB_CLIENT_ID,
+    identityPoolId: process.env.identityPoolId,
+    region: 'ap-northeast-1',
+    userPoolId: process.env.userPoolId,
+    userPoolWebClientId: process.env.userPoolWebClientId,
   },
   Storage: {
     AWSS3: {
-      bucket: process.env.AWS_USER_FILES_S3_BUCKET,
-      region: process.env.AWS_USER_FILES_S3_BUCKET_REGION,
+      bucket: 'lidbot-dev',
+      region: 'ap-northeast-1',
     }
+  },
+  API: {
+    endpoints: [
+      {
+        name: "lidbotAPI",
+        endpoint: process.env.api,
+        custom_header: async () => {
+          return {
+            Authorization: `${(await Auth.currentSession()).getIdToken().getJwtToken()}`
+          }
+        }
+      }
+    ]
   }
 })
 
@@ -33,13 +46,13 @@ function signOut(e) {
 
   Auth.signOut()
     .then(data => {
-      console.log('Sign out successful')
-      console.log(data)
+      logger.debug('Sign out successful')
+      logger.debug(data)
       Router.push('/')
     })
     .catch(err => {
-      console.log('Sign out error: ')
-      console.log(err)
+      logger.debug('Sign out error: ')
+      logger.debug(err)
     })
 }
 async function changePassword(oldPassword, newPassword) {
@@ -106,7 +119,7 @@ async function signIn(email, password) {
     if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
       return {user: user, authState: user.challengeName, authError: 'Please change your password.'}
     } else {
-      Router.push('/analytics')
+      Router.push('/sensors')
     }
 
   } catch (e) {
@@ -142,7 +155,7 @@ async function signUp(email, password) {
       },
     })
 
-    console.log(user)
+    logger.debug(user)
 
     return {
       user: user,
@@ -150,7 +163,7 @@ async function signUp(email, password) {
       successAuthCode: 'VerificationCodeSent'
     }
   } catch (e) {
-    console.log(e)
+    logger.debug(e)
 
     return {
       errorAuthCode: e.code
@@ -168,7 +181,7 @@ async function confirmSignUp(username, code) {
       successAuthCode: 'VerificationCodeSent'
     }
   } catch (e) {
-    console.log(e)
+    logger.debug(e)
 
     return {
       successAuthCode: null,
@@ -186,13 +199,13 @@ async function resendSignUp(username) {
 
   try {
     let data = await Auth.resendSignUp(username)
-    console.log('code resent successfully: ', data);
+    logger.debug('code resent successfully: ', data);
 
     return {
       successAuthCode: 'CodeResentSuccessfully'
     }
   } catch (e) {
-    console.log(e)
+    logger.debug(e)
 
     return {
       errorAuthCode: e.code
@@ -209,13 +222,13 @@ async function forgotPassword(username) {
 
   try {
     let data = await Auth.forgotPassword(username)
-    console.log(data);
+    logger.debug(data);
 
     return {
       successAuthCode: 'CodeResentSuccessfully'
     }
   } catch (e) {
-    console.log(e)
+    logger.debug(e)
 
     return {
       errorAuthCode: e.code
@@ -225,14 +238,14 @@ async function forgotPassword(username) {
 async function verifyCurrentUserAttribute(attr) {
   try {
     let data = await Auth.verifyCurrentUserAttribute(attr)
-    console.log(data);
+    logger.debug(data);
 
     return {
       errorAuthCode: null,
       successAuthCode: 'CodeResentSuccessfully'
     }
   } catch (e) {
-    console.log(e)
+    logger.debug(e)
 
     return {
       errorAuthCode: e.code
@@ -253,7 +266,7 @@ async function verifyCurrentUserAttributeSubmit(attr, code) {
       phone_number_verified: user.attributes.phone_number_verified,
     }
   } catch (e) {
-    console.log(e)
+    logger.debug(e)
 
     return {
       errorAuthCode: true
@@ -264,13 +277,13 @@ async function verifyCurrentUserAttributeSubmit(attr, code) {
 async function forgotPasswordSubmit(username, code, newPassword) {
   try {
     let data = await Auth.forgotPasswordSubmit(username, code, newPassword)
-    console.log(data);
+    logger.debug(data);
 
     return {
       successAuthCode: 'PasswordChangedSuccessfully'
     }
   } catch (e) {
-    console.log(e)
+    logger.debug(e)
 
     return {
       errorAuthCode: e.code
@@ -285,7 +298,7 @@ async function getUserImage(key) {
 
   let result = await Storage.get(key)
 
-  console.log('getUserImage: ', result)
+  logger.debug('getUserImage: ', result)
 
   logger.debug('getUserImage: ', result)
 
@@ -294,41 +307,32 @@ async function getUserImage(key) {
 function removeUserImage(key) {
   if(key) {
     Storage.remove(key)
-      .then(result => console.log(result))
-      .catch(err => console.log(err));
+      .then(result => logger.debug(result))
+      .catch(err => logger.debug(err));
   }
 }
 
 function reloadUserContext() {
-  console.log('reloadUserContext')
+  logger.debug('reloadUserContext')
   Auth.currentAuthenticatedUser({
     bypassCache: true
   }).then(user => {
-    console.log(user)
+    logger.debug(user)
   }).catch(e => {
-    console.log(e)
+    logger.debug(e)
   })
 }
 
 async function updateUserAttributes(attributes) {
-  try {
-    let user = await Auth.currentAuthenticatedUser()
-    let result = await Auth.updateUserAttributes(user, attributes)
+  let user = await Auth.currentAuthenticatedUser()
+  let result = await Auth.updateUserAttributes(user, attributes)
 
-    await Auth.currentAuthenticatedUser( {
-      bypassCache: true
-    })
+  await Auth.currentAuthenticatedUser( {
+    bypassCache: true
+  })
 
-    return {
-      successAuthCode: 'SettingsSaved'
-    }
-
-  } catch (e) {
-    console.log(e)
-
-    return {
-      errorAuthCode: e.code
-    }
+  return {
+    successAuthCode: 'SettingsSaved'
   }
 }
 
@@ -338,7 +342,7 @@ function withAuthSync(WrappedComponent) {
   return class extends Component {
     static async getInitialProps (ctx) {
       const pageProps = WrappedComponent.getInitialProps && await WrappedComponent.getInitialProps(ctx)
-      console.log('@auth getInitialProps: ', pageProps)
+      logger.debug('@auth getInitialProps: ', pageProps)
       return { ...pageProps }
     }
 
@@ -348,18 +352,17 @@ function withAuthSync(WrappedComponent) {
       this.state = {
         user: null,
         authState: 'loading',
-
       }
     }
 
     componentDidMount() {
       Auth.currentAuthenticatedUser().then(user => {
-        console.log('Current user: ', user)
+        logger.debug('Current user: ', user)
 
         let language = determineLanguage(user).value
 
         if(language) {
-          console.log(`setting language to: ${language}`)
+          logger.debug(`setting language to: ${language}`)
           i18n.changeLanguage(language)
           moment.locale(language)
         }
@@ -367,13 +370,13 @@ function withAuthSync(WrappedComponent) {
         let timezone = determineTimezone(user).value
 
         if(timezone) {
-          console.log(`setting timezone to: ${timezone}`)
+          logger.debug(`setting timezone to: ${timezone}`)
           moment.tz.setDefault(timezone)
         }
 
         this.setState({user: user, authState: 'signedIn'})
       }).catch(e => {
-        console.log(e)
+        logger.debug(e)
         Router.push('/')
       })
     }
@@ -389,7 +392,7 @@ function withAuthSync(WrappedComponent) {
             }}
           >
             <ToastContainer
-              autoClose={3000}
+              autoClose={2000}
               progressClassName={"progress"}
             />
             <WrappedComponent

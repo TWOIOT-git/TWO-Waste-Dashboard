@@ -2,5 +2,5 @@ const NextI18Next = require('next-i18next').default
 
 module.exports = new NextI18Next({
   defaultLanguage: 'en-US',
-  otherLanguages: ['de-DE', 'es-ES', 'zh-TW'],
+  otherLanguages: ['zh-TW'],
 })

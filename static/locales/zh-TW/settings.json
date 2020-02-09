@@ -63,13 +63,13 @@
   "cancel": "取消",
 
   "team": {
-    "title": "My team",
-    "account-management": "Account Management",
-    "role": "Role",
-    "add-user": "Add user"
+    "title": "我的團隊",
+    "account-management": "帳戶管理",
+    "role": "角色",
+    "add-user": "添加用戶"
   },
-  "user-disabled": "User disabled",
-  "user-enabled": "User enabled",
-  "user-deleted": "User deleted",
-  "user-added": "An invitation has been sent"
+  "user-disabled": "用戶已禁用",
+  "user-enabled": "已啟用用戶",
+  "user-deleted": "用戶已刪除",
+  "user-added": "邀請已發送"
 }

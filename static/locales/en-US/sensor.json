@@ -33,7 +33,7 @@
   "Notifications_BinFull": "Bin is full",
   "Notifications_BinChanged": "Bin changed",
   "Notifications_BinEmpty": "Bin is empty",
-  "LOW_BATTERY_LEVEL": "Low battery level",
+  "Notifications_LowBatteryLevel": "Low battery level",
   "edit-sensor": "Edit",
   "nickname": "Nickname",
   "min_distance": "Distance when fill level is 100%",

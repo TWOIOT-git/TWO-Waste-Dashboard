@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withTranslation } from '../i18n'
-import Link from "next/link";
 import moment from "moment";
 import Dropdown from 'react-bootstrap/Dropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,7 +8,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const EventTable = ({
                       items,
                       onDelete,
-                      onDebugInfo,
                       t
 }) => {
   return (
@@ -35,7 +33,7 @@ const EventTable = ({
           <div key={event_id} className="EventTableItem">
             {/*<div className="detail">Andrzej</div>*/}
             {/*<div className="detail">Report</div>*/}
-            <div className="detail">{moment.unix(created_on).fromNow()}</div>
+            <div className="detail">{moment.unix(created_on).format('LLL')}</div>
             <div className="detail">{t(type)}</div>
             {/*<div className="detail">{message}</div>*/}
             <div className="action">
@@ -50,7 +48,6 @@ const EventTable = ({
 
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={(e) => onDelete(e, customer_id, event_id)}>{t('delete')}</Dropdown.Item>
-                  <Dropdown.Item onClick={(e) => onDebugInfo(e, customer_id, event_id)}>{t('debug')}</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>

@@ -1,9 +1,13 @@
 import React from "react";
 import Head from "../components/Head";
 import HeaderMenu from "../components/HeaderMenu";
-import { completeNewPassword, signIn } from '../utils/auth'
+import { completeNewPassword, signIn, updateUserAttributes } from '../utils/auth'
 import { i18n, withTranslation } from '../i18n'
 import Link from "next/link"
+import Amplify, { Auth, Logger } from 'aws-amplify'
+
+Amplify.Logger.LOG_LEVEL = 'DEBUG';
+const logger = new Logger('verify');
 
 import './main.scss'
 
@@ -18,8 +22,6 @@ class Verify extends React.Component {
     i18n.changeLanguage(props.language)
 
     this.state = {
-      code: props.code,
-      email: props.email,
       password: '',
       errorAuthCode: null,
       successAuthCode: null,
@@ -35,12 +37,12 @@ class Verify extends React.Component {
   async onSubmit(e) {
     e.preventDefault();
 
-    let result = await signIn(this.state.email, this.props.password)
+    let result = await signIn(this.props.email, this.props.password)
 
-    let state = await completeNewPassword(result.user, this.state.password)
+    await completeNewPassword(result.user, this.state.password)
 
-    this.setState(state)
-  };
+    await signIn(this.props.email, this.state.password)
+  }
 
   render() {
     const { onChange } = this;
@@ -48,18 +50,17 @@ class Verify extends React.Component {
     return (
       <section>
         <HeaderMenu />
-        <Head title={`${this.props.t('password-reset')} | Lidbot`} />
+        <Head title={`${this.props.t('confirm.title')} | Lidbot`} />
         <div className="main">
           <div className="content">
-            <If condition={this.state.successAuthCode !== 'PasswordChangedSuccessfully'}>
-              <h1>{this.props.t('password-reset')}</h1>
-              <p>{this.props.t('new-password-prompt')}</p>
-              <If condition={this.state.errorAuthCode}>
-                <div className="alert error">
-                  {this.props.t(this.state.errorAuthCode)}
-                </div>
-              </If>
-              <form onSubmit={e => this.onSubmit(e)}>
+            <h1>{this.props.t('confirm.title')}</h1>
+            <p>{this.props.t('confirm.prompt')}</p>
+            <If condition={this.state.errorAuthCode}>
+              <div className="alert error">
+                {this.props.t(this.state.errorAuthCode)}
+              </div>
+            </If>
+            <form onSubmit={e => this.onSubmit(e)}>
                 <label htmlFor="password">
                   <input
                     name="password"
@@ -72,17 +73,8 @@ class Verify extends React.Component {
                     placeholder={this.props.t('password')}
                   />
                 </label>
-              <button type="submit">{this.props.t('change-password')}</button>
+              <button type="submit">{this.props.t('confirm.button')}</button>
             </form>
-            </If>
-            <If condition={this.state.successAuthCode === 'PasswordChangedSuccessfully'}>
-              <h1 className="success">{this.props.t('h1')}</h1>
-              <p>{this.props.t('p')}
-              <Link href='/'>
-                <a className="link-label">{this.props.t('sign-in')}.</a>
-              </Link>
-              </p>
-            </If>
           </div>
         </div>
         <style jsx>

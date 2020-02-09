@@ -13,9 +13,10 @@ import { toast } from 'react-toastify';
 import Modal from 'react-bootstrap/Modal'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import capabilities from '../utils/capabilities'
+import {API} from 'aws-amplify'
+
 
 const roles = [
-  { value: 'SUPER_ADMIN', label: 'Super admin'},
   { value: 'ADMIN', label: 'Admin'},
   { value: 'USER', label: 'User'}
 ]
@@ -38,7 +39,7 @@ class Team extends React.Component {
       given_name: '',
       family_name: '',
       email: '',
-      user_role: {},
+      user_role: roles[1],
       showAddUserModal: false
     }
 
@@ -49,14 +50,7 @@ class Team extends React.Component {
   }
 
   componentDidMount() {
-    let that = this
     this.getUsers()
-      .then(function (users) {
-        console.log(users)
-      })
-      .catch(function (e) {
-        console.log(e)
-      })
   }
 
   onChange = e => {
@@ -66,16 +60,10 @@ class Team extends React.Component {
   }
 
   async getUsers() {
-    let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/users/limit/50"
-    console.log('fetching users: ', url)
-    const response = await fetch(url)
-    if (!response.ok) {
-      throw Error(response.statusText)
-    }
+    const usersResponse = await API.get('lidbotAPI', `/users`, null)
 
-    const json = await response.json()
     let users = []
-    for (let user of json.results) {
+    for (let user of usersResponse) {
       let picture = user.Attributes.find(x => x.Name === 'picture')
       let src
 
@@ -88,8 +76,8 @@ class Team extends React.Component {
       }
 
       users.push({
-        given_name: user.Attributes.find(x => x.Name === 'given_name').Value,
-        family_name: user.Attributes.find(x => x.Name === 'family_name').Value,
+        given_name: user.Attributes.find(x => x.Name === 'given_name') ? user.Attributes.find(x => x.Name === 'given_name').Value : '',
+        family_name: user.Attributes.find(x => x.Name === 'family_name') ? user.Attributes.find(x => x.Name === 'family_name').Value : '',
         email: user.Attributes.find(x => x.Name === 'email').Value,
         user_role: user.Attributes.find(x => x.Name === 'custom:user_role').Value,
         src: src,
@@ -108,104 +96,65 @@ class Team extends React.Component {
   async disableUser(e, email) {
     e.preventDefault()
 
-    let url = `${process.env.DEVICE_API}/users/${email}/disable`
-    console.log('disabling user: ', url)
-    const response = await fetch(url, {
-      method: 'POST'
+    const usersResponse = await API.post('lidbotAPI', `/users/${email}`, {
+      body: {
+        action: 'disable'
+      }
     })
-    if (!response.ok) {
-      throw Error(response.statusText)
-    }
-
-    const json = await response.json()
 
     this.getUsers()
 
     toast(this.props.t('user-disabled'), {
       className: 'notification success'
     })
-
-
-    console.log(json)
   }
   async enableUser(e, email) {
     e.preventDefault()
 
-    let url = `${process.env.DEVICE_API}/users/${email}/enable`
-    console.log('enabling user: ', url)
-    const response = await fetch(url, {
-      method: 'POST'
+    const usersResponse = await API.post('lidbotAPI', `/users/${email}`, {
+      body: {
+        action: 'enable'
+      }
     })
-    if (!response.ok) {
-      throw Error(response.statusText)
-    }
-
-    const json = await response.json()
 
     this.getUsers()
 
     toast(this.props.t('user-enabled'), {
       className: 'notification success'
     })
-
-    console.log(json)
   }
 
 
   async deleteUser(e, email) {
     e.preventDefault()
 
-    let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/users/" + email
-    console.log('deleting user: ', url)
-    const response = await fetch(url, {
-      method: 'DELETE'
-    })
-    if (!response.ok) {
-      throw Error(response.statusText)
-    }
-
-    const json = await response.json()
+    const usersResponse = await API.del('lidbotAPI', `/users/${email}`, null)
 
     this.getUsers()
 
     toast(this.props.t('user-deleted'), {
       className: 'notification success'
     })
-
-    console.log(json)
   }
 
   async addUser(e) {
     e.preventDefault()
 
-    let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/users/" + this.state.email
-    console.log('adding user: ', url)
-    let options = {
-      method: 'POST',
-      body: JSON.stringify({
+    const usersResponse = await API.post('lidbotAPI', `/users`, {
+      body: {
         given_name: this.state.given_name,
         family_name: this.state.family_name,
-        picture: this.state.picture,
         language: this.props.user_attributes['custom:language'],
         email: this.state.email,
         user_role: this.state.user_role.value,
-      })
-    }
-    console.log('options: ', options)
-
-    const response = await fetch(url, options)
-
-    if (!response.ok) {
-      throw Error(response.statusText)
-    }
-
-    const json = await response.json()
+      }
+    })
 
     this.setState(prevState => ({
       ...prevState,
       given_name: '',
       family_name: '',
-      user_role: {},
+      user_role: roles[1],
       email: '',
       showAddUserModal: false
     }))
@@ -215,8 +164,6 @@ class Team extends React.Component {
     toast(this.props.t('user-added'), {
       className: 'notification success'
     })
-
-    console.log(json)
   }
 
   roleChange = selectedOption => {
@@ -329,7 +276,7 @@ class Team extends React.Component {
               .div-inputs {
                 margin-top: 30px;
                 margin-bottom: 30px;
-                
+
                 > div {
                   flex: 0 1 20%;
                 }
@@ -337,7 +284,7 @@ class Team extends React.Component {
               .button-section {
                 position: relative;
                 margin-bottom: 30px;
-                
+
                 .add-user-button {
                   position: absolute;
                   right: 0;

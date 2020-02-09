@@ -71,5 +71,11 @@
   "user-disabled": "User disabled",
   "user-enabled": "User enabled",
   "user-deleted": "User deleted",
-  "user-added": "An invitation has been sent"
+  "user-added": "An invitation has been sent",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "CONFIRMED": "Confirmed",
+  "FORCE_CHANGE_PASSWORD": "Invitation sent",
+  "USER": "User",
+  "ADMIN": "Admin"
 }

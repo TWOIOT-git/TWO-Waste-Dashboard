@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "../components/Head";
 import HeaderMenu from "../components/HeaderMenu";
-import { forgotPasswordSubmit } from '../utils/auth'
+import { signIn, forgotPasswordSubmit } from '../utils/auth'
 import { i18n, withTranslation } from '../i18n'
 import Link from "next/link"
 
@@ -38,7 +38,7 @@ class ResetPassword extends React.Component {
 
     let state = await forgotPasswordSubmit(this.state.email, this.state.code, this.state.password)
 
-    this.setState(state)
+    await signIn(this.state.email, this.state.password)
   };
 
   render() {
@@ -50,15 +50,14 @@ class ResetPassword extends React.Component {
         <Head title={`${this.props.t('password-reset')} | Lidbot`} />
         <div className="main">
           <div className="content">
-            <If condition={this.state.successAuthCode !== 'PasswordChangedSuccessfully'}>
-              <h1>{this.props.t('password-reset')}</h1>
-              <p>{this.props.t('new-password-prompt')}</p>
-              <If condition={this.state.errorAuthCode}>
-                <div className="alert error">
-                  {this.props.t(this.state.errorAuthCode)}
-                </div>
-              </If>
-              <form onSubmit={e => this.onSubmit(e)}>
+            <h1>{this.props.t('password-reset')}</h1>
+            <p>{this.props.t('new-password-prompt')}</p>
+            <If condition={this.state.errorAuthCode}>
+              <div className="alert error">
+                {this.props.t(this.state.errorAuthCode)}
+              </div>
+            </If>
+            <form onSubmit={e => this.onSubmit(e)}>
                 <label htmlFor="password">
                   <input
                     name="password"
@@ -73,15 +72,6 @@ class ResetPassword extends React.Component {
                 </label>
               <button type="submit">{this.props.t('change-password')}</button>
             </form>
-            </If>
-            <If condition={this.state.successAuthCode === 'PasswordChangedSuccessfully'}>
-              <h1 className="success">{this.props.t('h1')}</h1>
-              <p>{this.props.t('p')}
-              <Link href='/'>
-                <a className="link-label">{this.props.t('sign-in')}.</a>
-              </Link>
-              </p>
-            </If>
           </div>
         </div>
         <style jsx>

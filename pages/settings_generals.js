@@ -1,7 +1,6 @@
 import React from "react";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
-import SwitchItem from "../components/SwitchItem";
 import SettingLayout from "../components/SettingLayout";
 import SelectItem from "../components/SelectItem";
 import { withAuthSync, updateUserAttributes, ClientContext } from '../utils/auth'
@@ -9,6 +8,7 @@ import { i18n, withTranslation } from '../i18n'
 import moment from "moment"
 import 'moment-timezone';
 import {determineTimezone, determineLanguage, timezones, languages} from '../utils/locale'
+import { toast } from 'react-toastify'
 
 import './main.scss'
 
@@ -38,7 +38,7 @@ class SettingsGenerals extends React.Component {
     })
   }
 
-  handleTimezoneChange = selectedOption => {
+  handleTimezoneChange = async selectedOption => {
     let timezone = selectedOption.value
 
     moment.tz.setDefault(timezone);
@@ -47,12 +47,16 @@ class SettingsGenerals extends React.Component {
       timezone: selectedOption
     })
 
-    updateUserAttributes({
+    let data = await updateUserAttributes({
       'custom:timezone': timezone
+    })
+
+    toast(this.props.t('settings-saved'), {
+      className: 'notification success'
     })
   }
 
-  handleLanguageChange = selectedOption => {
+  handleLanguageChange = async selectedOption => {
     let language = selectedOption.value
 
     i18n.changeLanguage(language)
@@ -62,17 +66,21 @@ class SettingsGenerals extends React.Component {
       language: selectedOption
     })
 
-    updateUserAttributes({
+    let data = await updateUserAttributes({
       'custom:language': language
+    })
+
+    toast(this.props.t('settings-saved'), {
+      className: 'notification success'
     })
   }
 
   render() {
     return (
       <LayoutMenuNavegation>
-        <Head title={'lidbot - ' + this.props.t('language-region')}/>
+        <Head title={`${this.props.t('language-region')} | Lidbot`}/>
         <SettingLayout>
-          <div>
+          <div className="input">
             <SelectItem
               label={this.props.t('language')}
               value={this.state.language}
@@ -89,6 +97,13 @@ class SettingsGenerals extends React.Component {
               />
           </div>
         </SettingLayout>
+        <style jsx>
+          {`
+            .input {
+              margin-bottom: 35px;
+            }
+          `}
+        </style>
       </LayoutMenuNavegation>
     )
   }

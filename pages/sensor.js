@@ -11,6 +11,9 @@ import EventTable from "../components/EventTable";
 import { toast } from 'react-toastify';
 import Modal from 'react-bootstrap/Modal'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { API, Logger } from 'aws-amplify'
+
+const logger = new Logger('SensorPage')
 
 class Sensor extends Component {
   static contextType = ClientContext;
@@ -36,17 +39,16 @@ class Sensor extends Component {
       max_distance:0,
       schedule: 3600 * 12,
       nickname: '',
-      refresh: 10000,
+      bin_location: '',
       edit_volume: 0,
       edit_min_distance: 0,
       edit_max_distance:0,
       edit_schedule: 3600 * 12,
       edit_nickname: '',
-      edit_refresh: 10000
+      edit_bin_location: '',
     }
 
     this.getSensor = this.getSensor.bind(this);
-    this.interval = null
   }
 
   onChange = e => {
@@ -57,10 +59,8 @@ class Sensor extends Component {
 
   componentDidMount() {
     this.getSensor()
-    this.interval = setInterval(this.getSensor, this.state.refresh);
   }
   componentWillUnmount() {
-    clearInterval(this.interval)
   }
 
   handleClick(time) {
@@ -76,127 +76,74 @@ class Sensor extends Component {
   async deleteSensor(e) {
     e.preventDefault()
 
-    let url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id
-    const response = await fetch(url, {
-      method: 'DELETE'
-    })
-    if (!response.ok) {
-      throw Error(response.statusText)
-    }
-
-    const json = await response.json()
+    const sensor = await API.del('lidbotAPI', `/sensors/${this.state.sensor_id}`, null)
 
     Router.push('/sensors')
   }
 
-
   async getSensor() {
-    try {
-      let url = `${process.env.DEVICE_API}/sensors/${this.state.sensor_id}`
-      const sensor_response = await fetch(url);
-      if (!sensor_response.ok) {
-        throw Error(sensor_response.statusText);
-      }
+    const sensor = await API.get('lidbotAPI', `/sensors/${this.state.sensor_id}`, null)
+    const reports = await API.get('lidbotAPI', `/sensors/${this.state.sensor_id}/reports/from/${this.state.from}/to/${this.state.to}`, null)
+    const events = await API.get('lidbotAPI', `/sensors/${this.state.sensor_id}/events`, null)
 
-      let reports_url = process.env.DEVICE_API + "sensors/" + this.state.sensor_id + "/reports/from/" + this.state.from + "/to/" + this.state.to;
-      const reports_response = await fetch(reports_url);
-      if (!reports_response.ok) {
-        throw Error(reports_response.statusText);
-      }
-
-      let events_url = `${process.env.DEVICE_API}/customers/${this.context.user.attributes['custom:client_id']}/sensors/${this.state.sensor_id}/events`
-      const events_response = await fetch(events_url);
-      if (!events_response.ok) {
-        throw Error(reports_response.statusText);
-      }
-
-      const sensor = await sensor_response.json();
-      const reports = await reports_response.json();
-      const events = await events_response.json();
-
-      this.setState({
-          ...sensor,
-        loading: false,
-        reports: (reports.results) ? (reports.results).map(report => {
-            return {
-              ...report,
-              when: report.created_on,
-              v: Math.round(report.fill_percentage),
-              temperature: report.t,
-              t: moment.unix(report.created_on).format('HH:mm')
-            }
-          }) : [],
-        events: (events.results) ? (events.results).map(event => {
+    this.setState({
+      ...sensor,
+      loading: false,
+      reports: reports.map(report => {
           return {
-            ...event,
-            sensor_id: event.report.sensor_id,
-            event_id: event.event_id,
-            message: event.message,
+            ...report,
+            when: report.created_on,
+            v: (!isNaN(report.fill_percentage)) ? Math.round(report.fill_percentage) : null,
+            temperature: report.t,
+            t: moment.unix(report.created_on).format('HH:mm')
           }
-        }) : []
+        }),
+      events: events.map(event => {
+        return {
+          ...event,
+          sensor_id: event.report.sensor_id,
+          event_id: event.event_id,
+          message: event.message,
         }
-      )
-
-    } catch (error) {
-      console.log(error);
-    }
+      })
+    })
   }
 
   async deleteAllReports(e, sensor_id) {
     e.preventDefault()
 
-    let url = process.env.DEVICE_API + "sensors/" + sensor_id + "/reports/"
-    const response = await fetch(url, {
-      method: 'DELETE'
-    })
-    if (!response.ok) {
-      throw Error(response.statusText);
-    }
+    const reports = await API.del('lidbotAPI', `/sensors/${this.state.sensor_id}/reports`, null)
 
-    const json = await response.json();
+    logger.debug('Deleted reports: ', reports)
 
     toast(this.props.t('reports-deleted'), {
       className: 'notification success'
     })
 
     this.getSensor()
-
   }
 
 
   async deleteReport(e, sensor_id, created_on) {
     e.preventDefault()
 
-    let url = process.env.DEVICE_API + "sensors/" + sensor_id + "/reports/" + created_on
-    const response = await fetch(url, {
-      method: 'DELETE'
-    })
-    if (!response.ok) {
-      throw Error(response.statusText);
-    }
+    const report = await API.del('lidbotAPI', `/sensors/${this.state.sensor_id}/reports/${created_on}`, null)
 
-    const json = await response.json();
+    logger.debug('Deleted report: ', report)
 
     toast(this.props.t('report-deleted'), {
       className: 'notification success'
     })
 
     this.getSensor()
-
   }
 
   async deleteEvent(e, customer_id, event_id) {
     e.preventDefault()
 
-    let url = `${process.env.DEVICE_API}customers/${customer_id}/events/${event_id}`
-    const response = await fetch(url, {
-      method: 'DELETE'
-    })
-    if (!response.ok) {
-      throw Error(response.statusText);
-    }
+    const event = await API.del('lidbotAPI', `/sensors/${customer_id}/events/${event_id}`, null)
 
-    const json = await response.json();
+    logger.debug('Deleted events: ', event)
 
     toast(this.props.t('event-deleted'), {
       className: 'notification success'
@@ -205,29 +152,12 @@ class Sensor extends Component {
     this.getSensor()
   }
 
-  async onDebugInfo(e, customer_id, event_id) {
-    e.preventDefault()
-
-    this.state.events.map(event => {
-      if(event.event_id === event_id) {
-        console.log(event)
-      }
-    })
-  }
-
   async deleteEvents(e, customer_id, sensor_id) {
     e.preventDefault()
 
-    let url = `${process.env.DEVICE_API}customers/${customer_id}/sensors/${sensor_id}/events`
-    console.log(url)
-    const response = await fetch(url, {
-      method: 'DELETE'
-    })
-    if (!response.ok) {
-      throw Error(response.statusText);
-    }
+    const events = await API.del('lidbotAPI', `/sensors/${this.state.sensor_id}/events`, null)
 
-    const json = await response.json();
+    logger.debug('Deleted events: ', events)
 
     toast(this.props.t('events-deleted'), {
       className: 'notification success'
@@ -247,44 +177,35 @@ class Sensor extends Component {
       showEditSensorModal: show,
       edit_volume: this.state.volume,
       edit_nickname: this.state.nickname,
+      edit_bin_location: this.state.bin_location,
       edit_schedule: this.state.schedule,
       edit_min_distance: this.state.min_distance,
       edit_max_distance: this.state.max_distance,
-      edit_refresh: this.state.refresh,
     })
   }
 
   updateSensor = async(e) => {
     e.preventDefault()
 
-    let url = `${process.env.DEVICE_API}sensors/${this.state.sensor_id}`
-    let options = {
-      method: 'POST',
-      body: JSON.stringify({
+    const sensor = await API.post('lidbotAPI', `/sensors/${this.state.sensor_id}`, {
+      body: {
         volume: this.state.edit_volume,
         nickname: this.state.edit_nickname,
+        bin_location: this.state.edit_bin_location,
         schedule: this.state.edit_schedule,
         min_distance: this.state.edit_min_distance,
         max_distance: this.state.edit_max_distance,
-      })
-    }
+      }
+    })
 
     this.setState({
       volume: this.state.edit_volume,
       nickname: this.state.edit_nickname,
+      bin_location: this.state.edit_bin_location,
       schedule: this.state.edit_schedule,
       min_distance: this.state.edit_min_distance,
       max_distance: this.state.edit_max_distance,
-      refresh: this.state.edit_refresh,
     })
-
-    const response = await fetch(url, options)
-
-    if (!response.ok) {
-      throw Error(response.statusText)
-    }
-
-    const json = await response.json()
 
     this.setShowEditSensorModal(null, false)
 
@@ -292,10 +213,7 @@ class Sensor extends Component {
       className: 'notification success'
     })
 
-    clearInterval(this.interval)
-
     this.getSensor()
-    this.interval = setInterval(this.getSensor, this.state.refresh);
   }
 
   render() {
@@ -333,6 +251,17 @@ class Sensor extends Component {
                           name="edit_nickname"
                           id="edit_nickname"
                           value={this.state.edit_nickname}
+                          onChange={this.onChange}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label htmlFor="bin_location">
+                        {this.props.t('bin_location')}
+                        <input
+                          name="edit_bin_location"
+                          id="edit_bin_location"
+                          value={this.state.edit_bin_location}
                           onChange={this.onChange}
                         />
                       </label>
@@ -381,17 +310,6 @@ class Sensor extends Component {
                         />
                       </label>
                     </div>
-                    <div>
-                      <label htmlFor="refresh">
-                        {this.props.t('refresh')}
-                        <input
-                          name="edit_refresh"
-                          id="edit_refresh"
-                          value={this.state.edit_refresh}
-                          onChange={this.onChange}
-                        />
-                      </label>
-                    </div>
                   </div>
                 </form>
               </Modal.Body>
@@ -413,7 +331,6 @@ class Sensor extends Component {
               <EventTable
                 items={this.state.events}
                 onDelete={(e, customer_id, event_id) => this.deleteEvent(e, customer_id, event_id)}
-                onDebugInfo={(e, customer_id, event_id) => this.onDebugInfo(e, customer_id, event_id)}
               />
             </div>
           </If>

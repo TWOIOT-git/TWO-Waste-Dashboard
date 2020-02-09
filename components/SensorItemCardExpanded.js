@@ -70,7 +70,6 @@ const SensorItemCardExpanded = ({
               {sensor_id}
             </If>
           </h2>
-          <p>Type: {bin_type}</p>
           <p>Volume: {volume} m3</p>
           <p>Runs every: {(schedule / 3600).toFixed(2)} hour(s)</p>
           <If condition={moment.unix(next_report).isBefore(moment())}>
@@ -85,7 +84,9 @@ const SensorItemCardExpanded = ({
         <div>
           <div>
             <p>{t('status')}:</p>
-            <h3>{Math.round(fill_percentage)}%</h3>
+            <If condition={!isNaN(fill_percentage)}>
+              <h3>{Math.round(fill_percentage)}%</h3>
+            </If>
             <h5>{moment.unix(updated_on).fromNow()}</h5>
           </div>
           <div>
@@ -115,7 +116,7 @@ const SensorItemCardExpanded = ({
           </div>
         </div>
         <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={reports}
+        <LineChart data={reports.slice().reverse()}
                    margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
           <XAxis
             dataKey="t"
@@ -358,7 +359,7 @@ const SensorItemCardExpanded = ({
 SensorItemCardExpanded.propTypes = {
   sensor_id: PropTypes.string.isRequired,
   reports: PropTypes.array.isRequired,
-  fill_percentage: PropTypes.number.isRequired,
+  fill_percentage: PropTypes.number,
   updated_on: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
 };

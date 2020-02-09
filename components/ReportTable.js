@@ -25,7 +25,7 @@ const ReportTable = ({
       {items.map(
         ({
            created_on,
-            when,
+           when,
            sensor_id,
            v,
            l,
@@ -34,12 +34,12 @@ const ReportTable = ({
            s
         }) => (
           <div key={`${sensor_id}-${created_on}`} className="ReportTableItem">
-            <div className="detail">{moment.unix(created_on).fromNow()}</div>
-            <div className="detail">{v}</div>
-            <div className="detail">{l}</div>
-            <div className="detail">{temperature}</div>
-            <div className="detail">{b}</div>
-            <div className="detail">{s}</div>
+            <div className="detail">{moment.unix(created_on).format('LLL')}</div>
+            <div className="detail number">{v}</div>
+            <div className="detail number">{l}</div>
+            <div className="detail number">{temperature}</div>
+            <div className="detail number">{b}</div>
+            <div className="detail number">{s}</div>
             <div className="action">
               <Dropdown>
                 <Dropdown.Toggle variant="" id="dropdown-basic">
@@ -99,6 +99,7 @@ const ReportTable = ({
             display: flex;
 
             > div {
+              padding: 0 15px;
               font-style: normal;
               font-weight: normal;
               font-size: 16px;
@@ -202,6 +203,8 @@ const ReportTable = ({
               cursor: pointer;
             }
             .detail {
+              padding: 0 15px;
+              text-align: left;
               font-family: Roboto;
               font-style: normal;
               font-weight: normal;

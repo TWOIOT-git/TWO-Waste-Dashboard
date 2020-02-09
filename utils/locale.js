@@ -3,8 +3,6 @@ import 'moment-timezone';
 import _ from 'underscore'
 
 const languages = [
-  { value: 'de-DE', label: 'Deutsch'},
-  { value: 'es-ES', label: 'Español'},
   { value: 'en-US', label: 'English'},
   { value: 'zh-TW', label: '中文'},
 ]

@@ -4,8 +4,13 @@ import HeaderMenu from "../components/HeaderMenu";
 import { signIn } from '../utils/auth'
 import { withTranslation } from '../i18n'
 import Link from "next/link"
+import Router from 'next/router'
+import Amplify, { Auth, Logger } from 'aws-amplify'
 
 import './main.scss'
+
+Amplify.Logger.LOG_LEVEL = 'DEBUG';
+const logger = new Logger('IndexPage');
 
 class Authentication extends React.Component {
   getInitialProps = async () => ({
@@ -24,7 +29,16 @@ class Authentication extends React.Component {
       successAuthCode: null,
       errorAuthCode: null,
       user: null,
-    };
+    }
+  }
+
+  componentDidMount() {
+    Auth.currentAuthenticatedUser().then(user => {
+      logger.debug(user)
+      Router.push('/sensors')
+    }).catch(e => {
+      logger.debug(e)
+    })
   }
 
   onChange = e => {
@@ -33,18 +47,24 @@ class Authentication extends React.Component {
     });
   };
 
-  onSubmit = e => {
+  onSubmit = async e => {
     e.preventDefault();
-    this.signIn()
+
+    this.setState({
+      authState: 'loading'
+    })
+
+    let state = await signIn(this.state.email, this.state.password)
+
+    this.setState({
+      ...state,
+      authState: 'SIGN_IN'
+    })
   };
 
-  async signIn() {
-      let state = await signIn(this.state.email, this.state.password)
-      this.setState(state)
-  }
 
   render() {
-    const { email, password, newPassword, passwordRepeat, errorAuthCode, authState } = this.state;
+    const { email, password } = this.state;
     const { onChange } = this;
 
     return (
@@ -98,7 +118,12 @@ class Authentication extends React.Component {
                   placeholder={this.props.t('password-placeholder')}
                 />
               </label>
-              <button type="submit">{this.props.t('sign-in')}</button>
+              <If condition={this.state.authState === 'loading'}>
+                <button type="submit" disabled="disabled">{this.props.t('signing-in')}</button>
+              </If>
+              <If condition={this.state.authState === 'SIGN_IN'}>
+                <button type="submit">{this.props.t('sign-in')}</button>
+              </If>
               <Link href={`/forgot?email=${email}`} as={`/forgot/${email}`}>
                 <a className="link-label">{this.props.t('forgotten-password')}</a>
               </Link>
@@ -133,17 +158,17 @@ class Authentication extends React.Component {
               box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.25);
               animation: Enter 0.5s forwards;
               padding: 50px;
-            
+
               width: 840px;
               padding: 50px 50px 0 13px;
-          
+
               > div {
                 &:nth-child(1) {
                   display: flex;
                   justify-content: space-between;
                   flex-direction: column;
                 }
-          
+
                 &:nth-child(2) {
                   display: flex;
                   justify-content: space-between;
@@ -160,7 +185,7 @@ class Authentication extends React.Component {
                 flex-direction: column;
                 max-width: 500px;
                 padding: 30px 20px;
-            
+
                 &--sign-in {
                   .logo {
                     margin: 0 0 35px 0;

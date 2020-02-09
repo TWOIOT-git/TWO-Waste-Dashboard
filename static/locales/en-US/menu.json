@@ -5,7 +5,7 @@
   "admin": "Admin",
   "dashboard": "Dashboard",
   "sensors": "Sensors",
-  "alerts": "Notifications",
+  "events": "Events",
   "locations": "Locations",
   "settings": "Settings",
   "log-out": "Log Out"

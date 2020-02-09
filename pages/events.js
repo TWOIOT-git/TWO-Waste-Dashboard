@@ -1,5 +1,4 @@
 import React from "react";
-import moment from "moment";
 import LayoutMenuNavegation from "../components/LayoutMenuNavegation";
 import Head from "../components/Head";
 import TopTools from "../components/TopTools";
@@ -9,6 +8,7 @@ import fetch from "isomorphic-unfetch";
 import { withAuthSync, ClientContext } from '../utils/auth'
 import breakpoints from "../utils/breakpoints";
 import { withTranslation } from '../i18n'
+import { API, Logger } from 'aws-amplify'
 
 class Sensors extends React.Component {
   static contextType = ClientContext;
@@ -23,7 +23,7 @@ class Sensors extends React.Component {
     this.state = {
       layoutMode: "table",
       loading: true,
-      data: [
+      events: [
       ]
     };
   }
@@ -31,90 +31,58 @@ class Sensors extends React.Component {
   async deleteEvent(e, event_id) {
     e.preventDefault()
 
-    let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/events/" + event_id
-    console.log('deleting user: ', url)
-    const response = await fetch(url, {
-      method: 'DELETE'
-    })
-    if (!response.ok) {
-      throw Error(response.statusText);
-    }
-
-    const json = await response.json();
-
     this.getEvents()
-
-    console.log(json)
   }
 
-
   async componentDidMount() {
-      let data = await this.getEvents();
+      await this.getEvents();
   }
 
   async getEvents() {
-      try {
-        let url = process.env.DEVICE_API + "customers/" + this.context.user.attributes['custom:client_id'] + "/events";
-        console.log('Fetching: ', url)
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
+    const events = await API.get('lidbotAPI', `/events`, null)
 
-        const json = await response.json();
-    let data = [];
-        for (let sensor of json.results) {
-      data.push({
-        ...sensor,
-        reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {
-          return {
-            v: Math.round(obj.v),
-            t: moment(obj.t).format('HH:mm')
-          }
-        }) : [],
+    this.setState({
+      events: events.map(event => {
+        return {
+          ...event,
+          sensor_id: event.report.sensor_id,
+          event_id: event.event_id,
+          message: event.message,
+        }
       })
-        }
-
-        this.setState({
-          data: data,
-          loading: false
-        })
-
-      } catch (error) {
-        console.log(error);
-  }
+      ,
+      loading: false
+    })
   }
 
   render() {
-    const { data, layoutMode } = this.state;
-
       return (
         <LayoutMenuNavegation
           signOut={true}
         >
           <Head title="Sensors | lidbot"/>
           <TopTools
-            layoutMode={layoutMode}
+            layoutMode={this.state.layoutMode}
             onChangeLayout={value => this.setState({layoutMode: value})}
           />
           <div className="SensorsContainer">
             <If condition={this.state.loading === false}>
-              <If condition={data.length === 0}>
+              <If condition={this.state.events.length === 0}>
                 <div className="no-sensor-container">
                   <h1>{this.props.t('no-events')}</h1>
                 </div>
               </If>
-              <If condition={layoutMode === "cards"}>
-                {data.map(item => (
+              <If condition={this.state.layoutMode === "cards"}>
+                {this.state.events.map(item => (
                   <div key={`${item.sensor_id}-${item.report_created_on}-${item.type}`} className="ItemCol">
                     <EventItemCard {...item} />
                   </div>
                 ))}
               </If>
-              <If condition={layoutMode === "table"}>
+              <If condition={this.state.layoutMode === "table"}>
                 <EventTable
-                  items={data}
-                  onDelete={(e, event_id) => this.deleteEvent(e, event_id)}
+                  items={this.state.events}
+                  onDelete={(e, customer_id, event_id) => this.deleteEvent(e, customer_id, event_id)}
                 />
               </If>
             </If>
@@ -123,7 +91,7 @@ class Sensors extends React.Component {
             </If>
           </div>
           <style jsx>{`
-        
+
           .register-sensor {
             padding: 25px;
             cursor: pointer;

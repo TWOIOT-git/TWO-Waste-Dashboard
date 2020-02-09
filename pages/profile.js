@@ -6,7 +6,7 @@ import { withTranslation } from '../i18n'
 import { Auth, Logger, Storage } from 'aws-amplify';
 import uuid from 'uuid/v1'
 import ReactCodeInput from 'react-verification-code-input';
-import { toast } from 'react-toastify';
+import { toast } from 'react-toastify'
 import {
   updateUserAttributes,
   withAuthSync,
@@ -43,7 +43,7 @@ class SettingsUserDetails extends Component {
       email_verified: null,
       phone_number_verified: null,
       newPassword: '',
-      client_name: '',
+      client_id: '',
       errorAuthCode: null,
       successAuthCode: null,
     };
@@ -72,7 +72,6 @@ class SettingsUserDetails extends Component {
       client_id: this.context.user.attributes['custom:client_id'],
       email_verified: this.context.user.attributes['email_verified'],
       phone_number_verified: this.context.user.attributes['phone_number_verified'],
-      client_name: (this.context.user.attributes['custom:client_name']) ? this.context.user.attributes['custom:client_name'] : '',
     })
 
     getUserImage(imageS3Key).
@@ -168,8 +167,6 @@ class SettingsUserDetails extends Component {
     attributes.given_name = this.state.given_name
     attributes.family_name = this.state.family_name
     attributes.phone_number = this.state.phone_number
-    // attributes.phone_number_verified = false
-    attributes['custom:client_name'] = this.state.client_name
 
     this.setState(updateUserAttributes(attributes))
 
@@ -235,19 +232,6 @@ class SettingsUserDetails extends Component {
                     />
                   </label>
                 </div>
-                <div>
-                  <label htmlFor="email">
-                    {this.props.t('email')}
-                    <input
-                      name="email"
-                      id="email"
-                      type="email"
-                      value={this.state.email}
-                      onChange={this.onChange}
-                      placeholder={this.props.t('enter-email')}
-                    />
-                  </label>
-                </div>
                 <div className={`phone ${this.state.phone_number_verified ? 'verified' : 'not-verified'}`}>
                   <If condition={this.state.errorAuthCode}>
                     <div className="notification error">
@@ -257,7 +241,7 @@ class SettingsUserDetails extends Component {
                   <label htmlFor="phone_number">
                     {this.props.t('phone')}
                     <If condition={this.state.phone_number}>
-                      {this.state.phone_number_verified ? ' (verified)' : <span className="not-verified"> (not verified!)</span>}
+                      {this.state.phone_number_verified ? '' : <span className="not-verified"> (not verified!)</span>}
                     </If>
                     <input
                       name="phone_number"
@@ -288,14 +272,27 @@ class SettingsUserDetails extends Component {
                   </If>
                 </div>
                 <div>
-                  <label htmlFor="client_name">
+                  <label htmlFor="email">
+                    {this.props.t('email')}
+                    <input
+                      name="email"
+                      id="email"
+                      type="email"
+                      value={this.state.email}
+                      onChange={this.onChange}
+                      placeholder={this.props.t('enter-email')}
+                      disabled="disabled"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label htmlFor="client_id">
                     {this.props.t('company-name')}
                     <input
-                      name="client_name"
-                      id="client_name"
-                      value={this.state.client_name}
-                      onChange={this.onChange}
-                      placeholder={this.props.t('enter-company-name')}
+                      name="client_id"
+                      id="client_id"
+                      value={this.state.client_id}
+                      disabled="disabled"
                     />
                   </label>
                 </div>
@@ -356,7 +353,7 @@ class SettingsUserDetails extends Component {
               justify-content: flex-start;
               font-family: Roboto;
               margin-bottom: 50px;
-            
+
                 > img {
                   border: 1px solid #00b284;
                   border-radius: 50%;
@@ -377,7 +374,7 @@ class SettingsUserDetails extends Component {
                   overflow: hidden;
                   position: absolute;
                   z-index: -1;
-            
+
                   &:focus + label {
                     outline: 2px solid #05654c;
                   }
@@ -392,7 +389,7 @@ class SettingsUserDetails extends Component {
                   padding: 10px 20px;
                   color: #545454;
                   width: auto;
-            
+
                   &:hover {
                     border: 1px solid #00b284;
                     color: #00b284;
@@ -402,18 +399,26 @@ class SettingsUserDetails extends Component {
                   margin-left: 20px;
                   color: #00b284;
                   font-size: 14px;
-            
+
                   &:hover {
                     text-decoration: underline;
                   }
                 }
             }
-            
-            
+
+
             .div-inputs {
               margin-top: 40px;
               margin-bottom: 40px;
-            
+
+              input:disabled {
+                background: #dddddd;
+                border-bottom: none;
+                border-radius: 3px;
+                padding-left: 10px;
+                color: #666;
+              }
+
               div.phone {
                 .not-verified {
                   color: #da6464;
@@ -434,7 +439,7 @@ class SettingsUserDetails extends Component {
                   [container-start] minmax(0, 30em)
                   [container-end] minmax(1em, 1fr)
                   [viewport-end];
-            
+
                 > div {
                   grid-column: container;
                 }

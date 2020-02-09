@@ -37,7 +37,9 @@ const SensorItemCard = ({
       <div className="SensorItemCardContent">
         <div>
           <div>
-            <h3>{Math.round(fill_percentage)}%</h3>
+            <If condition={!isNaN(fill_percentage)}>
+              <h3>{Math.round(fill_percentage)}%</h3>
+            </If>
             <h5>{moment.unix(updated_on).fromNow()}</h5>
           </div>
           <div>
@@ -280,9 +282,9 @@ const SensorItemCard = ({
 
 SensorItemCard.propTypes = {
   sensor_id: PropTypes.string.isRequired,
-  reports: PropTypes.array.isRequired,
-  fill_percentage: PropTypes.number.isRequired,
-  updated_on: PropTypes.number.isRequired,
+  reports: PropTypes.array,
+  fill_percentage: PropTypes.number,
+  updated_on: PropTypes.number,
   t: PropTypes.func.isRequired,
 };
 

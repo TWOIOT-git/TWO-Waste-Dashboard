@@ -12,27 +12,27 @@ const SettingLayout = ({ children, router: { pathname }, t }) => {
       </h1>
       <div className="sub-menu">
         <div>
-          <Link href="settings_user_details">
+          <Link href="profile">
             <a
               className={`${
-                pathname === "/settings_user_details" ? "--active" : ""
+                pathname === "/profile" ? "--active" : ""
               }`}
             >
               {t('user-details')}
             </a>
           </Link>
         </div>
-        <div>
-          <Link href="settings_notifications">
-            <a
-              className={`${
-                pathname === "/settings_notifications" ? "--active" : ""
-              }`}
-            >
-              {t('notifications')}
-            </a>
-          </Link>
-        </div>
+        {/*<div>*/}
+        {/*  <Link href="settings_notifications">*/}
+        {/*    <a*/}
+        {/*      className={`${*/}
+        {/*        pathname === "/settings_notifications" ? "--active" : ""*/}
+        {/*      }`}*/}
+        {/*    >*/}
+        {/*      {t('notifications')}*/}
+        {/*    </a>*/}
+        {/*  </Link>*/}
+        {/*</div>*/}
         <div>
           <Link href="settings_generals">
             <a
@@ -45,10 +45,10 @@ const SettingLayout = ({ children, router: { pathname }, t }) => {
           </Link>
         </div>
         <div>
-          <Link href="my-team">
+          <Link href="team">
             <a
               className={`${
-                pathname === "/my-team" ? "--active" : ""
+                pathname === "/team" ? "--active" : ""
               }`}
             >
               {t('team.title')}
@@ -56,17 +56,17 @@ const SettingLayout = ({ children, router: { pathname }, t }) => {
           </Link>
         </div>
         {/*<If condition={capabilities.can_change_bin_full_threshold(this.props.user_attributes['custom:user_role'])}>*/}
-          <div>
-            <Link href="account-management">
-              <a
-                className={`${
-                  pathname === "/account-management" ? "--active" : ""
-                }`}
-              >
-                {t('team.account-management')}
-              </a>
-            </Link>
-          </div>
+        {/*  <div>*/}
+        {/*    <Link href="account-management">*/}
+        {/*      <a*/}
+        {/*        className={`${*/}
+        {/*          pathname === "/account-management" ? "--active" : ""*/}
+        {/*        }`}*/}
+        {/*      >*/}
+        {/*        {t('team.account-management')}*/}
+        {/*      </a>*/}
+        {/*    </Link>*/}
+        {/*  </div>*/}
         {/*</If>*/}
       </div>
       {children}
@@ -86,7 +86,7 @@ const SettingLayout = ({ children, router: { pathname }, t }) => {
               font-size: 36px;
               line-height: 42px;
               color: #545454;
-            
+
               span {
                 color: #00bf8d;
               }
@@ -94,16 +94,16 @@ const SettingLayout = ({ children, router: { pathname }, t }) => {
             .sub-menu {
               margin-top: 43px;
               margin-bottom: 83px;
-              
+
               div {
                 margin-right: 25px;
                 display: inline-block
               }
-            
+
               a {
                 text-decoration: none;
                 color: rgb(84, 84, 84);
-            
+
                 &.--active {
                   color: rgb(0, 191, 141);
                   padding-bottom: 5px;
