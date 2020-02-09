@@ -3,6 +3,7 @@ import HeaderMenu from "../components/HeaderMenu";
 import Head from "../components/Head";
 import { forgotPassword } from '../utils/auth'
 import { withTranslation } from '../i18n'
+import Alert from "../components/Alert";
 
 import './main.scss'
 
@@ -16,8 +17,8 @@ class Forgot extends React.Component {
 
     this.state = {
       email: props.email ? props.email : '',
-      errorAuthCode: null,
-      successAuthCode: null,
+      error: null,
+      success: null,
     };
   }
 
@@ -30,8 +31,14 @@ class Forgot extends React.Component {
   async onSubmit(e) {
     e.preventDefault();
 
-    let state = await forgotPassword(this.state.email)
-    this.setState(state)
+    let result = await forgotPassword(this.state.email)
+
+    if(result) {
+      this.setState({
+        error: result.error,
+        success: result.success,
+      })
+    }
   };
 
   render() {
@@ -43,16 +50,12 @@ class Forgot extends React.Component {
         <Head title={`${this.props.t('password-reset')} | Lidbot`} />
         <div className="main main--small">
           <div className="content">
-            <If condition={this.state.successAuthCode !== 'CodeResentSuccessfully'}>
+            <If condition={!this.state.success}>
               <h1>{this.props.t('password-reset')}</h1>
               <p>{this.props.t('password-reset-sub')}</p>
 
+              <Alert error={this.state.error}></Alert>
               <form onSubmit={e => this.onSubmit(e)}>
-                <If condition={this.state.errorAuthCode}>
-                  <div className="notification error">
-                    {this.props.t(this.state.errorAuthCode)}
-                  </div>
-                </If>
                   <label htmlFor="email">
                     <input
                       name="email"
@@ -66,7 +69,7 @@ class Forgot extends React.Component {
                 <button type="submit">{this.props.t('get-reset-link')}</button>
               </form>
             </If>
-            <If condition={this.state.successAuthCode === 'CodeResentSuccessfully'}>
+            <If condition={this.state.success}>
               <h1>{this.props.t('email-sent')}</h1>
               <p>{this.props.t('email-sent-sub')}</p>
             </If>

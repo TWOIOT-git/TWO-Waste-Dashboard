@@ -13,8 +13,6 @@ import 'react-toastify/dist/ReactToastify.min.css';
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 const logger = new Logger('auth');
 
-logger.debug('process.env.identityPoolId: ', process.env.identityPoolId)
-logger.debug('process.env.userPoolId: ', process.env.userPoolId)
 
 Amplify.configure({
   Auth: {
@@ -90,29 +88,36 @@ async function changePassword(oldPassword, newPassword) {
 async function completeNewPassword(user, password) {
   try {
     let result = await Auth.completeNewPassword(user, password)
-    logger.debug(result)
+
+    logger.debug('Auth.completeNewPassword: ', result)
 
     return {
       successAuthCode: 'PasswordChangedSuccessfully'
     }
   } catch (e) {
-    logger.error(e)
+    logger.error('Auth.completeNewPassword: ', e)
 
     return {
-      errorAuthCode: e.code
+      error: e
     }
   }
 }
 async function signIn(email, password) {
   if(!email) {
     return {
-      errorAuthCode: "NoEmail",
+      error: {
+        code: "NoEmail",
+        message: "Please enter your address"
+      }
     }
   }
 
   if(!password) {
     return {
-      errorAuthCode: "NoPassword",
+      error: {
+        code: "NoPassword",
+        message: "Please enter your password"
+      }
     }
   }
 
@@ -120,16 +125,18 @@ async function signIn(email, password) {
     const user = await Auth.signIn(email, password)
 
     if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-      return {user: user, authState: user.challengeName, authError: 'Please change your password.'}
+      return {
+        user: user
+      }
     } else {
       Router.push('/sensors')
     }
 
   } catch (e) {
-    logger.debug(e)
+    logger.error('Auth.signIn: ', e)
 
     return {
-      errorAuthCode: e.code
+      error: e
     }
   }
 }
@@ -219,22 +226,22 @@ async function resendSignUp(username) {
 async function forgotPassword(username) {
   if(!username) {
     return {
-      errorAuthCode: "NoEmail",
+      error: {
+        code: "NoEmail",
+        message: "Please enter email address"
+      }
     }
   }
 
   try {
-    let data = await Auth.forgotPassword(username)
-    logger.debug(data);
+    let result = await Auth.forgotPassword(username)
 
     return {
-      successAuthCode: 'CodeResentSuccessfully'
+      success: result
     }
   } catch (e) {
-    logger.debug(e)
-
     return {
-      errorAuthCode: e.code
+      error: e
     }
   }
 }

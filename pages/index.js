@@ -6,6 +6,7 @@ import { withTranslation } from '../i18n'
 import Link from "next/link"
 import Router from 'next/router'
 import Amplify, { Auth, Logger } from 'aws-amplify'
+import Alert from "../components/Alert";
 
 import './main.scss'
 
@@ -54,12 +55,14 @@ class Authentication extends React.Component {
       authState: 'loading'
     })
 
-    let state = await signIn(this.state.email, this.state.password)
+    let result = await signIn(this.state.email, this.state.password)
 
-    this.setState({
-      ...state,
-      authState: 'SIGN_IN'
-    })
+    if(result && result.error) {
+      this.setState({
+        error: result.error,
+        authState: 'SIGN_IN'
+      })
+    }
   };
 
 
@@ -92,12 +95,8 @@ class Authentication extends React.Component {
             <h1>{this.props.t('title')}</h1>
             <p>{this.props.t('subtitle')}</p>
 
+            <Alert error={this.state.error}></Alert>
             <form onSubmit={e => this.onSubmit(e)}>
-              <If condition={this.state.errorAuthCode}>
-                <div className="notification error">
-                  {this.props.t(this.state.errorAuthCode)}
-                </div>
-              </If>
               <label htmlFor="email">
                 <input
                   name="email"
