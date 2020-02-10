@@ -17,7 +17,7 @@ const ReportTable = ({
         <div>{t('created-on')}</div>
         <div>{t('fill-level')} (%)</div>
         <div>{t('distance')} (mm)</div>
-        <div>{t('temperature')} (°C)</div>
+        {/*<div>{t('temperature')} (°C)</div>*/}
         <div>{t('battery')} (%)</div>
         <div>{t('signal')} (%)</div>
         <div>{t('actions')}</div>
@@ -37,7 +37,7 @@ const ReportTable = ({
             <div className="detail">{moment.unix(created_on).format('LLL')}</div>
             <div className="detail number">{v}</div>
             <div className="detail number">{l}</div>
-            <div className="detail number">{temperature}</div>
+            {/*<div className="detail number">{temperature}</div>*/}
             <div className="detail number">{b}</div>
             <div className="detail number">{s}</div>
             <div className="action">

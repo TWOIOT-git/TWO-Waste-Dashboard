@@ -40,7 +40,7 @@ const SensorItemCardExpanded = ({
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span className={`status ${fill_percentage < 50 ? "green" : "red"}`} />
+          <span className={`status ${fill_percentage <= 80 ? "green" : "red"}`} />
           <div className="actions">
             <Dropdown>
               <Dropdown.Toggle
@@ -64,7 +64,7 @@ const SensorItemCardExpanded = ({
           </div>
           <h2>
             <If condition={nickname}>
-              {sensor_id} ({nickname})
+              {nickname} ({sensor_id})
             </If>
             <If condition={!nickname}>
               {sensor_id}
@@ -90,13 +90,17 @@ const SensorItemCardExpanded = ({
             <h5>{moment.unix(updated_on).fromNow()}</h5>
           </div>
           <div>
-            <p>{t('location')}:</p>
-            <h4>{bin_location}</h4>
+            <If condition={bin_location}>
+              <p>{t('location')}:</p>
+              <h4>{bin_location}</h4>
+            </If>
             <p>{t('battery')}:</p>
             <h4 className={`status ${battery > 20 ? "green" : "red"}`}>{battery}%</h4>
-            <p>{t('temperature')}:</p>
-            <h4>{temperature}°C</h4>
-            <p>{t('signal_strength')}:</p>
+            <If condition={temperature}>
+              <p>{t('temperature')}:</p>
+              <h4>{temperature}°C</h4>
+            </If>
+            <p>{t('signal')}:</p>
             <h4>{signal_strength}%</h4>
           </div>
         </div>
@@ -244,13 +248,13 @@ const SensorItemCardExpanded = ({
                     font-size: 52px;
                     line-height: normal;
 
-                    color: ${fill_percentage > 50 ? "#da6464" : "#00bf8d"};
+                    color: ${fill_percentage > 80 ? "#da6464" : "#00bf8d"};
                   }
 
                   h4,
                   h5,
                   h6 {
-                    margin-top: 6px;
+                    margin: 5px 0 8px 0;
                   }
 
                   h4 {

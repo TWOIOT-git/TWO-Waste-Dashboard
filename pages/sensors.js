@@ -36,11 +36,27 @@ class Sensors extends React.Component {
   }
 
   async getSensors() {
-    let response = await API.get('lidbotAPI', '/sensors', null)
+    let sensors = await API.get('lidbotAPI', '/sensors', null)
+
+    sensors.sort(function(a, b) {
+      if(a.nickname && b.nickname) {
+        let nameA = a.nickname.toUpperCase(); // ignore upper and lowercase
+        let nameB = b.nickname.toUpperCase(); // ignore upper and lowercase
+
+        if (nameA < nameB) {
+          return -1
+        }
+        if (nameA > nameB) {
+          return 1
+        }
+      }
+
+      return 0
+    })
 
     let data = []
 
-    for (let sensor of response) {
+    for (let sensor of sensors) {
       data.push({
         ...sensor,
         reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {

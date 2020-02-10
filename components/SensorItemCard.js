@@ -25,7 +25,7 @@ const SensorItemCard = ({
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span className={`status ${fill_percentage < 50 ? "green" : "red"}`} />
+          <span className={`status ${fill_percentage <= 80 ? "green" : "red"}`} />
           <h2>
             <Link href={{ pathname: '/sensor', query: { id: sensor_id } }} as={`/sensor/${sensor_id}`}>
               <a>{nickname}</a>
@@ -177,7 +177,7 @@ const SensorItemCard = ({
                     font-size: 42px;
                     line-height: normal;
 
-                    color: ${fill_percentage > 50 ? "#da6464" : "#00bf8d"};
+                    color: ${fill_percentage > 80 ? "#da6464" : "#00bf8d"};
                   }
 
                   h4,
