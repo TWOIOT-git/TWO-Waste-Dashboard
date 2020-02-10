@@ -7,7 +7,7 @@
     "node": "10.15.1"
   },
   "scripts": {
-    "dev": "userPoolId=ap-northeast-1_wtGNw1gmx stage=test node server.js",
+    "dev": "userPoolId=ap-northeast-1_ZsGvaNO3H userPoolWebClientId=5vouo4aj549f9qjnkrdj8tvkq8 identityPoolId=ap-northeast-1:94f12e8b-e7e7-462f-aeb5-d7a799f48978 api=https://api.lidbot.com node server.js",
     "start": "NODE_ENV=production node server.js",
     "build": "next build",
     "lint": "npm run lint:eslint",
