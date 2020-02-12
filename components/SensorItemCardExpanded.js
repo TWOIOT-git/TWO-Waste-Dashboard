@@ -40,7 +40,7 @@ const SensorItemCardExpanded = ({
     <article>
       <div className="SensorItemCardHeader">
         <div>
-          <span className={`status ${fill_percentage <= 80 ? "green" : "red"}`} />
+          <span className={`status ${fill_percentage <= 75 ? "green" : "red"}`} />
           <div className="actions">
             <Dropdown>
               <Dropdown.Toggle
@@ -101,7 +101,7 @@ const SensorItemCardExpanded = ({
               <h4>{temperature}°C</h4>
             </If>
             <p>{t('signal')}:</p>
-            <h4>{signal_strength}%</h4>
+            <h4>{signal_strength}</h4>
           </div>
         </div>
       </div>
@@ -248,7 +248,7 @@ const SensorItemCardExpanded = ({
                     font-size: 52px;
                     line-height: normal;
 
-                    color: ${fill_percentage > 80 ? "#da6464" : "#00bf8d"};
+                    color: ${fill_percentage > 75 ? "#da6464" : "#00bf8d"};
                   }
 
                   h4,
