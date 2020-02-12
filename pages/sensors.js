@@ -62,7 +62,7 @@ class Sensors extends React.Component {
         reports: (sensor.reports) ? JSON.parse(sensor.reports).map(obj => {
           return {
             v: Math.round(obj.v),
-            t: moment(obj.t).format('HH:mm')
+            t: moment.unix(obj.t).format('LLL')
           }
         }) : [],
       })
