@@ -6,6 +6,7 @@ import { withTranslation } from '../i18n'
 import { Auth, Logger, Storage } from 'aws-amplify';
 import uuid from 'uuid/v1'
 import ReactCodeInput from 'react-verification-code-input';
+import Alert from "../components/Alert";
 import { toast } from 'react-toastify'
 import {
   updateUserAttributes,
@@ -40,11 +41,8 @@ class SettingsUserDetails extends Component {
       imagePreview: null,
       imageS3Key: null,
       currentPassword: '',
-      email_verified: null,
       phone_number_verified: null,
       newPassword: '',
-      client_id: '',
-      errorAuthCode: null,
       successAuthCode: null,
     };
 
@@ -69,8 +67,6 @@ class SettingsUserDetails extends Component {
       phone_number: (this.context.user.attributes['phone_number']) ? this.context.user.attributes['phone_number'] : '',
       imageS3Key: imageS3Key,
       email: this.context.user.attributes['email'],
-      client_id: this.context.user.attributes['custom:client_id'],
-      email_verified: this.context.user.attributes['email_verified'],
       phone_number_verified: this.context.user.attributes['phone_number_verified'],
     })
 
@@ -166,7 +162,7 @@ class SettingsUserDetails extends Component {
     let attributes = {}
     attributes.given_name = this.state.given_name
     attributes.family_name = this.state.family_name
-    attributes.phone_number = this.state.phone_number
+    // attributes.phone_number = this.state.phone_number
 
     this.setState(updateUserAttributes(attributes))
 
@@ -180,7 +176,7 @@ class SettingsUserDetails extends Component {
     let state = await changePassword(this.state.currentPassword, this.state.newPassword)
     this.setState(state)
 
-    if(state.successAuthCode) {
+    if(state.success) {
       toast(this.props.t('password-updated'), {
         className: 'notification success'
       })
@@ -232,45 +228,45 @@ class SettingsUserDetails extends Component {
                     />
                   </label>
                 </div>
-                <div className={`phone ${this.state.phone_number_verified ? 'verified' : 'not-verified'}`}>
-                  <If condition={this.state.errorAuthCode}>
-                    <div className="notification error">
-                      {this.props.t(this.state.errorAuthCode)}
-                    </div>
-                  </If>
-                  <label htmlFor="phone_number">
-                    {this.props.t('phone')}
-                    <If condition={this.state.phone_number}>
-                      {this.state.phone_number_verified ? '' : <span className="not-verified"> (not verified!)</span>}
-                    </If>
-                    <input
-                      name="phone_number"
-                      id="phone_number"
-                      inputMode="tel"
-                      type="phone"
-                      value={this.state.phone_number}
-                      onChange={this.onChange}
-                      placeholder={this.props.t('enter-phone')}
-                    />
-                  </label>
-                  <If condition={this.state.phone_number}>
-                    <If condition={!this.state.phone_number_verified}>
-                    <If condition={this.state.successAuthCode !== 'CodeResentSuccessfully'}>
-                      <span className="link" onClick={this.onSendVerificationCode}>{this.props.t('send-verification-code')}</span>
-                    </If>
-                    <If condition={this.state.successAuthCode === 'CodeResentSuccessfully'}>
-                      <label className="verification-code">
-                        <ReactCodeInput
-                          title={this.props.t('verification-code')}
-                          onComplete={e => this.verificationCodeEntered(e)}
-                          type="text"
-                        />
-                      </label>
-                      <span className="link" onClick={this.onSendVerificationCode}>{this.props.t('resend-verification-code')}</span>
-                    </If>
-                  </If>
-                  </If>
-                </div>
+                {/*<div className={`phone ${this.state.phone_number_verified ? 'verified' : 'not-verified'}`}>*/}
+                {/*  <If condition={this.state.errorAuthCode}>*/}
+                {/*    <div className="notification error">*/}
+                {/*      {this.props.t(this.state.errorAuthCode)}*/}
+                {/*    </div>*/}
+                {/*  </If>*/}
+                {/*  <label htmlFor="phone_number">*/}
+                {/*    {this.props.t('phone')}*/}
+                {/*    <If condition={this.state.phone_number}>*/}
+                {/*      {this.state.phone_number_verified ? '' : <span className="not-verified"> (not verified!)</span>}*/}
+                {/*    </If>*/}
+                {/*    <input*/}
+                {/*      name="phone_number"*/}
+                {/*      id="phone_number"*/}
+                {/*      inputMode="tel"*/}
+                {/*      type="phone"*/}
+                {/*      value={this.state.phone_number}*/}
+                {/*      onChange={this.onChange}*/}
+                {/*      placeholder={this.props.t('enter-phone')}*/}
+                {/*    />*/}
+                {/*  </label>*/}
+                {/*  <If condition={this.state.phone_number}>*/}
+                {/*    <If condition={!this.state.phone_number_verified}>*/}
+                {/*    <If condition={this.state.successAuthCode !== 'CodeResentSuccessfully'}>*/}
+                {/*      <span className="link" onClick={this.onSendVerificationCode}>{this.props.t('send-verification-code')}</span>*/}
+                {/*    </If>*/}
+                {/*    <If condition={this.state.successAuthCode === 'CodeResentSuccessfully'}>*/}
+                {/*      <label className="verification-code">*/}
+                {/*        <ReactCodeInput*/}
+                {/*          title={this.props.t('verification-code')}*/}
+                {/*          onComplete={e => this.verificationCodeEntered(e)}*/}
+                {/*          type="text"*/}
+                {/*        />*/}
+                {/*      </label>*/}
+                {/*      <span className="link" onClick={this.onSendVerificationCode}>{this.props.t('resend-verification-code')}</span>*/}
+                {/*    </If>*/}
+                {/*  </If>*/}
+                {/*  </If>*/}
+                {/*</div>*/}
                 <div>
                   <label htmlFor="email">
                     {this.props.t('email')}
@@ -286,29 +282,14 @@ class SettingsUserDetails extends Component {
                   </label>
                 </div>
                 <div>
-                  <label htmlFor="client_id">
-                    {this.props.t('company-name')}
-                    <input
-                      name="client_id"
-                      id="client_id"
-                      value={this.state.client_id}
-                      disabled="disabled"
-                    />
-                  </label>
-                </div>
-                <div>
                   <button type="submit">{this.props.t('save-changes')}</button>
                 </div>
               </div>
             </div>
           </form>
           <form onSubmit={this.handleUpdatePassword}>
-            <If condition={this.state.errorAuthCode}>
-              <div className="notification error">
-                {this.props.t(this.state.errorAuthCode)}
-              </div>
-            </If>
             <div className="div-inputs">
+              <Alert error={this.state.error}></Alert>
               <div>
                 <div>
                 <div>

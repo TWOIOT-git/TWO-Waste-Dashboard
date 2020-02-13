@@ -59,13 +59,19 @@ function signOut(e) {
 async function changePassword(oldPassword, newPassword) {
   if(!oldPassword) {
     return {
-      errorAuthCode: "NoOldPassword",
+      error: {
+        code: "NoOldPassword",
+        message: "Please enter your current password"
+      }
     }
   }
 
   if(!newPassword) {
     return {
-      errorAuthCode: "NoNewPassword",
+      error: {
+        code: "NoNewPassword",
+        message: "Please enter your new password"
+      }
     }
   }
 
@@ -73,15 +79,15 @@ async function changePassword(oldPassword, newPassword) {
     let user = await Auth.currentAuthenticatedUser()
     let response = await Auth.changePassword(user, oldPassword, newPassword)
 
-    logger.debug('Auth.changePassword response: ', response)
+    logger.debug('Auth.changePassword: ', response)
 
     return {
-      successAuthCode: true,
-      errorAuthCode: false
+      success: true,
+      error: null
     }
   } catch (e) {
     return {
-      errorAuthCode: e.code
+      error: e
     }
   }
 }

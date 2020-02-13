@@ -27,8 +27,6 @@ class Authentication extends React.Component {
       newPassword: "",
       passwordRepeat: "",
       authState: 'SIGN_IN',
-      successAuthCode: null,
-      errorAuthCode: null,
       user: null,
     }
   }
